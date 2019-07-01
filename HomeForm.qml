@@ -26,29 +26,33 @@ Page {
             spacing: 50
             anchors.centerIn: parent
             TButton {
+                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
 //                highlighted: true
 //                focusPolicy: Qt.NoFocus
                 text: qsTr("全关")
-                onClicked: console.log("ddddd")
             }
             TButton {
+                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("下滑指示器")
             }
             TButton {
+                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("横摇指示器")
             }
             TButton {
+                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("故障指示灯")
             }
             TButton {
+                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("起降信号灯")
@@ -94,26 +98,31 @@ Page {
             spacing: 50
             anchors.centerIn: parent
             TButton {
+                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("桅杆障碍灯")
             }
             TButton {
+                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("塔台障碍灯")
             }
             TButton {
+                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("机库障碍灯")
             }
             TButton {
+                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("甲板泛光灯")
             }
             TButton {
+                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("风向指示袋")
@@ -127,6 +136,7 @@ Page {
         contentHeight: root.height*.08
         TButton {
             id:left
+            tag:0
             text: qsTr("‹")
             color: "#565656"
             radius: 0
@@ -134,20 +144,7 @@ Page {
             anchors.left: parent.left
             width: bar.width/10
             height: bar.height
-            onClicked: popup1.open()
             anchors.margins: 0
-            Popup {
-                id: popup1
-                modal: true
-                dim: true
-                focus: true
-                width: parent.width*2
-                height: page.height/2
-                anchors.centerIn: parent
-                bottomMargin:  parent.height
-                onOpened: page.opacity = 0.4
-                onClosed: page.opacity = 1
-            }
         }
         ToolSeparator {
             orientation: Qt.Vertical
@@ -169,6 +166,7 @@ Page {
         }
         TButton {
             id: right
+            tag:0
             text: qsTr("⋮")
             radius: 0
             border.width: 0
@@ -176,24 +174,10 @@ Page {
             anchors.right: parent.right
             width: bar.width/10
             height: bar.height
-            onClicked: popup2.open()
-            Popup {
-                id: popup2
-                modal: true
-                dim: true
-                focus: true
-                width: parent.width*5/2
-                height: page.height/2
-                anchors.centerIn: parent
-                bottomMargin:  parent.height
-                onOpened: {
-                    page.opacity = 0.4
-                    console.info("opened popup")
-                    console.log("opened popup")
-                    console.warn("opened popup")
-                    console.error("EEEEEEEEEEEEEEEEEEEEEEE")
-                }
-                onClosed: page.opacity = 1
+            pWidth: bar.width/3
+            pHeight: bar.height*2
+            onClicked:{
+                console.log("---------------")
             }
         }
         background: Rectangle {

@@ -20,9 +20,6 @@ namespace LOGTOOL
 //    .arg(QTime::currentTime().toString("hh_mm_ss_zzz"));
   }
 
-  /**
-   * @brief deletes old log files, only the last ones are kept
-   */
   void deleteOldLogs()
   {
     QDir dir;

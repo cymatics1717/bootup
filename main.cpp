@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
                                 "%{if-debug}D%{endif}"
                                 "%{if-info}I%{endif}"
                                 "%{if-warning}W%{endif}"
-                                "%{if-critical}C%{endif}"
+                                "%{if-critical}E%{endif}"
                                 "%{if-fatal}F%{endif}]"
                                 "%{if-warning} %{backtrace}%{endif}"
                                 "%{if-critical} %{backtrace}%{endif}"
