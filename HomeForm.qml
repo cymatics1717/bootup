@@ -22,8 +22,7 @@ Page {
         //        }
 
         Column {
-            id: row
-            spacing: 50
+            spacing: groupBox1.height/20
             anchors.centerIn: parent
             TButton {
                 tag: 1
@@ -32,12 +31,23 @@ Page {
 //                highlighted: true
 //                focusPolicy: Qt.NoFocus
                 text: qsTr("全关")
+                onClicked: {
+                    content.source = "Page1Form.qml"
+                    pWidth = width*2
+                    pHeight = height*2
+                }
             }
             TButton {
                 tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("下滑指示器")
+                onClicked: {
+                    content.source = "Page2Form.qml"
+                    pWidth = width*3
+                    pHeight = height*3
+                }
+
             }
             TButton {
                 tag: 1
@@ -174,10 +184,11 @@ Page {
             anchors.right: parent.right
             width: bar.width/10
             height: bar.height
-            pWidth: bar.width/3
-            pHeight: bar.height*2
             onClicked:{
                 console.log("---------------")
+                content.source = "Page1Form.qml"
+                pWidth = width*2
+                pHeight = height*4
             }
         }
         background: Rectangle {
