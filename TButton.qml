@@ -9,6 +9,8 @@ Rectangle {
     property alias content: content
     property alias pWidth: popup.width
     property alias pHeight: popup.height
+    property alias px: popup.x
+    property alias py: popup.y
     signal clicked();
 
     border.color: "grey"

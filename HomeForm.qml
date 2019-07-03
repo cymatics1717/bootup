@@ -62,10 +62,19 @@ Page {
                 text: qsTr("故障指示灯")
             }
             TButton {
-                tag: 1
+                tag: 0
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("起降信号灯")
+                onClicked: {
+                    content.source = "Page2Form.qml"
+                    pWidth = width*3
+                    pHeight = height*3
+                }
+                px: width
+                py: height - pHeight
+                pWidth: width
+                pHeight:  4*height
             }
         }
     }
