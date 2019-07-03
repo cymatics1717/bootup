@@ -6,10 +6,22 @@ Page {
     id:page
     title: qsTr("Home.Page")
     anchors.fill: parent
-    //    background: Rectangle {
-    //        color: "#272727"
-    ////        color:Qt.rgba(39,39,39,255)
-    //    }
+
+    Popup {
+        id: popup
+        modal: true
+        dim: true
+        focus: true
+        property alias content: content
+        anchors.centerIn: parent
+//        bottomMargin:  parent.height
+        onOpened: page.opacity = 0.1
+        onClosed: page.opacity = 1
+        contentItem: Loader {
+             anchors.fill: parent
+             id: content
+        }
+    }
 
     Rectangle {
         id: groupBox1
@@ -25,56 +37,43 @@ Page {
             spacing: groupBox1.height/20
             anchors.centerIn: parent
             TButton {
-                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
 //                highlighted: true
 //                focusPolicy: Qt.NoFocus
                 text: qsTr("全关")
                 onClicked: {
-                    content.source = "Page1Form.qml"
-                    pWidth = width*2
-                    pHeight = height*2
+                    popup.content.source = "qrc:/home/alloff.qml"
+                    popup.width = page.width/2
+                    popup.height = page.height/2
+                    popup.open()
                 }
             }
             TButton {
-                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("下滑指示器")
                 onClicked: {
-                    content.source = "Page2Form.qml"
-                    pWidth = width*3
-                    pHeight = height*3
+                    content.source = "qrc:/home/down_indicator.qml"
+                    popup.width = page.width/2
+                    popup.height = page.height/2
+                    popup.open()
                 }
-
             }
             TButton {
-                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("横摇指示器")
             }
             TButton {
-                tag: 1
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("故障指示灯")
             }
             TButton {
-                tag: 0
                 width: groupBox1.width * .7
                 height: groupBox1.height * .1
                 text: qsTr("起降信号灯")
-                onClicked: {
-                    content.source = "Page2Form.qml"
-                    pWidth = width*3
-                    pHeight = height*3
-                }
-                px: width
-                py: height - pHeight
-                pWidth: width
-                pHeight:  4*height
             }
         }
     }
@@ -117,31 +116,26 @@ Page {
             spacing: 50
             anchors.centerIn: parent
             TButton {
-                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("桅杆障碍灯")
             }
             TButton {
-                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("塔台障碍灯")
             }
             TButton {
-                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("机库障碍灯")
             }
             TButton {
-                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("甲板泛光灯")
             }
             TButton {
-                tag: -1
                 width: groupBox2.width * .7
                 height: groupBox2.height * .1
                 text: qsTr("风向指示袋")
@@ -155,7 +149,6 @@ Page {
         contentHeight: root.height*.08
         TButton {
             id:left
-            tag:0
             text: qsTr("‹")
             color: "#565656"
             radius: 0
@@ -185,7 +178,6 @@ Page {
         }
         TButton {
             id: right
-            tag:0
             text: qsTr("⋮")
             radius: 0
             border.width: 0
@@ -196,8 +188,7 @@ Page {
             onClicked:{
                 console.log("---------------")
                 content.source = "Page1Form.qml"
-                pWidth = width*2
-                pHeight = height*4
+
             }
         }
         background: Rectangle {

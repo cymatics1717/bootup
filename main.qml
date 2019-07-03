@@ -11,7 +11,9 @@ ApplicationWindow {
     height: Screen.height*ratio
 
     title: qsTr("Stack")
-
+    background: Rectangle {
+        color: "black"
+    }
     //    Drawer {
 //        id: drawer
 //        width: root.width * 0.66

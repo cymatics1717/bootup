@@ -7,5 +7,7 @@
         <file>qtquickcontrols2.conf</file>
         <file>res/boat.png</file>
         <file>TButton.qml</file>
+        <file>home/alloff.qml</file>
+        <file>home/down_indicator.qml</file>
     </qresource>
 </RCC>
