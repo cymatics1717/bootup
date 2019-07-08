@@ -12,40 +12,64 @@ ApplicationWindow {
 
     title: qsTr("Stack")
     background: Rectangle {
-        color: "black"
+        gradient: Gradient {
+            GradientStop { position: 0; color: "black" }
+            GradientStop { position: 1; color: "#aaaaaa" }
+        }
     }
-    //    Drawer {
-//        id: drawer
-//        width: root.width * 0.66
-//        height: root.height
 
-//        Column {
-//            anchors.fill: parent
+    header: Rectangle {
+        id:headerbar
+        color: "#565656"
+        height: root.width/36
+        Behavior on color {
+            ColorAnimation { duration: 1000 }
+        }
 
-//            ItemDelegate {
-//                text: qsTr("Page 1")
-//                width: parent.width
-//                onClicked: {
-//                    stackView.push("Page1Form.ui.qml")
-//                    drawer.close()
-//                }
-//            }
-//            ItemDelegate {
-//                text: qsTr("Page 2")
-//                width: parent.width
-//                onClicked: {
-//                    stackView.push("Page2Form.ui.qml")
-//                    drawer.close()
-//                }
-//            }
-//        }
-//    }
+        Text {
+            id:title
+            color: "white"
+            text: qsTr("灯光助降系统")
+            anchors{
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+                margins: 10
+            }
+        }
+        Label {
+            id:timestamp
+            color: "white"
+            font.pixelSize: 20
+            anchors.right: date_.left
+            text: qsTr("ddd")
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        Label {
+            id:date_
+            color: "white"
+            anchors.right: parent.right
+//            width: groupBox1.width * .7
+//            height: groupBox1.height * .1
+//            text: qsTr("f")
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
 
     StackView {
         id: stackView
         initialItem: "HomeForm.qml"
         anchors.fill: parent
     }
+
+    Timer {
+        interval: 1000; running: true; repeat: true
+        onTriggered: {
+            var tmp = new Date().toLocaleString(Qt.locale(),"dddd yyyy-MM-dd hh:mm:ss.z")
+            timestamp.text = tmp
+            headerbar.color = Qt.rgba(Math.random(),Math.random(),Math.random(),1);
+        }
+    }
+
 
     InputPanel {
         id: inputPanel

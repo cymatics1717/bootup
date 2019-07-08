@@ -6,16 +6,22 @@ Rectangle {
     anchors.fill: parent
     Text {
         id: txt
-        anchors.bottom: main.top
-        x: parent.width/2 - width/2
-        y: parent.height/3
+        anchors {
+//            bottom: main.top
+//            horizontalCenter: rect.horizontalCenter
+            centerIn: parent
+            margins: 20
+        }
+//        x: rect.width/2 - width
+//        y: rect.parent.height/2
         text: qsTr("是否关闭全部灯具")
 //        font.pointSize: 20
 //        color: "red"
     }
     Row {
         id: main
-        anchors.centerIn: parent
+        anchors.horizontalCenter: rect.horizontalCenter
+        y:rect.height*2/3
         spacing: 100
           Button {
               text: qsTr("取消")

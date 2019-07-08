@@ -8,6 +8,19 @@
         <file>res/boat.png</file>
         <file>TButton.qml</file>
         <file>home/alloff.qml</file>
-        <file>home/down_indicator.qml</file>
+        <file>home/xiahua.qml</file>
+        <file>res/icon.png</file>
+        <file>home/BooleanControl.qml</file>
+        <file>home/IntegerControl.qml</file>
+        <file>home/EnumControl.qml</file>
+        <file>home/hengyao.qml</file>
+        <file>home/guzhangjingshi.qml</file>
+        <file>home/weigan.qml</file>
+        <file>home/tatai.qml</file>
+        <file>home/jiku.qml</file>
+        <file>home/jiaban.qml</file>
+        <file>home/fengxiang.qml</file>
+        <file>home/LightControl.qml</file>
+        <file>home/qijiang.qml</file>
     </qresource>
 </RCC>
