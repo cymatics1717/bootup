@@ -47,7 +47,7 @@ Page {
 //                focusPolicy: Qt.NoFocus
                 text: qsTr("全关")
                 onClicked: {
-                    popup.content.source = "qrc:/home/alloff.qml"
+                    popup.content.source = "qrc:/qml/home/alloff.qml"
                     popup.parent = page
                     popup.width = page.width/3
                     popup.height = page.height/3
@@ -62,7 +62,7 @@ Page {
                 height: groupBox1.height * .1
                 text: qsTr("下滑指示器")
                 onClicked: {
-                    content.source = "qrc:/home/xiahua.qml"
+                    content.source = "qrc:/qml/home/xiahua.qml"
                     popup.parent = xiahua
                     popup.x = xiahua.width
                     popup.y = 0
@@ -77,7 +77,7 @@ Page {
                 height: groupBox1.height * .1
                 text: qsTr("横摇指示器")
                 onClicked: {
-                    content.source = "qrc:/home/hengyao.qml"
+                    content.source = "qrc:/qml/home/hengyao.qml"
                     popup.parent = hengyao
                     popup.x = hengyao.width
                     popup.y = 0
@@ -92,7 +92,7 @@ Page {
                 height: groupBox1.height * .1
                 text: qsTr("故障指示灯")
                 onClicked: {
-                    content.source = "qrc:/home/guzhangjingshi.qml"
+                    content.source = "qrc:/qml/home/guzhangjingshi.qml"
                     popup.parent = guzhang
                     popup.x = guzhang.width
                     popup.y = 0
@@ -107,7 +107,7 @@ Page {
                 height: groupBox1.height * .1
                 text: qsTr("起降信号灯")
                 onClicked: {
-                    content.source = "qrc:/home/qijiang.qml"
+                    content.source = "qrc:/qml/home/qijiang.qml"
                     popup.parent = qijiang
                     popup.x = qijiang.width
                     popup.y = height-root.height*.3
@@ -161,7 +161,7 @@ Page {
                 height: groupBox2.height * .1
                 text: qsTr("桅杆障碍灯")
                 onClicked: {
-                    content.source = "qrc:/home/weigan.qml"
+                    content.source = "qrc:/qml/home/weigan.qml"
                     popup.parent = weigan
                     popup.x = - page.width/4
                     popup.y = 0
@@ -176,7 +176,7 @@ Page {
                 height: groupBox2.height * .1
                 text: qsTr("塔台障碍灯")
                 onClicked: {
-                    content.source = "qrc:/home/tatai.qml"
+                    content.source = "qrc:/qml/home/tatai.qml"
                     popup.parent = tatai
                     popup.x = - page.width/4
                     popup.y = 0
@@ -191,7 +191,7 @@ Page {
                 height: groupBox2.height * .1
                 text: qsTr("机库障碍灯")
                 onClicked: {
-                    content.source = "qrc:/home/jiku.qml"
+                    content.source = "qrc:/qml/home/jiku.qml"
                     popup.parent = jiku
                     popup.x = - page.width/4
                     popup.y = 0
@@ -206,7 +206,7 @@ Page {
                 height: groupBox2.height * .1
                 text: qsTr("甲板泛光灯")
                 onClicked: {
-                    content.source = "qrc:/home/jiaban.qml"
+                    content.source = "qrc:/qml/home/jiaban.qml"
                     popup.parent = jiaban
                     popup.x = - page.width/4
                     popup.y = 0
@@ -221,7 +221,7 @@ Page {
                 height: groupBox2.height * .1
                 text: qsTr("风向指示袋")
                 onClicked: {
-                    content.source = "qrc:/home/fengxiang.qml"
+                    content.source = "qrc:/qml/home/fengxiang.qml"
                     popup.parent = fengxiang
                     popup.x = - page.width/4
                     popup.y = 0
@@ -248,7 +248,7 @@ Page {
             height: bar.height
             anchors.margins: 0
             onClicked: {
-                content.source = "qrc:/home/leftbottom.qml"
+                content.source = "qrc:/qml/home/leftbottom.qml"
                 popup.width = page.width/2
                 popup.height = page.height/2
                 popup.open()

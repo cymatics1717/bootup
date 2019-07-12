@@ -10,7 +10,7 @@
 #include <QDate>
 #include <QTime>
 
-namespace LOGTOOL
+namespace UTILS
 {
     const QString logFolderName = "logs";
 

@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/home/BooleanControl.qml</file>
+        <file>qml/home/hengyao.qml</file>
+        <file>qml/home/guzhangjingshi.qml</file>
+        <file>qml/home/weigan.qml</file>
+        <file>qml/home/tatai.qml</file>
+        <file>qml/home/jiku.qml</file>
+        <file>qml/home/jiaban.qml</file>
+        <file>qml/home/fengxiang.qml</file>
+        <file>qml/home/qijiang.qml</file>
+        <file>qml/home/alloff.qml</file>
+        <file>qml/home/LightControl.qml</file>
+        <file>qml/home/IntegerControl.qml</file>
+        <file>qml/home/EnumControl.qml</file>
+        <file>qml/home/xiahua.qml</file>
+        <file>qml/Page2Form.qml</file>
+        <file>qml/Page1Form.qml</file>
+        <file>qml/TButton.qml</file>
+        <file>qml/HomeForm.qml</file>
+        <file>qml/main.qml</file>
+        <file>res/icon.png</file>
+        <file>res/v2_ps6xgj.png</file>
+        <file>res/boat.png</file>
+    </qresource>
+</RCC>

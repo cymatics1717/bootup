@@ -2,8 +2,32 @@
 #include <QQmlApplicationEngine>
 #include <QTranslator>
 #include <QDebug>
-#include <QFile>
+#include <QFileInfo>
+
+#include <iostream>
+#include <fstream>
 #include "logging.hpp"
+#include "json/json.h"
+
+static void loadConfig(QString config_file){
+    // https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html
+    std::ifstream infile(config_file.toStdString());
+    Json::Value root;
+    infile >> root;
+    std::cerr << root << std::endl;
+
+    ////////
+    Json::StreamWriterBuilder builder;
+    builder["indentation"] = "\t";
+    builder["commentStyle"] = "None";
+//    builder["commentStyle"] = "All";
+    builder["enableYAMLCompatibility"] = true;
+    builder["dropNullPlaceholders"] = false;
+    builder["useSpecialFloats"] = false;
+    std::string doc = Json::writeString(builder, root);
+    std::cerr << doc << std::endl;
+
+}
 
 int main(int argc, char *argv[])
 {
@@ -21,23 +45,27 @@ int main(int argc, char *argv[])
                                 "%{if-warning} %{backtrace}%{endif}"
                                 "%{if-critical} %{backtrace}%{endif}"
                                 "%{if-fatal} %{backtrace}%{endif} "
-                                "%{function}:%{line}---%{message}";
+                                "%{if-debug}%{function}:%{line}"
+                                "---%{message}";
 
     qSetMessagePattern(QT_MESSAGE_PATTERN);
 
-    LOGTOOL::initLogging();
+    UTILS::initLogging();
 
     QGuiApplication app(argc, argv);
 
+//    QString root =  app.applicationFilePath();
+    QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";
+    qDebug() <<"root path: "<< root;
+
+    loadConfig(root+"conf/test.json");
+
     QTranslator translator;
-    if(translator.load("zh_CN.qm","/home/wayne/qt/bootup/lang"))
+    if(translator.load("zh_CN.qm", root + "lang"))
         qApp->installTranslator(&translator);
 
-
     QQmlApplicationEngine engine;
-    engine.addImportPath( "qrc:///" );
-    engine.addImportPath( "qrc:///home" );
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
