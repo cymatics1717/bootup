@@ -3,10 +3,8 @@
 #include <QFile>
 #include <QNetworkDatagram>
 
-udpServer::udpServer(QString ip, quint16 port, QObject *parent) : QObject(parent)
+udpServer::udpServer(QString ip, quint16 port, QObject *parent) : QObject(parent),udp(new QUdpSocket(this))
 {
-
-    udp = new QUdpSocket(this);
     qDebug()<<"bind status:"<<udp->bind(QHostAddress(ip), port/*,QAbstractSocket::ReuseAddressHint*/);
     connect(udp, SIGNAL(readyRead()),SLOT(readPendingDatagrams()));
 }
@@ -22,7 +20,13 @@ void udpServer::readPendingDatagrams()
 void udpServer::processTheDatagram(const QNetworkDatagram &gram)
 {
     QByteArray dat = gram.data();
-    qDebug() <<"server recv: [" <<gram.senderAddress()<<gram.senderPort()<< gram.data().size()<<"]" << dat;
+    QString id = QString("[%1:%2->%3:%4 %5]")
+            .arg(gram.senderAddress().toString())
+            .arg(gram.senderPort())
+            .arg(gram.destinationAddress().toString())
+            .arg(gram.destinationPort())
+            .arg(gram.data().size(),4,10);
+    qDebug() <<"server recv: " << id << dat;
 
     int tmp = QString(dat.trimmed()).toInt();
     emit incoming(tmp);

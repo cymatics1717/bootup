@@ -15,8 +15,8 @@ signals:
     void incoming(int);
 public slots:
     void readPendingDatagrams();
-    void processTheDatagram(const QNetworkDatagram &);
 private:
+    void processTheDatagram(const QNetworkDatagram &);
     QUdpSocket *udp;
 };
 
