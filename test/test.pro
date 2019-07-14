@@ -16,6 +16,9 @@ QT += network core
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += udpserver.h
+HEADERS += \
+    udpclient.hpp \
+    udpserver.hpp
 SOURCES += udpserver.cpp \
-    main.cpp
+    main.cpp \
+    udpclient.cpp

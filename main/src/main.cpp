@@ -24,6 +24,8 @@ static void loadConfig(QString config_file){
     builder["enableYAMLCompatibility"] = true;
     builder["dropNullPlaceholders"] = false;
     builder["useSpecialFloats"] = false;
+    root["id"] = "config file";
+    root["id"] = __FUNCTION__;
     std::string doc = Json::writeString(builder, root);
     std::cerr << doc << std::endl;
 
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
                                 "%{if-warning} %{backtrace}%{endif}"
                                 "%{if-critical} %{backtrace}%{endif}"
                                 "%{if-fatal} %{backtrace}%{endif} "
-                                "%{if-debug}%{function}:%{line}"
+                                "%{if-debug}%{function}:%{line}%{endif}"
                                 "---%{message}";
 
     qSetMessagePattern(QT_MESSAGE_PATTERN);
