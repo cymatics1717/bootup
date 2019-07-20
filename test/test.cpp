@@ -4,6 +4,7 @@
 #include "udpserver.hpp"
 #include "udpclient.hpp"
 #include "serialpeer.hpp"
+#include "serialother.hpp"
 
 /*
 nc -u 127.0.0.1 10000
@@ -28,12 +29,6 @@ int main(int argc, char *argv[])
     p.addPositionalArgument("device", "device path.", "device");
     p.process(app);
 
-//    if(p.isSet("u")&&p.value("u").toInt()>0){
-//        new udpServer("127.0.0.1",10000,&app);
-//    } else {
-//        new udpClient("127.0.0.1",10000,&app);
-//    }
-
     int t = 1000;
     if(p.isSet("t")&&p.value("t").toInt()>0){
         t = p.value("t").toInt();
@@ -46,7 +41,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    serialPeer serial(path,t);
+    serialPeer serial("/dev/ttytest1",t);
+    serialOther other("/dev/ttytest2",t);
 
     return app.exec();
 }

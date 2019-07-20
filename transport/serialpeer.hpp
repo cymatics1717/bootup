@@ -1,9 +1,9 @@
 #ifndef SERIALPEER_HPP
 #define SERIALPEER_HPP
 
-#include <QObject>
 #include <QSerialPort>
 #include <QTimerEvent>
+#include "common.hpp"
 
 class serialPeer : public QObject
 {
@@ -19,7 +19,13 @@ signals:
 
 public slots:
     void onReadyRead();
+    void writing(QByteArray dat);
     void onError(QSerialPort::SerialPortError);
+
+    void powerOnOff(bool on);
+    void DeIcingOnOff(bool on);
+    void queryPowerStatus();
+
 private:
     QSerialPort *serial;
 };

@@ -13,8 +13,7 @@ QT += network serialport
 
 # Input
 HEADERS +=
-SOURCES += \
-    test.cpp
+SOURCES +=   test.cpp
 
 INCLUDEPATH += ../transport
 LIBS += -L../transport -ltransport

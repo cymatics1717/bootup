@@ -4,7 +4,7 @@
 
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS = main test transport
+SUBDIRS = transport test main
 
 test.depends = transport
 main.depends = transport
