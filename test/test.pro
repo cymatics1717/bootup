@@ -16,4 +16,4 @@ HEADERS +=
 SOURCES +=   test.cpp
 
 INCLUDEPATH += ../transport
-LIBS += -L../transport -ltransport
+LIBS += -L../lib -ltransport

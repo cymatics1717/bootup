@@ -66,19 +66,20 @@ void serialPeer::onError(QSerialPort::SerialPortError)
 void serialPeer::powerOnOff(bool on)
 {
     QByteArray data;
-    data.append(qint8(0x0D));
-    data.append(qint8(0x0F));
-    data.append(qint8(0x00));
-    data.append(qint8(0x20));
-    data.append(qint8(0x00));
+    data.append('\x0D');
+    data.append('\x0F');
+    data.append('\x00');
+    data.append('\x20');
+    data.append('\x00');
+
     if(on){
-        data.append(qint8(0x03));
-        data.append(qint8(0x01));
-        data.append(qint8(0x07));
+        data.append('\x03');
+        data.append('\x01');
+        data.append('\x07');
     } else {
-        data.append(qint8(0x04));
-        data.append(qint8(0x01));
-        data.append(qint8(0x00));
+        data.append('\x04');
+        data.append('\x01');
+        data.append('\x00');
     }
 
     writing(data);
@@ -87,16 +88,16 @@ void serialPeer::powerOnOff(bool on)
 void serialPeer::DeIcingOnOff(bool on)
 {
     QByteArray data;
-    data.append(qint8(0x0D));
-    data.append(qint8(0x05));
-    data.append(qint8(0x00));
-    data.append(qint8(0x23));
+    data.append('\x0D');
+    data.append('\x05');
+    data.append('\x00');
+    data.append('\x23');
     if(on){
-        data.append(qint8(0xFF));
-        data.append(qint8(0x00));
+        data.append('\xFF');
+        data.append('\x00');
     } else {
-        data.append(qint8(0x00));
-        data.append(qint8(0x00));
+        data.append('\x00');
+        data.append('\x00');
     }
     writing(data);
 }
@@ -104,12 +105,11 @@ void serialPeer::DeIcingOnOff(bool on)
 void serialPeer::queryPowerStatus()
 {
     QByteArray data;
-    data.append(qint8(0x0D));
-    data.append(qint8(0x01));
-    data.append(qint8(0x00));
-    data.append(qint8(0x20));
-    data.append(qint8(0x00));
-    data.append(qint8(0x04));
-
+    data.append('\x0D');
+    data.append('\x01');
+    data.append('\x00');
+    data.append('\x20');
+    data.append('\x00');
+    data.append('\x04');
     writing(data);
 }

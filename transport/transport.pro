@@ -8,6 +8,8 @@ INCLUDEPATH += .
 
 QT += core network serialport
 
+DESTDIR = ../lib
+
 CONFIG += dll c++11
 CONFIG += staticlib
 
