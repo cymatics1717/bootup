@@ -46,6 +46,17 @@ void udpClient::onError()
     qDebug() << __FUNCTION__ << udp->errorString();
 }
 
+void udpClient::writing(QByteArray dat)
+{
+
+}
+
+void udpClient::handshake()
+{
+    QByteArray data;
+    data.append('\x1B');
+}
+
 void udpClient::processTheDatagram(const QNetworkDatagram &gram)
 {
     QByteArray dat = gram.data();

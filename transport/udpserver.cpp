@@ -30,12 +30,20 @@ void udpServer::timerEvent(QTimerEvent *event)
 {
     static int cnt = 0;
     cnt++;
-    if(event->timerId()==timers.at(200))
-    for(auto peer:peers){
-        auto reply = QString("%1-%2\n").arg(cnt,5,10,QChar('0')).arg(currentTime());
-        udp->writeDatagram(reply.toUtf8(), peer.second, peer.first);
-    }
+//    if(event->timerId()==timers.at(200))
+//    for(auto peer:peers){
+//        auto reply = QString("%1-%2\n").arg(cnt,5,10,QChar('0')).arg(currentTime());
+//        udp->writeDatagram(reply.toUtf8(), peer.second, peer.first);
+//    }
 
+    {
+        auto reply = QString("%1-%2\n").arg(100*cnt,5,10,QChar('0')).arg(currentTime());
+        udp->writeDatagram(reply.toUtf8(), QHostAddress("127.0.0.1"), 10001);
+    }
+    {
+        auto reply = QString("%1-%2\n").arg(10000*cnt,5,10,QChar('0')).arg(currentTime());
+        udp->writeDatagram(reply.toUtf8(), QHostAddress("127.0.0.1"), 10002);
+    }
 }
 
 void udpServer::readPendingDatagrams()

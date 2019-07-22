@@ -20,6 +20,7 @@ QML_IMPORT_PATH =
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 INCLUDEPATH += . src/utils/jsoncpp src/utils/logging
+INCLUDEPATH += ../transport
 
 # Input
 HEADERS += src/utils/logging/logging.hpp \

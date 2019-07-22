@@ -17,6 +17,10 @@ protected:
 public slots:
     void onReadyRead();
     void onError();
+
+    void writing(QByteArray dat);
+    void handshake();
+
 private:
     void processTheDatagram(const QNetworkDatagram &gram);
     QUdpSocket *udp;

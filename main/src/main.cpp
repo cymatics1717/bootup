@@ -8,6 +8,8 @@
 #include <fstream>
 #include "logging.hpp"
 #include "json/json.h"
+#include "udpclient.hpp"
+#include "udpserver.hpp"
 
 static void loadConfig(QString config_file){
     // https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html
@@ -55,6 +57,8 @@ int main(int argc, char *argv[])
     UTILS::initLogging();
 
     QGuiApplication app(argc, argv);
+    qmlRegisterType<udpClient>("io.qt.udpclient", 1, 0, "udpClient");
+    qmlRegisterType<udpServer>("io.qt.udpserver", 1, 0, "udpServer");
 
 //    QString root =  app.applicationFilePath();
     QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";

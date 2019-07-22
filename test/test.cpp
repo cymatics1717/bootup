@@ -30,24 +30,24 @@ int main(int argc, char *argv[])
     p.process(app);
 
 
-//    udpServer server;
+    udpServer server;
 //    udpClient client;
 
 
-    int t = 1000;
-    if(p.isSet("t")&&p.value("t").toInt()>0){
-        t = p.value("t").toInt();
-    }
-    QString path = "/dev/ttytest1";
-    if(p.positionalArguments().size()>0){
-        path = p.positionalArguments().at(0);
-        if(p.positionalArguments().size()>1){
-            t = p.positionalArguments().at(1).toInt();
-        }
-    }
+//    int t = 1000;
+//    if(p.isSet("t")&&p.value("t").toInt()>0){
+//        t = p.value("t").toInt();
+//    }
+//    QString path = "/dev/ttytest1";
+//    if(p.positionalArguments().size()>0){
+//        path = p.positionalArguments().at(0);
+//        if(p.positionalArguments().size()>1){
+//            t = p.positionalArguments().at(1).toInt();
+//        }
+//    }
 
-    serialPeer serial("/dev/ttytest1",t);
-    serialOther other("/dev/ttytest2",t);
+//    serialPeer serial("/dev/ttytest1",t);
+//    serialOther other("/dev/ttytest2",t);
 
     return app.exec();
 }

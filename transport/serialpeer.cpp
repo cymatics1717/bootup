@@ -52,7 +52,7 @@ void serialPeer::writing(QByteArray dat)
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::BigEndian);
     stream.writeRawData(dat,dat.size());
-    stream << CHECKSUM::crc32(data);
+    stream << mmmcrc32(data);
 
     qDebug() <<"sent:"<< data.toHex('-');
     serial->write(data);

@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-quint32 CHECKSUM::crc32(const QByteArray &data)
+quint32 mmmcrc32(const QByteArray &data)
 {
     static const quint32 crc32Table[] =
     {
@@ -58,3 +58,10 @@ quint32 CHECKSUM::crc32(const QByteArray &data)
 
     return (crc32 ^ 0xffffffffL);
 }
+
+QByteArray hardwareHandShake(){
+    QByteArray data;
+    data.append('\x1B');
+    return data;
+}
+
