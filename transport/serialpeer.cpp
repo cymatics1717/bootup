@@ -38,7 +38,7 @@ void serialPeer::timerEvent(QTimerEvent *event)
 //    powerOnOff(true);
 //    powerOnOff(false);
 //    DeIcingOnOff(true);
-    queryPowerStatus();
+    getPowerStatus();
 }
 
 void serialPeer::onReadyRead()
@@ -63,7 +63,7 @@ void serialPeer::onError(QSerialPort::SerialPortError)
     qDebug() << serial->errorString();
 }
 
-void serialPeer::powerOnOff(bool on)
+void serialPeer::setPowerOnOff(bool on)
 {
     QByteArray data;
     data.append('\x0D');
@@ -85,7 +85,7 @@ void serialPeer::powerOnOff(bool on)
     writing(data);
 }
 
-void serialPeer::DeIcingOnOff(bool on)
+void serialPeer::setDeIcingOnOff(bool on)
 {
     QByteArray data;
     data.append('\x0D');
@@ -102,7 +102,40 @@ void serialPeer::DeIcingOnOff(bool on)
     writing(data);
 }
 
-void serialPeer::queryPowerStatus()
+void serialPeer::setVisibleRedLight(bool on)
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x06');
+    data.append('\x00');
+    data.append('\x01');
+//    data.append('\x00');
+    if(on){
+        data.append('\x01');
+    } else {
+        data.append('\x00');
+    }
+    writing(data);
+}
+
+void serialPeer::setInfraRedLight(bool on)
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x06');
+    data.append('\x00');
+    data.append('\x02');
+//    data.append('\x00');
+    if(on){
+        data.append('\x01');
+    } else {
+        data.append('\x00');
+    }
+    writing(data);
+}
+
+
+void serialPeer::getPowerStatus()
 {
     QByteArray data;
     data.append('\x0D');
@@ -113,3 +146,30 @@ void serialPeer::queryPowerStatus()
     data.append('\x04');
     writing(data);
 }
+
+void serialPeer::getErrorLightStatus()
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x03');
+    data.append('\x00');
+    data.append('\x03');
+    data.append('\x00');
+    data.append('\x02');
+
+    writing(data);
+}
+
+void serialPeer::getErrorLight()
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x03');
+    data.append('\x00');
+    data.append('\x01');
+    data.append('\x00');
+    data.append('\x02');
+
+    writing(data);
+}
+

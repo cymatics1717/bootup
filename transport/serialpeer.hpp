@@ -22,9 +22,14 @@ public slots:
     void writing(QByteArray dat);
     void onError(QSerialPort::SerialPortError);
 
-    void powerOnOff(bool on);
-    void DeIcingOnOff(bool on);
-    void queryPowerStatus();
+    void setPowerOnOff(bool on);
+    void setDeIcingOnOff(bool on);
+    void setVisibleRedLight(bool on);
+    void setInfraRedLight(bool on);
+
+    void getPowerStatus();
+    void getErrorLightStatus();
+    void getErrorLight();
 
 private:
     QSerialPort *serial;

@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
     p.addPositionalArgument("device", "device path.", "device");
     p.process(app);
 
+
+//    udpServer server;
+//    udpClient client;
+
+
     int t = 1000;
     if(p.isSet("t")&&p.value("t").toInt()>0){
         t = p.value("t").toInt();
