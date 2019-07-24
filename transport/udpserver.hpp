@@ -14,10 +14,11 @@ public:
 protected:
     void timerEvent(QTimerEvent *event);
 signals:
-    void incoming(int);
+    void incoming(int udata);
 public slots:
     void readPendingDatagrams();
     void onError(QAbstractSocket::SocketError socketError);
+
 private:
     void processTheDatagram(const QNetworkDatagram &);
     QUdpSocket *udp;

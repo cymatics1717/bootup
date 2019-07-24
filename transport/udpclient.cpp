@@ -55,6 +55,8 @@ void udpClient::handshake()
 {
     QByteArray data;
     data.append('\x1B');
+
+    writing(data);
 }
 
 void udpClient::processTheDatagram(const QNetworkDatagram &gram)

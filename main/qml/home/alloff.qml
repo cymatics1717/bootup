@@ -30,7 +30,7 @@ Rectangle {
             width: rect.width/6
             height: rect.height/10
             onClicked: {
-                console.log(text)
+                uclient.handshake()
             }
         }
     }

@@ -5,8 +5,9 @@
 TEMPLATE = app
 TARGET = bootup
 
-QT += quick
+QT += quick network serialport
 CONFIG += c++11
+
 
 QMAKE_LFLAGS += -rdynamic
 

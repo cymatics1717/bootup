@@ -3,6 +3,7 @@
 #include <QTranslator>
 #include <QDebug>
 #include <QFileInfo>
+#include <QQmlContext>
 
 #include <iostream>
 #include <fstream>
@@ -10,6 +11,7 @@
 #include "json/json.h"
 #include "udpclient.hpp"
 #include "udpserver.hpp"
+#include "serialpeer.hpp"
 
 static void loadConfig(QString config_file){
     // https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html
@@ -87,6 +89,14 @@ int main(int argc, char *argv[])
     qInfo() <<"ddddddddddd";
     qWarning() <<"ddddddddddd";
     qCritical() <<"ddddddddddd";
+
+
+    udpServer server;
+    udpClient client;
+//    serialPeer serial;
+    engine.rootContext()->setContextProperty("userver",&server);
+    engine.rootContext()->setContextProperty("uclient",&client);
+//    engine.rootContext()->setContextProperty("com",&serial);
 
     return app.exec();
 }
