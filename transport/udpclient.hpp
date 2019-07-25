@@ -4,6 +4,7 @@
 #include <QNetworkDatagram>
 #include <QObject>
 #include <QUdpSocket>
+#include "common.hpp"
 
 class udpClient : public QObject
 {
@@ -19,7 +20,6 @@ public slots:
     void onError();
 
     void writing(QByteArray dat);
-    void handshake();
 
     void getSysinfo();
 

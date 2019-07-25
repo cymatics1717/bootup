@@ -3,10 +3,6 @@
 #include <QDateTime>
 
 
-static QString currentTime(){
-    return QDateTime::currentDateTime().toString("yyyy.MM.dd-hh:mm:ss.zzz");
-}
-
 udpClient::udpClient(QString ip, quint16 port , QObject *parent) :
     QObject(parent),udp(new QUdpSocket(this)),saddr(ip),sport(port)
 {
@@ -49,14 +45,9 @@ void udpClient::onError()
 void udpClient::writing(QByteArray dat)
 {
 //    QNetworkDatagram gram(dat,QH);
+    udp->write(dat);
+    qDebug() << __FUNCTION__ ;
 
-}
-
-void udpClient::handshake()
-{
-    QByteArray data;
-    data.append('\x1B');
-    writing(data);
 }
 
 void udpClient::getSysinfo()

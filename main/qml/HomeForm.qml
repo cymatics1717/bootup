@@ -251,6 +251,8 @@ Page {
                 popup.width = page.width/2
                 popup.height = page.height/2
                 popup.open()
+
+                backend.hwHandShake();
             }
         }
         ToolSeparator {

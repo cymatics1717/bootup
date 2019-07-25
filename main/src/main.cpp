@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
 //    QString root =  app.applicationFilePath();
     QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";
-    qDebug() <<"root path: "<< root;
+//    qDebug() <<"root path: "<< root;
 
     backEnd backend(root+"conf/test.json");
     if(backend.loadConfig()!=0)

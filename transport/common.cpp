@@ -59,9 +59,6 @@ quint32 mmmcrc32(const QByteArray &data)
     return (crc32 ^ 0xffffffffL);
 }
 
-QByteArray hardwareHandShake(){
-    QByteArray data;
-    data.append('\x1B');
-    return data;
+QString currentTime(){
+    return QDateTime::currentDateTime().toString("yyyy.MM.dd-hh:mm:ss.zzz");
 }
-

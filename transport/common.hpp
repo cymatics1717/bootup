@@ -2,6 +2,7 @@
 #define COMMON_HPP
 
 #include <QByteArray>
+#include <QDateTime>
 
 quint32 mmmcrc32(const QByteArray &data);
 
@@ -17,8 +18,6 @@ quint32 mmmcrc32(const QByteArray &data);
 #define TATAI_IP "127.0.0.1"
 #define TATAI_PORT "1021"
 //////////////////////////////////////
-
-#define MID_HARD ''
 
 /*
 1) 故障信息主动上报报文信息标识为 0x00,
@@ -120,8 +119,6 @@ quint32 mmmcrc32(const QByteArray &data);
 //5.3.31 陀螺信号源选择报文
 #define MID_REQUEST_GYRO_SINGAL '\x1D'
 
-
-QByteArray hardwareHandShake();
-
+QString currentTime();
 
 #endif // COMMON_HPP

@@ -2,9 +2,6 @@
 #include <QDebug>
 #include <QDateTime>
 
-static QString currentTime(){
-    return QDateTime::currentDateTime().toString("yyyy.MM.dd-hh:mm:ss.zzz");
-}
 
 serialOther::serialOther(QString name, int interval, QObject *parent) : QObject(parent)
   ,serial(new QSerialPort(name,this))
