@@ -30,7 +30,8 @@ Rectangle {
             width: rect.width/6
             height: rect.height/10
             onClicked: {
-                uclient.handshake()
+                console.log(text)
+                backend.testQML(text)
             }
         }
     }

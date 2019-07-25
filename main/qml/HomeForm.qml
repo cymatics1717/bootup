@@ -21,7 +21,6 @@ Page {
         }
         onClosed: page.opacity = 1
         contentItem: Loader {
-             anchors.fill: popup
              id: content
         }
     }

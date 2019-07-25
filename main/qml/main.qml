@@ -9,7 +9,7 @@ ApplicationWindow {
     visible: true
     width: Screen.width*ratio
     height: Screen.height*ratio
-
+    opacity: 0.3
     title: qsTr("Stack")
     background: Rectangle {
         gradient: Gradient {

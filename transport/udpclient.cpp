@@ -23,7 +23,7 @@ udpClient::udpClient(QString ip, quint16 port , QObject *parent) :
 
 udpClient::~udpClient()
 {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
 }
 
 void udpClient::timerEvent(QTimerEvent *event)
@@ -48,6 +48,7 @@ void udpClient::onError()
 
 void udpClient::writing(QByteArray dat)
 {
+//    QNetworkDatagram gram(dat,QH);
 
 }
 
@@ -55,7 +56,13 @@ void udpClient::handshake()
 {
     QByteArray data;
     data.append('\x1B');
+    writing(data);
+}
 
+void udpClient::getSysinfo()
+{
+    QByteArray data;
+    data.append('\x1B');
     writing(data);
 }
 

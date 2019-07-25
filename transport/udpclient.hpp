@@ -21,6 +21,9 @@ public slots:
     void writing(QByteArray dat);
     void handshake();
 
+    void getSysinfo();
+
+
 private:
     void processTheDatagram(const QNetworkDatagram &gram);
     QUdpSocket *udp;
