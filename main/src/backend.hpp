@@ -1,9 +1,9 @@
 #ifndef BACKEND_HPP
 #define BACKEND_HPP
 
-#include <QObject>
-//#include "udpclient.hpp"
-#include "udpserver.hpp"
+#include <QUdpSocket>
+#include <QNetworkDatagram>
+
 #include "serialpeer.hpp"
 
 #include <iostream>
@@ -36,11 +36,8 @@ private:
     QString configfile;
     Json::Value root;
 
-    udpServer *localServer;
-    QUdpSocket uwriter;
-
+    QUdpSocket udp;
     QHash<QString,QPair<QString,quint16>> endpoints;
-
 };
 
 #endif // BACKEND_HPP

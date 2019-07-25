@@ -3,7 +3,7 @@
 #include <QFileInfo>
 
 backEnd::backEnd(QString config_file, QObject *parent) : QObject(parent)
-  ,configfile(config_file),localServer(nullptr)
+  ,configfile(config_file)
 {
     endpoints.insert("local",qMakePair<QString,quint16>("129.168.1.5",1025));
     endpoints.insert("xiahua",qMakePair<QString,quint16>("129.168.1.6",1026));
@@ -36,7 +36,6 @@ int backEnd::loadConfig()
 
     {
         Json::Value item = root["endpoints"]["touchpad"];
-        localServer = new udpServer(QString::fromStdString(item["ip"].asString()),quint16(item["port"].asInt()),this);
         endpoints.insert("local",qMakePair(QString::fromStdString(item["ip"].asString()) ,item["port"].asInt()));
     }
     {
@@ -51,6 +50,29 @@ int backEnd::loadConfig()
         Json::Value item = root["endpoints"]["tatai"];
         endpoints.insert("tatai",qMakePair(QString::fromStdString(item["ip"].asString()) ,item["port"].asInt()));
     }
+
+    // init server.
+
+    qDebug()<<"bind status:"<<udp.bind(QHostAddress(endpoints.value("local").first),
+                                           endpoints.value("local").second/*,QAbstractSocket::ReuseAddressHint*/);
+    connect(&udp,&QUdpSocket::hostFound,[](){qDebug() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::connected,[](){qDebug() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::disconnected,[](){qDebug() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::readyRead, [=](){
+        qDebug() << __FUNCTION__;
+        while(udp.hasPendingDatagrams()){
+            QNetworkDatagram gram = udp.receiveDatagram();
+            QByteArray dat = gram.data();
+            QString id = QString("[%1:%2->%3:%4 %5]")
+                    .arg(gram.senderAddress().toString())
+                    .arg(gram.senderPort())
+                    .arg(gram.destinationAddress().toString())
+                    .arg(gram.destinationPort())
+                    .arg(gram.data().size(),4,10);
+            qDebug() <<"server recv: " << id << dat;
+        }
+    }
+    );
 
     return 0;
 }
@@ -104,7 +126,7 @@ void backEnd::writeToXiaHua(const QByteArray &data)
     gram.setDestination(QHostAddress(endpoints.value("xiahua").first),endpoints.value("xiahua").second);
 
     gram.setData(data);
-    uwriter.writeDatagram(gram);
+    udp.writeDatagram(gram);
 }
 
 void backEnd::writeToHengYao(const QByteArray &data)
@@ -114,7 +136,7 @@ void backEnd::writeToHengYao(const QByteArray &data)
     gram.setDestination(QHostAddress(endpoints.value("hengyao").first),endpoints.value("hengyao").second);
 
     gram.setData(data);
-    uwriter.writeDatagram(gram);
+    udp.writeDatagram(gram);
 }
 
 void backEnd::writeToTaTai(const QByteArray &data)
@@ -124,6 +146,6 @@ void backEnd::writeToTaTai(const QByteArray &data)
     gram.setDestination(QHostAddress(endpoints.value("tatai").first),endpoints.value("tatai").second);
 
     gram.setData(data);
-    uwriter.writeDatagram(gram);
+    udp.writeDatagram(gram);
 }
 
