@@ -1,9 +1,9 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 Rectangle {
     focus: true
-// public
+    // public
     property string text: 'text'
 
     signal clicked();
@@ -13,8 +13,15 @@ Rectangle {
     radius:       0.05  * height
     opacity:      enabled? 1: 0.3
 
+    color: "#111111"
+    gradient: Gradient {
+        orientation: Gradient.Horizontal
+        GradientStop { position: 0.73; color: "#FF032154" }
+        GradientStop { position: 0.0; color: "#FF2F3A60" }
+    }
     Text {
         text: parent.text
+        color: "white"
         font.pixelSize: 0.25 * parent.height
         anchors.centerIn: parent
     }
@@ -29,7 +36,19 @@ Rectangle {
         onCanceled: parent.opacity = 1
         onClicked:{
             parent.clicked()
+            rect.state === "on" ? rect.state = "off":rect.state = "off"
         }
     }
+    states: [
+        State {
+            name: "on"
+        },
+        State {
+            name: "off"
+        },
+        State {
+            name: "active"
+        }
+    ]
 
 }

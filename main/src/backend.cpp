@@ -59,7 +59,6 @@ int backEnd::loadConfig()
     connect(&udp,&QUdpSocket::connected,[](){qDebug() << __FUNCTION__;});
     connect(&udp,&QUdpSocket::disconnected,[](){qDebug() << __FUNCTION__;});
     connect(&udp,&QUdpSocket::readyRead, [=](){
-        qDebug() << __FUNCTION__;
         while(udp.hasPendingDatagrams()){
             QNetworkDatagram gram = udp.receiveDatagram();
             QByteArray dat = gram.data();
