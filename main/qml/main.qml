@@ -12,9 +12,10 @@ ApplicationWindow {
     opacity: 1
     title: qsTr("Stack")
     background: Rectangle {
+//        color:"#FF202123"
         gradient: Gradient {
-            GradientStop { position: 0; color: "black" }
-            GradientStop { position: 1; color: "#aaaaaa" }
+            GradientStop { position: 0; color: "#1e315b" }
+            GradientStop { position: 1; color: "#1e335c" }
         }
     }
 
@@ -23,15 +24,15 @@ ApplicationWindow {
         color: "#565656"
         height: root.width/36
         Behavior on color {
-            ColorAnimation { duration: 1000 }
+            ColorAnimation { duration: 100 }
         }
 
         Text {
             id:title
             color: "white"
             text: qsTr("灯光助降系统")
-            anchors{
-                left: parent.left
+            anchors {
+                centerIn: parent
                 verticalCenter: parent.verticalCenter
                 margins: 10
             }
@@ -40,63 +41,36 @@ ApplicationWindow {
             id:timestamp
             color: "white"
             font.pixelSize: 20
-            anchors.right: date_.left
-            text: qsTr("ddd")
-            anchors.verticalCenter: parent.verticalCenter
+            text: qsTr("初始化...")
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+                margins: 5
+            }
         }
-        Label {
-            id:date_
-            color: "white"
-            anchors.right: parent.right
-//            width: groupBox1.width * .7
-//            height: groupBox1.height * .1
-//            text: qsTr("f")
-            anchors.verticalCenter: parent.verticalCenter
+        Image {
+            id:dateI
+            source: "qrc:/res/date-icon.png"
+            anchors {
+                right: timestamp.left
+                verticalCenter: parent.verticalCenter
+                margins: 5
+            }
         }
     }
 
     StackView {
         id: stackView
-        initialItem: "HomeForm.qml"
+        initialItem: "normalmode.qml"
         anchors.fill: parent
     }
 
     Timer {
         interval: 1000; running: true; repeat: true
         onTriggered: {
-            var tmp = new Date().toLocaleString(Qt.locale(),"dddd yyyy-MM-dd hh:mm:ss.z")
+            var tmp = new Date().toLocaleString(Qt.locale(),"yyyy/MM/dd hh:mm:ss")
             timestamp.text = tmp
             headerbar.color = Qt.rgba(Math.random(),Math.random(),Math.random(),1);
-        }
-    }
-
-
-    InputPanel {
-        id: inputPanel
-        z: 99
-        x: 0
-        y: root.height
-        width: root.width
-
-        states: State {
-            name: "visible"
-            when: inputPanel.active
-            PropertyChanges {
-                target: inputPanel
-                y: root.height - inputPanel.height
-            }
-        }
-        transitions: Transition {
-            from: ""
-            to: "visible"
-            reversible: true
-            ParallelAnimation {
-                NumberAnimation {
-                    properties: "y"
-                    duration: 250
-                    easing.type: Easing.InOutQuad
-                }
-            }
         }
     }
 

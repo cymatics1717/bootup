@@ -6,7 +6,7 @@ Rectangle {
     border.color: "#eeeeee"
     border.width: 0
     radius: 3
-    color: "grey"
+    color: "transparent"
     property real rate: 1./2.1
 
     BooleanControl{

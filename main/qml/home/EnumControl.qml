@@ -8,10 +8,20 @@ Rectangle {
     property alias value: info.text
     property int rradius: 20
     property int margin: 20
-    anchors.margins: 3
-    anchors.rightMargin: 6
+    border.color: "grey"
+    border.width: 0.02 * height
+
+//    anchors.margins: 3
+//    anchors.rightMargin: 6
+    gradient: Gradient {
+        GradientStop { position: 1; color: "#1e315b" }
+        GradientStop { position: 0; color: "#22335c" }
+    }
+
     Text {
         id:title
+        anchors.leftMargin: 5
+        color: "white"
         anchors{
             left: parent.left
 //            leftMargin: margin
@@ -39,6 +49,8 @@ Rectangle {
         Text {
             text: qsTr("不闪")
             x: parent.radius/4
+            anchors.leftMargin: 5
+            color: "white"
             anchors{
                 top: parent.bottom
             }
@@ -58,6 +70,8 @@ Rectangle {
         }
         Text {
             text: qsTr("全闪")
+            anchors.leftMargin: 5
+            color: "white"
             x: parent.radius/4
             anchors.top: parent.bottom
         }
@@ -75,6 +89,8 @@ Rectangle {
         }
         Text {
             text: qsTr("单闪")
+            anchors.leftMargin: 5
+            color: "white"
             x: parent.radius/4
             anchors.top: parent.bottom
         }

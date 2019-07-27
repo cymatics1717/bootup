@@ -6,7 +6,7 @@ Rectangle {
     border.color: "#eeeeee"
     border.width: 0
     radius: 3
-    color: "grey"
+    color: "transparent"
     anchors.margins: 0
     property real rate: 1./8
     BooleanControl{
@@ -17,7 +17,6 @@ Rectangle {
             left: parent.left
         }
         title:qsTr("开关")
-        value:qsTr("当前状态：关闭")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
     }
@@ -29,7 +28,6 @@ Rectangle {
             left: parent.left
         }
         title:qsTr("光源控制")
-        value:qsTr("当前状态：关闭")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
     }
@@ -90,7 +88,6 @@ Rectangle {
             left: rect.left
         }
         title:qsTr("除冰控制")
-        value:qsTr("当前状态：关闭")
         height: rect.height*rect.rate
         width: rect.width - 2*rect.radius
     }

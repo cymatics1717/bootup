@@ -4,8 +4,19 @@ import QtQuick.Controls 2.5
 Rectangle {
     id:rect
     anchors.fill: parent
+
+//    color: "transparent"
+    gradient: Gradient {
+        GradientStop { position: 1; color: "#1e315b" }
+        GradientStop { position: 0; color: "#22335c" }
+    }
+
     Text {
         id: txt
+        font {
+            pointSize: 26
+        }
+        color: "white"
         anchors {
             centerIn: parent
             margins: 20

@@ -6,8 +6,8 @@ Rectangle {
     border.color: "#eeeeee"
     border.width: 0
     radius: 3
-    color: "grey"
-    property real rate: 1./2.1
+    color: "transparent"
+    property real rate: 1./2
 
     BooleanControl{
         id: lightswitch
@@ -17,7 +17,6 @@ Rectangle {
             left: parent.left
         }
         title:qsTr("开关")
-        value:qsTr("当前状态：关闭")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
     }
