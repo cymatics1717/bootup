@@ -261,9 +261,9 @@ Page {
     }
 
 
-    footer: ToolBar {
+    footer: Rectangle {
         id:bar
-        contentHeight: page.height*.08
+        height: page.height*.08
         TButton {
             id:left
             text: qsTr("‹")
@@ -283,17 +283,7 @@ Page {
                 backend.hwHandShake();
             }
         }
-        ToolSeparator {
-            orientation: Qt.Vertical
-            anchors.left: left.right
-            height: bar.height
-        }
 
-        ToolSeparator {
-            orientation: Qt.Vertical
-            anchors.right: right.left
-            height: bar.height
-        }
         TButton {
             id: right
             objectName: "to"
@@ -313,9 +303,6 @@ Page {
 
             }
         }
-        background: Rectangle {
-            color: "#565656"
-        }
 
         ScrollView {
             id:panel
@@ -334,6 +321,7 @@ Page {
             clip: true
             anchors {
                 bottom: parent.bottom
+                left: left.right
                 horizontalCenter: parent.horizontalCenter
 //                verticalCenter:  parent.verticalCenter
             }
@@ -345,7 +333,7 @@ Page {
                 color: "red"
                 font {
                     bold: true
-                    pointSize: 20
+                    pointSize: 15
                 }
                 height: parent.height
                 anchors.fill: parent

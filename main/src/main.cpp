@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QString QT_MESSAGE_PATTERN ="[%{threadid}-%{time yyyyMMdd.hhmmss.zzz}-"
+    QString QT_MESSAGE_PATTERN ="[%{threadid}-%{time yyyyMMdd hh:mm:ss.zzz}-"
                                 "%{if-debug}D%{endif}"
                                 "%{if-info}I%{endif}"
                                 "%{if-warning}W%{endif}"
