@@ -19,11 +19,20 @@ backEnd::backEnd(QString config_file, QObject *parent) : QObject(parent)
     endpoints.insert("xiahua",qMakePair<QString,quint16>("129.168.1.6",1026));
     endpoints.insert("hengyao",qMakePair<QString,quint16>("129.168.1.7",1027));
     endpoints.insert("tatai",qMakePair<QString,quint16>("129.168.1.1",1021));
+
+    tataireportTimerID = startTimer(1000);
 }
 
 QString backEnd::getConfigfile() const
 {
     return configfile;
+}
+
+void backEnd::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == tataireportTimerID){
+        sysinfoUpload();
+    }
 }
 
 int backEnd::loadConfig()
@@ -132,6 +141,16 @@ void backEnd::hwHandShake()
 void backEnd::closeAll()
 {
 
+}
+
+void backEnd::sysinfoUpload()
+{
+    QByteArray data;
+    data.append(MID_REQUEST_HARDWARE);
+//    data.append(currentTime().toUtf8());
+//    data.append('\n');
+
+    send2TaTai_(data);
 }
 
 void backEnd::send2XiaHua(const QByteArray &data)

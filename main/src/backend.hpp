@@ -17,6 +17,10 @@ public:
     explicit backEnd(QString config_file, QObject *parent = nullptr);
 
     QString getConfigfile() const;
+
+protected:
+    void timerEvent(QTimerEvent *event) override;
+
 signals:
 
 public slots:
@@ -31,6 +35,8 @@ public slots:
 
     void closeAll();
 
+    void sysinfoUpload();
+
 private:
     void send2XiaHua(const QByteArray &data);
     void send2HengYa(const QByteArray &data);
@@ -40,6 +46,9 @@ private:
 
     QUdpSocket udp;
     QHash<QString,QPair<QString,quint16>> endpoints;
+
+    int tataireportTimerID;
+
 };
 
 #endif // BACKEND_HPP
