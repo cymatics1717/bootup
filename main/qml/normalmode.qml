@@ -1,6 +1,9 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtQuick.Extras 1.4
+import QtQuick.Controls.Styles 1.4
 
+import "home"
 Page {
     id:page
     title: qsTr("普通模式")
@@ -9,26 +12,22 @@ Page {
     property color leftcolor: "#101220"
     property color rightcolor: "#0f1531"
     property color midcolor: "#020710"
+    property real ratio: .5
+    property real testv:0.3
 
     Popup {
         id: popup
         modal: true
 //        dim: true
-        focus: true
+//        focus: true
         property alias content: content
         background:Rectangle{
             color: "transparent"
         }
-
         padding: 0
-//        onOpened: {
-//            page.opacity = 0.1
-//        }
-//        onClosed: {
-//            page.opacity = 1
-//        }
         contentItem: Loader {
              id: content
+             anchors.fill: parent
         }
     }
 
@@ -54,7 +53,7 @@ Page {
                 objectName: "xiahua"
                 lightStatus:2
 //                lightColor: "grey"
-                width: groupBox1.width * .7
+                width: groupBox1.width * ratio
                 height: groupBox1.height * .1
                 text: qsTr("下滑指示器")
                 onClicked: {
@@ -71,7 +70,7 @@ Page {
                 id:hengyao
                 objectName: "hengyao"
                 lightStatus:2
-                width: groupBox1.width * .7
+                width: groupBox1.width * ratio
                 height: groupBox1.height * .1
                 text: qsTr("横摇指示器")
                 onClicked: {
@@ -89,7 +88,7 @@ Page {
                 id:jiaban
                 objectName: "jiaban"
                 lightStatus:2
-                width: groupBox2.width * .7
+                width: groupBox2.width * ratio
                 height: groupBox2.height * .1
                 text: qsTr("甲板平面泛光灯1组")
                 onClicked: {
@@ -107,7 +106,7 @@ Page {
                 id:qijiang
                 objectName: "qijiang"
                 lightStatus:2
-                width: groupBox1.width * .7
+                width: groupBox1.width * ratio
                 height: groupBox1.height * .1
                 text: qsTr("起降信号灯")
                 onClicked: {
@@ -171,7 +170,77 @@ Page {
             fillMode: Image.PreserveAspectFit
             source: "qrc:/res/boat.png"
         }
+
+        CircularGauge {
+            id: fuelGauge1
+            value: page.testv
+            maximumValue: 1
+            x:parent.width/2 - width*1.5
+//            y: parent.height / 2 - height
+            width: parent.width/4
+            height: parent.height * 0.3
+
+            style: IconGaugeStyle {
+                id: fuelGaugeStyle1
+
+//                icon: "qrc:/images/fuel-icon.png"
+                minWarningColor: Qt.rgba(0.5, 0, 0, 1)
+
+                tickmarkLabel: Text {
+                    color: "white"
+                    visible: styleData.value === 0 || styleData.value === 1
+                    font.pixelSize: fuelGaugeStyle1.toPixels(0.225)
+                    text: styleData.value === 0 ? "-10" : (styleData.value === 1 ? "10" : "")
+                }
+            }
+        }
+
+        CircularGauge {
+            id: fuelGauge2
+            value: page.testv
+            maximumValue: 1
+            x:parent.width/2 + width/2
+//            y: parent.height / 2 - height
+            width: parent.width/4
+            height: parent.height * 0.3
+
+            style: IconGaugeStyle {
+                id: fuelGaugeStyle2
+
+//                icon: "qrc:/images/fuel-icon.png"
+                minWarningColor: Qt.rgba(0.5, 0, 0, 1)
+
+                tickmarkLabel: Text {
+                    color: "white"
+                    visible: styleData.value === 0 || styleData.value === 1
+                    font.pixelSize: fuelGaugeStyle2.toPixels(0.225)
+                    text: styleData.value === 0 ? "-10" : (styleData.value === 1 ? "10" : "")
+                }
+            }
+        }
+        Text {
+            text:qsTr("横摇表盘")
+            color: "white"
+            y:fuelGauge1.y+ fuelGauge1.height/2
+            anchors {
+//                top: fuelGauge1.bottom
+                horizontalCenter: fuelGauge1.horizontalCenter
+//                verticalCenter:  fuelGauge1.verticalCenter
+            }
+        }
+        Text {
+            text:qsTr("纵摇表盘")
+            color: "white"
+            y:fuelGauge2.y+ fuelGauge2.height/2
+            anchors {
+//                top: fuelGauge2.bottom
+                horizontalCenter: fuelGauge2.horizontalCenter
+//                verticalCenter:  fuelGauge2.verticalCenter
+            }
+        }
     }
+
+
 
     Rectangle {
         id: groupBox2
@@ -192,7 +261,7 @@ Page {
                 id:weigan
                 objectName: "weigan"
                 lightStatus:1
-                width: groupBox2.width * .7
+                width: groupBox2.width * ratio
                 height: groupBox2.height * .1
                 text: qsTr("桅杆障碍灯")
                 onClicked: {
@@ -209,7 +278,7 @@ Page {
                 id:tatai
                 objectName: "tatai"
                 lightStatus:1
-                width: groupBox2.width * .7
+                width: groupBox2.width * ratio
                 height: groupBox2.height * .1
                 text: qsTr("塔台障碍灯")
                 onClicked: {
@@ -226,7 +295,7 @@ Page {
                 id:jiku
                 objectName: "jiku"
                 lightStatus:1
-                width: groupBox2.width * .7
+                width: groupBox2.width * ratio
                 height: groupBox2.height * .1
                 text: qsTr("机库障碍灯")
                 onClicked: {
@@ -244,7 +313,7 @@ Page {
                 id:fengxiang
                 objectName: "fengxiang"
                 lightStatus:1
-                width: groupBox2.width * .7
+                width: groupBox2.width * ratio
                 height: groupBox2.height * .1
                 text: qsTr("风向指示袋")
                 onClicked: {
@@ -266,41 +335,47 @@ Page {
         height: page.height*.08
         TButton {
             id:left
-            text: qsTr("‹")
-            color: "#565656"
+            text: qsTr("菜单")
             radius: 0
             border.width: 0
             anchors.left: parent.left
             width: bar.width/10
             height: bar.height
-            anchors.margins: 0
             onClicked: {
-//                content.source = "qrc:/qml/home/leftbottom.qml"
-//                popup.width = page.width/2
-//                popup.height = page.height/2
-//                popup.open()
-
-                backend.hwHandShake();
+//                menu.source = "qrc:/qml/home/startmenu.qml"
+                startm.width = left.width*1.2
+                startm.height = bar.height*8
+                startm.y = -startm.height
+                startm.open()
             }
+
+            StartMenu {
+                id:startm
+            }
+
+
+//            Popup {
+//                id: startm
+//                modal: true
+//                dim: true
+//                property alias content: menu
+//                contentItem: Loader {
+//                     id: menu
+//                     anchors.fill: parent
+//                }
+//            }
         }
 
         TButton {
             id: right
-            objectName: "to"
             text: qsTr("⋮")
-            radius: 0
             border.width: 0
-            color: "#565656"
             anchors.right: parent.right
             width: bar.width/10
             height: bar.height
             onClicked:{
-                console.log("---------------")
-                panel.text += new Date().toLocaleString(Qt.locale(),"yyyy/MM/dd hh:mm:ss.z") + "\n"
-                panel.text += new Date().toLocaleString(Qt.locale(),"yyyy/MM/dd hh:mm:ss.z")
                 panel.text += new Date().toLocaleString(Qt.locale(),"yyyy/MM/dd hh:mm:ss.z") + "\n"
                 content.source = "Page1Form.qml"
-
             }
         }
 
@@ -351,7 +426,7 @@ Page {
             }
             contentItem: Rectangle {
                 anchors.fill: parent
-                gradient: left.rgradient
+                gradient: left.lgradient
                 Text {
                     id:innertxt
                     text:qsTr('\u2B06')

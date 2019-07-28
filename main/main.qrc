@@ -24,5 +24,9 @@
         <file>res/boat.png</file>
         <file>res/date-icon.png</file>
         <file>res/green-light.png</file>
+        <file>qml/home/StartMenu.qml</file>
+        <file>qml/SButton.qml</file>
+        <file>qml/IconGaugeStyle.qml</file>
+        <file>qml/DashboardGaugeStyle.qml</file>
     </qresource>
 </RCC>

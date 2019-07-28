@@ -37,49 +37,19 @@ Rectangle {
         font.pixelSize: 0.25 * parent.height
         anchors.centerIn: parent
     }
-    Rectangle {
-        id: llight
-        color: lightColor
-        width: parent.width*.04
-        height: parent.height*.4
-        radius: width/2
-        visible: lightStatus==1?true:false
-        anchors {
-            left: parent.left
-            verticalCenter: parent.verticalCenter
-            margins: parent.width*.1
-        }
-    }
-    Rectangle {
-        id: rlight
-        color: lightColor
-        width: parent.width*.04
-        height: parent.height*.4
-        radius: width/2
-        visible: lightStatus==2?true:false
-        anchors {
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-            margins: parent.width*.1
-        }
-    }
 
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
         onEntered:  {
             parent.opacity = .3
-            llight.rotation = 90
-            rlight.rotation = 90
         }
         onExited:   {
             parent.opacity = 1
             page.opacity = 1
-            llight.rotation = 0
-            rlight.rotation = 0
         }
-//        onPressed:  fenter()
-//        onReleased: fleave()
+        onPressed:  fenter()
+        onReleased: fleave()
 //        onCanceled: fleave()
         onClicked:{
             console.log(parent.objectName + " clicked.")
@@ -87,22 +57,11 @@ Rectangle {
         }
     }
 
-    Connections {
-        target: popup
-        ignoreUnknownSignals: true
-        onOpened: fenter()
-        onClosed: fleave()
-    }
-
     function fenter(){
-//        console.log(typeof(JSON.stringify(popup.content.source)))
-//        page.opacity = 0.1
         if(objectName && objectName.length>0){
 //            console.log(popup.content.item+"++++++++++++"+objectName+"++"+popup.content.source)
             if(JSON.stringify(popup.content.source).includes(objectName) ){
                 opacity = 1
-                llight.rotation = 90
-                rlight.rotation = 90
             } else {
                 opacity = .1
             }
@@ -113,21 +72,6 @@ Rectangle {
 //            console.log(popup.content.item.objectName+"---------------------"+objectName+"--"+popup.content.source)
             opacity = 1
             page.opacity = 1
-            llight.rotation = 0
-            rlight.rotation = 0
         }
     }
-
-    states: [
-        State {
-            name: "on"
-        },
-        State {
-            name: "off"
-        },
-        State {
-            name: "active"
-        }
-    ]
-
 }
