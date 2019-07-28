@@ -71,6 +71,7 @@ ApplicationWindow {
             var tmp = new Date().toLocaleString(Qt.locale(),"yyyy/MM/dd hh:mm:ss")
             timestamp.text = tmp
             headerbar.color = Qt.rgba(Math.random(),Math.random(),Math.random(),1);
+            backend.hwHandShake()
         }
     }
 

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     backEnd backend(root+"conf/test.json");
     if(backend.loadConfig()!=0)
     {
-        app.quit();
+        QGuiApplication::quit();
         qDebug() <<"no such file, or invalid json file format? -->" << backend.getConfigfile();
         return -1;
     }
@@ -68,5 +68,5 @@ int main(int argc, char *argv[])
 //    qWarning() <<"ddddddddddd";
 //    qCritical() <<"ddddddddddd";
 
-    return app.exec();
+    return QGuiApplication::exec();
 }

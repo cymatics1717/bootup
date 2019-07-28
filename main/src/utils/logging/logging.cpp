@@ -15,8 +15,7 @@ static QString logFileName;
 void initLogFileName()
 {
     logFileName = QString(logFolderName + "/Log_%1__%2.txt")
-            .arg(QDate::currentDate().toString("yyyy_MM_dd"))
-            .arg(QTime::currentTime().toString("hh_mm_ss"));
+            .arg(QDate::currentDate().toString("yyyy_MM_dd"),QTime::currentTime().toString("hh_mm_ss"));
     //    .arg(QTime::currentTime().toString("hh_mm_ss_zzz"));
 }
 
@@ -53,9 +52,9 @@ bool initLogging()
     {
         qInstallMessageHandler(UTILS::myMessageHandler);
         return true;
-    }  else  {
+    }   
         return false;
-    }
+    
 }
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString& txt)

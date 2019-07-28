@@ -3,7 +3,7 @@
 #include <QDateTime>
 #include <QDataStream>
 
-serialPeer::serialPeer(QString name, int interval, QObject *parent) : QObject(parent)
+serialPeer::serialPeer(const QString& name, int interval, QObject *parent) : QObject(parent)
   ,serial(new QSerialPort(name,this))
 {
     qDebug() << name;
@@ -26,7 +26,7 @@ serialPeer::~serialPeer()
     qDebug() <<"";
 }
 
-void serialPeer::timerEvent(QTimerEvent *event)
+void serialPeer::timerEvent(QTimerEvent * /*event*/)
 {
     QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
 //    qDebug() <<  stamp;
@@ -42,7 +42,7 @@ void serialPeer::onReadyRead()
     qDebug() <<"recv:"<< serial->readAll() ;
 }
 
-void serialPeer::writing(QByteArray dat)
+void serialPeer::writing(const QByteArray& dat)
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);

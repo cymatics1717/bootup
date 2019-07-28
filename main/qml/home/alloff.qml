@@ -34,6 +34,7 @@ Rectangle {
             height: rect.height/10
             onClicked: {
                 console.log(text)
+                backend.closeAll()
             }
         }
         Button {

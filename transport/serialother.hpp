@@ -9,10 +9,10 @@ class serialOther : public QObject
 {
     Q_OBJECT
 public:
-    explicit serialOther(QString name="/dev/ttytest2", int interval=1000, QObject *parent = nullptr);
+    explicit serialOther(const QString& name="/dev/ttytest2", int interval=1000, QObject *parent = nullptr);
 
 protected:
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 signals:
 

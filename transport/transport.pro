@@ -22,9 +22,9 @@ CONFIG += staticlib
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += serialpeer.hpp udpclient.hpp udpserver.hpp \
+HEADERS += serialpeer.hpp udppeer.hpp \
     common.hpp \
     serialother.hpp
-SOURCES += serialpeer.cpp udpclient.cpp udpserver.cpp \
+SOURCES += serialpeer.cpp udppeer.cpp \
     common.cpp \
     serialother.cpp

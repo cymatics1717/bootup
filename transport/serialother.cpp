@@ -3,7 +3,7 @@
 #include <QDateTime>
 
 
-serialOther::serialOther(QString name, int interval, QObject *parent) : QObject(parent)
+serialOther::serialOther(const QString& name, int interval, QObject *parent) : QObject(parent)
   ,serial(new QSerialPort(name,this))
 {
     qDebug() << name;
@@ -21,9 +21,9 @@ serialOther::serialOther(QString name, int interval, QObject *parent) : QObject(
     startTimer(interval);
 }
 
-void serialOther::timerEvent(QTimerEvent *event)
+void serialOther::timerEvent(QTimerEvent * /*event*/)
 {
-    QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
+//    QString data = QString("%1--%2").arg(serial->portName(),currentTime());
 //    qDebug() <<  stamp;
 //    serial->write(data.toUtf8());
 }

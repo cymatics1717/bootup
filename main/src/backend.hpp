@@ -21,18 +21,20 @@ signals:
 
 public slots:
     int loadConfig();
-
     int saveConfig();
-
-    void testQML(QString data);
+    void onReadyRead();
+    void onError(QAbstractSocket::SocketError socketError);
+    void testQML(const QString& data);
 
 //    5.3.1     硬件握手结果查询报文
     void hwHandShake();
 
+    void closeAll();
+
 private:
-    void writeToXiaHua(const QByteArray &data);
-    void writeToHengYao(const QByteArray &data);
-    void writeToTaTai(const QByteArray &data);
+    void send2XiaHua(const QByteArray &data);
+    void send2HengYa(const QByteArray &data);
+    void send2TaTai_(const QByteArray &data);
     QString configfile;
     Json::Value root;
 

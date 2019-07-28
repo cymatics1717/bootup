@@ -9,17 +9,17 @@ class serialPeer : public QObject
 {
     Q_OBJECT
 public:
-    explicit serialPeer(QString name="/dev/ttytest1", int interval=1000, QObject *parent = nullptr);
-    ~serialPeer();
+    explicit serialPeer(const QString& name="/dev/ttytest1", int interval=1000, QObject *parent = nullptr);
+    ~serialPeer() override;
 
 protected:
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 signals:
 
 public slots:
     void onReadyRead();
-    void writing(QByteArray dat);
+    void writing(const QByteArray& dat);
     void onError(QSerialPort::SerialPortError);
 
     void setPowerOnOff(bool on);

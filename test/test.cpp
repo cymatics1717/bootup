@@ -1,8 +1,7 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
-#include "udpserver.hpp"
-#include "udpclient.hpp"
+#include "udppeer.hpp"
 #include "serialpeer.hpp"
 #include "serialother.hpp"
 
@@ -30,8 +29,9 @@ int main(int argc, char *argv[])
     p.process(app);
 
 
-    udpServer server;
-//    udpClient client;
+    udpPeer xiahua("127.0.0.1",1026);
+    udpPeer hengyao("127.0.0.1",1027);
+    udpPeer tatai("127.0.0.1",1021);
 
 
 //    int t = 1000;
@@ -49,5 +49,5 @@ int main(int argc, char *argv[])
 //    serialPeer serial("/dev/ttytest1",t);
 //    serialOther other("/dev/ttytest2",t);
 
-    return app.exec();
+    return QCoreApplication::exec();
 }

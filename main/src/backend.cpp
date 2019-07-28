@@ -1,9 +1,19 @@
 #include "backend.hpp"
 #include <QDebug>
 #include <QFileInfo>
+#include <utility>
+
+static QString makeID(const QNetworkDatagram gram){
+    return QString("[%1:%2->%3:%4 %5]")
+            .arg(gram.senderAddress().toString())
+            .arg(gram.senderPort())
+            .arg(gram.destinationAddress().toString())
+            .arg(gram.destinationPort())
+            .arg(gram.data().size(),4,10);
+}
 
 backEnd::backEnd(QString config_file, QObject *parent) : QObject(parent)
-  ,configfile(config_file)
+  ,configfile(std::move(config_file))
 {
     endpoints.insert("local",qMakePair<QString,quint16>("129.168.1.5",1025));
     endpoints.insert("xiahua",qMakePair<QString,quint16>("129.168.1.6",1026));
@@ -58,20 +68,8 @@ int backEnd::loadConfig()
     connect(&udp,&QUdpSocket::hostFound,[](){qDebug() << __FUNCTION__;});
     connect(&udp,&QUdpSocket::connected,[](){qDebug() << __FUNCTION__;});
     connect(&udp,&QUdpSocket::disconnected,[](){qDebug() << __FUNCTION__;});
-    connect(&udp,&QUdpSocket::readyRead, [=](){
-        while(udp.hasPendingDatagrams()){
-            QNetworkDatagram gram = udp.receiveDatagram();
-            QByteArray dat = gram.data();
-            QString id = QString("[%1:%2->%3:%4 %5]")
-                    .arg(gram.senderAddress().toString())
-                    .arg(gram.senderPort())
-                    .arg(gram.destinationAddress().toString())
-                    .arg(gram.destinationPort())
-                    .arg(gram.data().size(),4,10);
-            qDebug() <<"server recv: " << id << dat;
-        }
-    }
-    );
+    connect(&udp,&QUdpSocket::readyRead,this,&backEnd::onReadyRead);
+    connect(&udp, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),this, &backEnd::onError);
 
     return 0;
 }
@@ -100,7 +98,21 @@ int backEnd::saveConfig()
     return 0;
 }
 
-void backEnd::testQML(QString data)
+void backEnd::onReadyRead()
+{
+    while(udp.hasPendingDatagrams()){
+        QNetworkDatagram gram = udp.receiveDatagram();
+        QByteArray dat = gram.data();
+        qDebug() <<"recv: " << makeID(gram) << dat/*.toHex('-')*/;
+    }
+}
+
+void backEnd::onError(QAbstractSocket::SocketError socketError)
+{
+    qDebug() <<currentTime()<< "--"<<udp.errorString() << sender()<<socketError;
+}
+
+void backEnd::testQML(const QString& data)
 {
     qDebug() << data;
 }
@@ -109,16 +121,20 @@ void backEnd::hwHandShake()
 {
     QByteArray data;
     data.append(MID_REQUEST_HARDWARE);
-    data.append(currentTime().toUtf8());
-    data.append(currentTime().toUtf8());
-    data.append(currentTime().toUtf8());
-    data.append('\n');
+//    data.append(currentTime().toUtf8());
+//    data.append('\n');
 
-    writeToXiaHua(data);
-    writeToHengYao(data);
+    send2XiaHua(data);
+    send2HengYa(data);
+    send2TaTai_(data);
 }
 
-void backEnd::writeToXiaHua(const QByteArray &data)
+void backEnd::closeAll()
+{
+
+}
+
+void backEnd::send2XiaHua(const QByteArray &data)
 {
     QNetworkDatagram gram;
     gram.setSender(QHostAddress(endpoints.value("local").first),endpoints.value("local").second);
@@ -126,9 +142,10 @@ void backEnd::writeToXiaHua(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 
-void backEnd::writeToHengYao(const QByteArray &data)
+void backEnd::send2HengYa(const QByteArray &data)
 {
     QNetworkDatagram gram;
     gram.setSender(QHostAddress(endpoints.value("local").first),endpoints.value("local").second);
@@ -136,9 +153,10 @@ void backEnd::writeToHengYao(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 
-void backEnd::writeToTaTai(const QByteArray &data)
+void backEnd::send2TaTai_(const QByteArray &data)
 {
     QNetworkDatagram gram;
     gram.setSender(QHostAddress(endpoints.value("local").first),endpoints.value("local").second);
@@ -146,5 +164,6 @@ void backEnd::writeToTaTai(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 
