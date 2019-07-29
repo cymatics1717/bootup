@@ -30,6 +30,8 @@ public slots:
     void onError(QAbstractSocket::SocketError socketError);
     void testQML(const QString& data);
 
+    void TaTaiReport();
+
 //    5.3.1     硬件握手结果查询报文
     void hwHandShake();
 

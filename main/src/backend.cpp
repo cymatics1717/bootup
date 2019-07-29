@@ -31,7 +31,10 @@ QString backEnd::getConfigfile() const
 void backEnd::timerEvent(QTimerEvent *event)
 {
     if(event->timerId() == tataireportTimerID){
-        sysinfoUpload();
+//        sysinfoUpload();
+        xiaHuaReport();
+        HengYaoReport();
+        GuZhangLightReport();
     }
 }
 
@@ -124,6 +127,25 @@ void backEnd::onError(QAbstractSocket::SocketError socketError)
 void backEnd::testQML(const QString& data)
 {
     qDebug() << data;
+}
+
+void backEnd::TaTaiReport()
+{
+    //5.2.1 下滑系统状态上报报文 0x01
+    QByteArray xiahua;
+    xiahua.append(MID_REPORT_XIAHUA);
+
+    send2TaTai_(xiahua);
+    //5.2.2 横摇系统状态上报报文
+    QByteArray heng;
+    heng.append(MID_REPORT_HENGYAO);
+
+    send2TaTai_(heng);
+    //5.2.3 故障警示灯状态上报报文
+    QByteArray light;
+    light.append(MID_REPORT_WARNING_LIGHT);
+
+    send2TaTai_(light);
 }
 
 void backEnd::hwHandShake()

@@ -9,7 +9,7 @@ QT += quick network serialport
 CONFIG += c++11
 
 
-QMAKE_LFLAGS += -rdynamic
+#QMAKE_LFLAGS += -rdynamic
 
 QML_IMPORT_PATH =
 

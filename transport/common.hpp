@@ -54,7 +54,11 @@ quint32 mmmcrc32(const QByteArray &data);
 */
 
 //5.2.1 下滑系统状态上报报文 0x01
-#define MID_REPORT_LIGHT '\x01'
+#define MID_REPORT_XIAHUA '\x01'
+//5.2.2 横摇系统状态上报报文
+#define MID_REPORT_HENGYAO '\x02'
+//5.2.3 故障警示灯状态上报报文
+#define MID_REPORT_WARNING_LIGHT '\x03'
 
 //5.3.1 硬件握手结果查询报文
 #define MID_REQUEST_HARDWARE '\x1B'
