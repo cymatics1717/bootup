@@ -10,7 +10,7 @@ ApplicationWindow {
     width: Screen.width*ratio
     height: Screen.height*ratio
     opacity: 1
-    title: qsTr("Stack")
+    title: qsTr("灯光助降系统")
     background: Rectangle {
 //        color:"#FF202123"
         gradient: Gradient {

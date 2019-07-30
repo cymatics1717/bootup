@@ -32,9 +32,7 @@ void backEnd::timerEvent(QTimerEvent *event)
 {
     if(event->timerId() == tataireportTimerID){
 //        sysinfoUpload();
-        xiaHuaReport();
-        HengYaoReport();
-        GuZhangLightReport();
+        TaTaiReport();
     }
 }
 
