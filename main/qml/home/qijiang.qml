@@ -20,7 +20,7 @@ Rectangle {
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
     }
-    LightControl{
+    EnumControl {
         id: lightcontrol
         color: "white"
         anchors {

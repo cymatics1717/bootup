@@ -43,24 +43,12 @@ Rectangle {
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
     }
-    EnumControl {
-        id: lightStatus
-        color: "white"
-        anchors {
-            top: lightsetting.bottom
-            left: parent.left
-        }
-        title:qsTr("闪光状态")
-        value:qsTr("当前状态")
-        height: parent.height*(rect.rate+0.04)
-        width: parent.width - 2*parent.radius
-    }
 
     IntegerControl {
         id: pitchAngleSetting
         color: "white"
         anchors {
-            top: lightStatus.bottom
+            top: lightsetting.bottom
             left: parent.left
         }
         title:qsTr("仰角设置")
@@ -80,11 +68,24 @@ Rectangle {
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
     }
+    EnumControl {
+        id: lightStatus
+        color: "white"
+        anchors {
+            top: yawAngleSetting.bottom
+            left: parent.left
+        }
+        title:qsTr("闪光状态")
+        value:qsTr("当前状态")
+        height: parent.height*(rect.rate+0.04)
+        width: parent.width - 2*parent.radius
+    }
+
     BooleanControl{
         id: deicingControl
         color: "white"
         anchors {
-            top: yawAngleSetting.bottom
+            top: lightStatus.bottom
             left: rect.left
         }
         title:qsTr("除冰控制")

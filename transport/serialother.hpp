@@ -25,9 +25,9 @@ public slots:
     //3.1.4 系统开关状态返回报文
      void replyPowerStatus();
      //3.1.8 故障警示灯开关及光强状态返回报文
-     void replyLightPowerAndLightValue();
+     void replyLightValue();
      //3.1.10 故障警示灯故障状态返回报文
-     void replyLightErrorStatus();
+     void replyLightEStatus();
 private:
     QSerialPort *serial;
 };

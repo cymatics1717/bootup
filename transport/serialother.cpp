@@ -42,22 +42,22 @@ void serialOther::onReadyRead()
 
     if(reply.size()>0){
         if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
-            replyLightPowerAndLightValue();
+            replyLightValue();
             reply.remove(0,10);
         }
     }
 
     if(reply.size()>0){
         if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
-            replyLightErrorStatus();
+            replyLightEStatus();
             reply.remove(0,10);
         }
     }
 
 //    else if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
-//        replyLightPowerAndLightValue();
+//        replyLightValue();
 //    } else if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
-//        replyLightErrorStatus();
+//        replyLightEStatus();
 //    }
 }
 
@@ -87,7 +87,7 @@ void serialOther::replyPowerStatus()
     writing(data);
 }
 
-void serialOther::replyLightPowerAndLightValue()
+void serialOther::replyLightValue()
 {
     QByteArray data;
     data.append('\x0B');
@@ -109,7 +109,7 @@ void serialOther::replyLightPowerAndLightValue()
     writing(data);
 }
 
-void serialOther::replyLightErrorStatus()
+void serialOther::replyLightEStatus()
 {
     QByteArray data;
     data.append('\x0B');

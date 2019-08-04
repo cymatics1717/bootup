@@ -19,13 +19,13 @@ serialPeer::serialPeer(const QString& name, int interval, QObject *parent) : QOb
         qWarning() << QString("open failed %1:%2").arg(serial->error()).arg(serial->errorString());
     }
 
-//    timerID_PowerStatus = startTimer(interval);
+    timerID_PowerStatus = startTimer(interval);
 
 //    QTimer::singleShot(interval/3 , this, [=](){
 //        timerID_LightPower = startTimer(interval);
 //    });
 //    QTimer::singleShot(interval*2/3, this, [=](){
-//        timerID_LightErrorStatus = startTimer(interval);
+//        timerID_LightEStatus = startTimer(interval);
 //    });
 
 }
@@ -40,17 +40,17 @@ void serialPeer::timerEvent(QTimerEvent */*event*/)
     QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
 
     getPowerStatus();
-    getLightPowerAndLightValue();
-    getLightErrorStatus();
+    getLightValue();
+    getLightEStatus();
 //    if(event->timerId() == timerID_PowerStatus ){
 //        getPowerStatus();
 //        qInfo() <<"timerID_PowerStatus = " << timerID_PowerStatus;
 //    } else if(event->timerId() == timerID_LightPower ){
 //        qInfo() <<"timerID_LightPower = " << timerID_LightPower;
-//        getLightPowerAndLightValue();
-//    } else if(event->timerId() == timerID_LightErrorStatus ){
-//        getLightErrorStatus();
-//        qInfo() <<"timerID_LightErrorStatus = " << timerID_LightErrorStatus;
+//        getLightValue();
+//    } else if(event->timerId() == timerID_LightEStatus ){
+//        getLightEStatus();
+//        qInfo() <<"timerID_LightEStatus = " << timerID_LightEStatus;
 //    }
 }
 
@@ -67,7 +67,7 @@ void serialPeer::onReadyRead()
     }
     if(reply.size()>=11 &&reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
         if(status ==1 ){
-            onGetLightPowerAndLightValue(reply.left(11));
+            onGetLightValue(reply.left(11));
             status = 0;
             reply.remove(0,11);
         } else {
@@ -76,7 +76,7 @@ void serialPeer::onReadyRead()
         qDebug() <<"+++++++++++"<<reply.size()<< reply.toHex('-');
     }
     if(reply.size()>=11 &&reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
-        onGetLightErrorStatus(reply.left(11));
+        onGetLightEStatus(reply.left(11));
         reply.remove(0,11);
         status =0;
         qDebug() <<"+++++++++++"<<reply.size()<< reply.toHex('-');
@@ -208,7 +208,7 @@ void serialPeer::setInfraRedLight(bool on)
 }
 
 
-void serialPeer::getLightPowerAndLightValue()
+void serialPeer::getLightValue()
 {
     QByteArray data;
     data.append('\x0B');
@@ -222,7 +222,7 @@ void serialPeer::getLightPowerAndLightValue()
     writing(data);
 }
 
-void serialPeer::onGetLightPowerAndLightValue(const QByteArray& dat)
+void serialPeer::onGetLightValue(const QByteArray& dat)
 {
     bool check = checkEquality(dat);
     qDebug() << dat.toHex('-') << check;
@@ -238,7 +238,7 @@ void serialPeer::onGetLightPowerAndLightValue(const QByteArray& dat)
     }
 }
 
-void serialPeer::getLightErrorStatus()
+void serialPeer::getLightEStatus()
 {
     QByteArray data;
     data.append('\x0B');
@@ -252,7 +252,7 @@ void serialPeer::getLightErrorStatus()
     writing(data);
 }
 
-void serialPeer::onGetLightErrorStatus(const QByteArray& dat)
+void serialPeer::onGetLightEStatus(const QByteArray& dat)
 {
     bool check = checkEquality(dat);
     qDebug() << dat.toHex('-') << check;

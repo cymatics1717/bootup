@@ -1,12 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
-
+import ".."
 Rectangle {
     radius: 3
     color: "white"
     property alias title: title.text
     property alias value: info.text
-    property int rradius: 20
+    property int rradius: height/5
     property int margin: 20
     border.color: "grey"
     border.width: 0.02 * height
@@ -39,12 +39,27 @@ Rectangle {
         id:none
         color: "green"
         radius: rradius
-        width: radius*2
-        height: radius*2
+        width: radius*3
+        height: radius*3
+
         anchors{
             left: parent.left
             top: title.bottom
             leftMargin: margin
+        }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered:  {
+                parent.opacity = .3
+            }
+            onExited:   {
+                parent.opacity = 1
+            }
+            onClicked:{
+                console.log(parent.objectName + " clicked.")
+                parent.clicked()
+            }
         }
         Text {
             text: qsTr("不闪")
@@ -52,7 +67,7 @@ Rectangle {
             anchors.leftMargin: 5
             color: "white"
             anchors{
-                top: parent.bottom
+                centerIn: parent
             }
         }
     }
@@ -61,38 +76,68 @@ Rectangle {
         id:all
         color: "#ff7700"
         radius: rradius
-        width: radius*2
-        height: radius*2
+        width: radius*3
+        height: radius*3
         anchors{
             left: none.right
             top: title.bottom
             leftMargin: margin
+        }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered:  {
+                parent.opacity = .3
+            }
+            onExited:   {
+                parent.opacity = 1
+            }
+            onClicked:{
+                console.log(parent.objectName + " clicked.")
+                parent.clicked()
+            }
         }
         Text {
             text: qsTr("全闪")
             anchors.leftMargin: 5
             color: "white"
             x: parent.radius/4
-            anchors.top: parent.bottom
+            anchors.centerIn: parent
         }
+
     }
     Rectangle {
         id:single
         color: "#ff0000"
         radius: rradius
-        width: radius*2
-        height: radius*2
+        width: radius*3
+        height: radius*3
         anchors{
             left: all.right
             top: title.bottom
             leftMargin: margin
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered:  {
+                parent.opacity = .3
+            }
+            onExited:   {
+                parent.opacity = 1
+            }
+            onClicked:{
+                console.log(parent.objectName + " clicked.")
+                parent.clicked()
+            }
         }
         Text {
             text: qsTr("单闪")
             anchors.leftMargin: 5
             color: "white"
             x: parent.radius/4
-            anchors.top: parent.bottom
+            anchors.centerIn: parent
         }
     }
 }

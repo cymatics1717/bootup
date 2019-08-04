@@ -35,17 +35,17 @@ public slots:
     //3.1.6  故障警示灯(红外)开/关机、调光报文
     void setInfraRedLight(bool on);
     //3.1.7 故障警示灯开关及光强状态查询报文
-    void getLightPowerAndLightValue();
-    void onGetLightPowerAndLightValue(const QByteArray& dat);
+    void getLightValue();
+    void onGetLightValue(const QByteArray& dat);
     //3.1.9 故障警示灯故障状态查询报文
-    void getLightErrorStatus();
-    void onGetLightErrorStatus(const QByteArray& dat);
+    void getLightEStatus();
+    void onGetLightEStatus(const QByteArray& dat);
 private:
     QSerialPort *serial;
 
     int timerID_PowerStatus;
     int timerID_LightPower;
-    int timerID_LightErrorStatus;
+    int timerID_LightEStatus;
 };
 
 #endif // SERIALPEER_HPP
