@@ -104,7 +104,7 @@ quint32 mmmcrc32(const QByteArray &data);
 //5.3.21 方位角设置报文
 #define MID_REQUEST_AZIMUTH '\x09'
 //5.3.22 仰角设置报文
-#define MID_REQUEST_ELEVATION '\x0A'
+#define MID_REQUEST_PITCH '\x0A'
 //5.3.23 确认收到报文
 #define MID_ACK '\x06'
 //5.3.24 待机保护报文

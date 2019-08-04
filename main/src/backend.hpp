@@ -33,14 +33,72 @@ public slots:
 
     void TaTaiReport();
 
-//    5.3.1     硬件握手结果查询报文
+    //5.3.1 硬件握手结果查询报文
     void hwHandShake();
+    //5.3.3 初始化报文
+    void initSystem();
+    //5.3.4 初始化结果查询报文
+    void getInitSystemStatus();
+    //5.3.6 开机/关机报文
+    void setPowerOnOff(bool on);
+    //5.3.7 开机/关机结果查询报文
+    void getPowerOnOffStatus();
+    //5.3.9 工作模式设置报文
+    void setWorkMode(qint8 tag);
+    //5.3.10 检视模式参数设置报文
+    void setInspect(qint8 addr);
+
+//    5.3.11 零位旋变值及惯性单元偏移量查询报文
+//    #define MID_REQUEST_ZERO_OFFSET '\x15'
+    void getZeroOffset(qint8 addr);
+    //5.3.13 零位旋变值及惯性单元偏移量平均值报文
+//    #define MID_REQUEST_ZERO_OFFSET_AVG '\x16'
+    void getZeroOffsetAvg(qint8 addr);
+
+//    5.3.14 标零结果查询报文
+//    #define MID_REQUEST_CALIB_STATUS '\x17'
+    void getCalibStatus(qint8 addr);
+
+//    5.3.16 系统状态查询报文
+//    #define MID_REQUEST_SYSTEM_STATUS '\x07'
+    void getSystemStatus();
+
+//    5.3.20 光源控制报文
+//    #define MID_REQUEST_LIGHT_CONTROL '\x08'
+    void setLight(qint8 addr);
+
+//    //5.3.21 方位角设置报文
+//    #define MID_REQUEST_AZIMUTH '\x09'
+    void setAzimuth();
+//    //5.3.22 仰角设置报文
+//    #define MID_REQUEST_PITCH '\x0A'
+    void setPitch();
+
+//    //5.3.23 确认收到报文
+//    #define MID_ACK '\x06'
+//    //5.3.24 待机保护报文
+//    #define MID_REQUEST_STANDBY_ON '\x02'
+//    //5.3.25 取消待机保护报文
+//    #define MID_REQUEST_STANDBY_OFF '\x03'
+//    //5.3.26 进入标零报文
+//    #define MID_REQUEST_CALIB_ACTIVATE '\x19'
+//    //5.3.27 退出标零报文
+//    #define MID_REQUEST_CALIB_DEACTIVATE '\x1A'
+//    //5.3.28 限位测试报文
+//    #define MID_REPLY_LIMIT_TEST '\x01'
+//    //5.3.29 限位角度查询报文
+//    #define MID_REPLY_LIMIT_ANGLE_STATUS '\x1C'
+//    //5.3.30 限位角度报文
+//    #define MID_REQUEST_LIMIT_ANGLE '\x1C'
+//    //5.3.31 陀螺信号源选择报文
+//    #define MID_REQUEST_GYRO_SINGAL '\x1D'
 
     void closeAll();
 
     void sysinfoUpload();
 
 private:
+    void send2Contrl(const QByteArray &data);
     void send2XiaHua(const QByteArray &data);
     void send2HengYa(const QByteArray &data);
     void send2TaTai_(const QByteArray &data);
@@ -54,6 +112,7 @@ private:
 
 
     int tataireportTimerID;
+    int getSystemStatusTimerID;
 
 
 };

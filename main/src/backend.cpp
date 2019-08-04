@@ -1,6 +1,7 @@
 #include "backend.hpp"
 #include <QDebug>
 #include <QFileInfo>
+#include <QTimer>
 #include <utility>
 
 static QString makeID(const QNetworkDatagram gram){
@@ -31,8 +32,9 @@ QString backEnd::getConfigfile() const
 void backEnd::timerEvent(QTimerEvent *event)
 {
     if(event->timerId() == tataireportTimerID){
-//        sysinfoUpload();
         TaTaiReport();
+    } else if(event->timerId() == getSystemStatusTimerID){
+        getSystemStatus();
     }
 }
 
@@ -95,7 +97,8 @@ int backEnd::loadConfig()
     }
 
     controller->setPowerOnOff(true);
-//    controller->getPowerStatus();
+
+    initSystem();
 
     return 0;
 }
@@ -164,10 +167,214 @@ void backEnd::hwHandShake()
 //    data.append(currentTime().toUtf8());
 //    data.append('\n');
 
-    send2XiaHua(data);
-    send2HengYa(data);
-    send2TaTai_(data);
+    send2Contrl(data);
+
+    //    send2TaTai_(data);
 }
+
+
+void backEnd::initSystem()
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_INIT);
+    send2XiaHua(dat);
+//    方位角初始值(4字节)(扩大1000倍,小端传输,有符号数)
+    qint32 azimuth = 1000;
+//    仰角初始值(4字节)(扩大1000倍,小端传输,有符号数)
+    qint32 pitch = 2000;
+
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream.writeRawData(dat,dat.size());
+    stream << azimuth << pitch;
+
+    send2Contrl(data);
+    QTimer::singleShot(40000 , this, &backEnd::getInitSystemStatus);
+}
+
+void backEnd::getInitSystemStatus()
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_INIT_STATUS);
+    send2Contrl(dat);
+}
+
+void backEnd::setPowerOnOff(bool on)
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_POWER);
+    if(on){
+        dat.append('\x01');
+    } else {
+        dat.append('\x02');
+    }
+    send2Contrl(dat);
+    QTimer::singleShot(10000 , this, &backEnd::getPowerOnOffStatus);
+}
+
+void backEnd::getPowerOnOffStatus()
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_POWER_STATUS);
+    send2Contrl(dat);
+
+    getSystemStatusTimerID = startTimer(500);
+}
+
+void backEnd::setWorkMode(qint8 tag)
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_WORKING_MODE);
+    // 01:调试模式 10:检视模式 11:正常工作模式
+    if(tag == 3){
+        dat.append('\x03');
+    } else if(tag == 2){
+        dat.append('\x02');
+    } else if(tag == 1){
+        dat.append('\x01');
+    }
+    send2Contrl(dat);
+}
+
+void backEnd::setInspect(qint8 addr)
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_SET_INSPECT_MODE);
+
+//    下滑系统控制器 0x07
+//    横摇系统控制器 0x08
+    dat.append(addr);
+//    幅值(单位:°)
+    qint8 amp = 10;
+//    周期(大于最小周期值,单位为s)
+    qint8 period = 20;
+    dat.append(amp);
+    dat.append(period);
+    if(addr=='\x07'){
+        send2XiaHua(dat);
+    } else if(addr=='\x08'){
+        send2HengYa(dat);
+    }
+}
+
+void backEnd::getZeroOffset(qint8 addr)
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_ZERO_OFFSET);
+    if(addr=='\x07'){
+        send2XiaHua(dat);
+    } else if(addr=='\x08'){
+        send2HengYa(dat);
+    }
+}
+
+void backEnd::getZeroOffsetAvg(qint8 addr)
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_ZERO_OFFSET_AVG);
+    if(addr=='\x07'|| addr=='\x08'){
+        dat.append(addr);
+    }
+    //平均值(4字节) (惯性单元偏移量平均值扩大1000倍,小端传输,有符号数)
+
+    qint32 avg = 2000;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream.writeRawData(dat,dat.size());
+    stream  << avg;
+
+    if(addr=='\x07'){
+        send2XiaHua(data);
+    } else if(addr=='\x08'){
+        send2HengYa(data);
+    }
+}
+
+void backEnd::getCalibStatus(qint8 addr)
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_CALIB_STATUS);
+    if(addr=='\x07'){
+        send2XiaHua(dat);
+    } else if(addr=='\x08'){
+        send2HengYa(dat);
+    }
+}
+
+void backEnd::getSystemStatus()
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_SYSTEM_STATUS);
+    send2Contrl(dat);
+}
+
+void backEnd::setLight(qint8 addr)
+{
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_LIGHT_CONTROL);
+    if(addr=='\x07'){
+        //光强等级设置 光强等级0:00000000 光强等级1:0000
+        dat.append('\x22');
+        // 横摇灯杆开关设置 开:01关:10
+        if(true){
+            dat.append('\x40');
+        } else {
+            dat.append('\x80');
+        }
+        //      左固定灯黄灯开关设置 开:01关:10  左固定灯红灯开关设置 开:01关:10 右固定灯黄灯开关设置 开:01关:10  右固定灯红灯开关设置 开:01关:10
+        dat.append('\x40');
+        dat.append('\x02');
+
+        send2XiaHua(dat);
+    } else if(addr=='\x08'){
+        //光强等级设置 光强等级0:00000000 光强等级1:0000
+        dat.append('\x22');
+        //      闪光状态设置(三闪:11开:01单闪:10关:10不闪:01)   下滑光源开关设置 开:01 关:10
+        dat.append('\x42');
+
+        send2HengYa(dat);
+    }
+}
+
+void backEnd::setAzimuth()
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_AZIMUTH);
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream.writeRawData(dat,dat.size());
+    qint32 azimuth =1000;
+    stream << azimuth;
+
+    send2XiaHua(data);
+}
+
+void backEnd::setPitch()
+{
+    qDebug() <<"";
+    QByteArray dat,data;
+    dat.append(MID_REQUEST_PITCH);
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream.writeRawData(dat,dat.size());
+    qint32 pitch =1000;
+    stream << pitch;
+
+    send2XiaHua(data);
+}
+
 
 void backEnd::closeAll()
 {
@@ -182,6 +389,12 @@ void backEnd::sysinfoUpload()
 //    data.append('\n');
 
     send2TaTai_(data);
+}
+
+void backEnd::send2Contrl(const QByteArray &data)
+{
+    send2XiaHua(data);
+    send2HengYa(data);
 }
 
 void backEnd::send2XiaHua(const QByteArray &data)

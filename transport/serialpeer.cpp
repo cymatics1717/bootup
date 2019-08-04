@@ -19,7 +19,7 @@ serialPeer::serialPeer(const QString& name, int interval, QObject *parent) : QOb
         qWarning() << QString("open failed %1:%2").arg(serial->error()).arg(serial->errorString());
     }
 
-    timerID_PowerStatus = startTimer(interval);
+//    timerID_PowerStatus = startTimer(interval);
 
 //    QTimer::singleShot(interval/3 , this, [=](){
 //        timerID_LightPower = startTimer(interval);
@@ -35,7 +35,7 @@ serialPeer::~serialPeer()
     qInfo() <<"";
 }
 
-void serialPeer::timerEvent(QTimerEvent *event)
+void serialPeer::timerEvent(QTimerEvent */*event*/)
 {
     QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
 

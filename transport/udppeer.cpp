@@ -23,7 +23,6 @@ udpPeer::udpPeer(const QString& ip, quint16 port, QObject *parent) : QObject(par
     connect(udp,&QUdpSocket::connected,[](){qDebug() << __FUNCTION__;});
     connect(udp,&QUdpSocket::disconnected,[](){qDebug() << __FUNCTION__;});
     connect(udp,&QUdpSocket::readyRead,this, &udpPeer::readPendingDatagrams);
-
 }
 
 void udpPeer::timerEvent(QTimerEvent * /*event*/)
