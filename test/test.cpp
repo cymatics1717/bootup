@@ -17,6 +17,20 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("my-copy");
     QCoreApplication::setApplicationVersion("1.0");
 
+    QString QT_MESSAGE_PATTERN ="[%{threadid}-%{time yyyyMMdd hh:mm:ss.zzz}-"
+                                "%{if-debug}D%{endif}"
+                                "%{if-info}I%{endif}"
+                                "%{if-warning}W%{endif}"
+                                "%{if-critical}E%{endif}"
+                                "%{if-fatal}F%{endif}]"
+                                "%{if-warning} %{backtrace}%{endif}"
+                                "%{if-critical} %{backtrace}%{endif}"
+                                "%{if-fatal} %{backtrace}%{endif} "
+                                "%{if-debug}%{function}:%{line}%{endif}"
+                                "---%{message}";
+
+    qSetMessagePattern(QT_MESSAGE_PATTERN);
+
     QCommandLineParser p;
     p.setApplicationDescription("UDP network emulator");
     p.addHelpOption();
@@ -34,20 +48,20 @@ int main(int argc, char *argv[])
     udpPeer tatai("127.0.0.1",1021);
 
 
-//    int t = 1000;
-//    if(p.isSet("t")&&p.value("t").toInt()>0){
-//        t = p.value("t").toInt();
-//    }
-//    QString path = "/dev/ttytest1";
-//    if(p.positionalArguments().size()>0){
-//        path = p.positionalArguments().at(0);
-//        if(p.positionalArguments().size()>1){
-//            t = p.positionalArguments().at(1).toInt();
-//        }
-//    }
+    int t = 1000;
+    if(p.isSet("t")&&p.value("t").toInt()>0){
+        t = p.value("t").toInt();
+    }
+    QString path = "/dev/ttytest2";
+    if(p.positionalArguments().size()>0){
+        path = p.positionalArguments().at(0);
+        if(p.positionalArguments().size()>1){
+            t = p.positionalArguments().at(1).toInt();
+        }
+    }
 
 //    serialPeer serial("/dev/ttytest1",t);
-//    serialOther other("/dev/ttytest2",t);
+    serialOther other("/dev/ttytest2",t);
 
     return QCoreApplication::exec();
 }

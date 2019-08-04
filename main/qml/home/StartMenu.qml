@@ -9,7 +9,7 @@ Menu {
     dim:true
     property color leftColor: "#2c395f"
     property color rightColor: "#082355"
-    property color ccolor: "grey"
+    property color ccolor: "#88888888"
     property var grad: Gradient {
         orientation: Gradient.Horizontal
         GradientStop { position: 1; color: leftColor }
@@ -25,6 +25,7 @@ Menu {
         gradient: grad
     }
     font.pointSize: 15
+
 
     Menu {
         id: m1
@@ -54,7 +55,6 @@ Menu {
             onTriggered: {
                 console.log(text)
             }
-
         }
         MenuItem {
             text: qsTr("外部");

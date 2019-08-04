@@ -1,5 +1,7 @@
 #include "common.hpp"
 
+#include <QDebug>
+
 quint32 mmmcrc32(const QByteArray &data)
 {
     static const quint32 crc32Table[] =
@@ -61,4 +63,15 @@ quint32 mmmcrc32(const QByteArray &data)
 
 QString currentTime(){
     return QDateTime::currentDateTime().toString("yyyy.MM.dd-hh:mm:ss.zzz");
+}
+
+bool checkEquality(const QByteArray &dat){
+    QByteArray calc,check = dat.right(4);
+    QDataStream stream(&calc, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::BigEndian);
+    stream << mmmcrc32(dat.chopped(4));
+
+//    qDebug() <<dat.toHex('-')<< calc.toHex('-') << check.toHex('-');
+
+    return calc == check;
 }

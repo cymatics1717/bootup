@@ -240,8 +240,6 @@ Page {
         }
     }
 
-
-
     Rectangle {
         id: groupBox2
         width: parent.width * .3

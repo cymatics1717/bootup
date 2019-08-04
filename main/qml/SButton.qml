@@ -31,10 +31,15 @@ Rectangle {
 
     gradient: lightStatus%2+1==2?rgradient:lgradient
 
+    FontMetrics {
+          id: fontMetrics
+          font.family: "Arial"
+      }
+
     Text {
         text: parent.text
         color: "white"
-        font.pixelSize: 0.25 * parent.height
+        font.pixelSize: fontMetrics.font*2
         anchors.centerIn: parent
     }
 
@@ -46,7 +51,7 @@ Rectangle {
         }
         onExited:   {
             parent.opacity = 1
-            page.opacity = 1
+//            page.opacity = 1
         }
         onPressed:  fenter()
         onReleased: fleave()

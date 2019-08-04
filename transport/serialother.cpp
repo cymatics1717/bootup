@@ -1,6 +1,7 @@
 #include "serialother.hpp"
 #include <QDebug>
 #include <QDateTime>
+#include <QDataStream>
 
 
 serialOther::serialOther(const QString& name, int interval, QObject *parent) : QObject(parent)
@@ -30,7 +31,99 @@ void serialOther::timerEvent(QTimerEvent * /*event*/)
 
 void serialOther::onReadyRead()
 {
-    qDebug() <<"recv:"<< serial->readAll().toHex('-');
+    auto reply = serial->readAll();
+    qDebug() <<"recv:"<< reply.toHex('-');
+    if(reply.size()>0){
+        if(reply.at(0)=='\x0D' && reply.at(1)=='\x01'){
+            replyPowerStatus();
+            reply.remove(0,10);
+        }
+    }
+
+    if(reply.size()>0){
+        if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
+            replyLightPowerAndLightValue();
+            reply.remove(0,10);
+        }
+    }
+
+    if(reply.size()>0){
+        if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
+            replyLightErrorStatus();
+            reply.remove(0,10);
+        }
+    }
+
+//    else if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
+//        replyLightPowerAndLightValue();
+//    } else if(reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
+//        replyLightErrorStatus();
+//    }
+}
+
+void serialOther::writing(const QByteArray& dat)
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::BigEndian);
+    stream.writeRawData(dat,dat.size());
+    stream << mmmcrc32(data);
+
+    serial->write(data);
+    serial->flush();
+//    serial->waitForBytesWritten(10);
+}
+
+void serialOther::replyPowerStatus()
+{
+    QByteArray data;
+    data.append('\x0D');
+    data.append('\x01');
+    data.append('\x01');
+    //全开
+    data.append('\x07');
+
+    qDebug() << QString(40,'-') <<"sent:"<< data.toHex('-');
+    writing(data);
+}
+
+void serialOther::replyLightPowerAndLightValue()
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x03');
+    data.append('\x04');
+    //故障警示灯(红外)光强
+    qint8 v1 = 7;
+    data.append(v1);
+    //故障警示灯(红外) 开关状态
+    data.append('\x01');
+    //故障警示灯(红灯)光强
+    qint8 v2 = 7;
+    data.append(v2);
+    //故障警示灯(红灯) 开关状态
+    data.append('\x01');
+
+    qDebug() << QString(40,'-') <<"sent:"<< data.toHex('-');
+
+    writing(data);
+}
+
+void serialOther::replyLightErrorStatus()
+{
+    QByteArray data;
+    data.append('\x0B');
+    data.append('\x03');
+    data.append('\x04');
+
+    data.append('\x01');
+    data.append('\x01');
+    data.append('\x01');
+    data.append('\x01');
+
+    qDebug() << QString(40,'-') <<"sent:"<< data.toHex('-');
+
+    writing(data);
 }
 
 void serialOther::onError(QSerialPort::SerialPortError)

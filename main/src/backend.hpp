@@ -29,6 +29,7 @@ public slots:
     void onReadyRead();
     void onError(QAbstractSocket::SocketError socketError);
     void testQML(const QString& data);
+    void setDateTime(const QDateTime &dt);
 
     void TaTaiReport();
 
@@ -45,11 +46,15 @@ private:
     void send2TaTai_(const QByteArray &data);
     QString configfile;
     Json::Value root;
-
-    QUdpSocket udp;
     QHash<QString,QPair<QString,quint16>> endpoints;
 
+    QUdpSocket udp;
+    serialPeer *controller;
+    QHash<QString,QVariant> pool;
+
+
     int tataireportTimerID;
+
 
 };
 

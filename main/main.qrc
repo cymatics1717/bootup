@@ -28,5 +28,6 @@
         <file>qml/SButton.qml</file>
         <file>qml/IconGaugeStyle.qml</file>
         <file>qml/DashboardGaugeStyle.qml</file>
+        <file>qml/DateSelector.qml</file>
     </qresource>
 </RCC>

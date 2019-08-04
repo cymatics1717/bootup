@@ -20,7 +20,14 @@ public slots:
     void onReadyRead();
     void onError(QSerialPort::SerialPortError);
 
+    void writing(const QByteArray& dat);
 
+    //3.1.4 系统开关状态返回报文
+     void replyPowerStatus();
+     //3.1.8 故障警示灯开关及光强状态返回报文
+     void replyLightPowerAndLightValue();
+     //3.1.10 故障警示灯故障状态返回报文
+     void replyLightErrorStatus();
 private:
     QSerialPort *serial;
 };

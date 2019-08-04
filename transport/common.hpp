@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <QDateTime>
+#include <QDataStream>
 
 quint32 mmmcrc32(const QByteArray &data);
 
@@ -124,5 +125,6 @@ quint32 mmmcrc32(const QByteArray &data);
 #define MID_REQUEST_GYRO_SINGAL '\x1D'
 
 QString currentTime();
+bool checkEquality(const QByteArray &dat);
 
 #endif // COMMON_HPP

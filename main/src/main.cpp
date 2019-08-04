@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-//    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
                                 "%{if-warning} %{backtrace}%{endif}"
                                 "%{if-critical} %{backtrace}%{endif}"
                                 "%{if-fatal} %{backtrace}%{endif} "
+                                "%{if-info}%{function}:%{line}%{endif}"
                                 "%{if-debug}%{function}:%{line}%{endif}"
                                 "---%{message}";
 
@@ -34,13 +35,17 @@ int main(int argc, char *argv[])
 
 //    QString root =  app.applicationFilePath();
     QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";
+//    QString root =  "./";
 //    qDebug() <<"root path: "<< root;
 
-    backEnd backend(root+"conf/test.json");
+//    backEnd backend(root+"conf/test.json");
+    backEnd backend("/home/wayne/qt/bootup/conf/test.json");
+
+
     if(backend.loadConfig()!=0)
     {
         QGuiApplication::quit();
-        qDebug() <<"no such file, or invalid json file format? -->" << backend.getConfigfile();
+        qInfo() <<"no such file, or invalid json file format? -->" << backend.getConfigfile();
         return -1;
     }
     backend.saveConfig();

@@ -73,13 +73,29 @@ int backEnd::loadConfig()
 
     // init server.
 
-    qDebug()<<"bind status:"<<udp.bind(QHostAddress(endpoints.value("local").first),
+    qInfo()<<"bind status:"<<udp.bind(QHostAddress(endpoints.value("local").first),
                                            endpoints.value("local").second/*,QAbstractSocket::ReuseAddressHint*/);
-    connect(&udp,&QUdpSocket::hostFound,[](){qDebug() << __FUNCTION__;});
-    connect(&udp,&QUdpSocket::connected,[](){qDebug() << __FUNCTION__;});
-    connect(&udp,&QUdpSocket::disconnected,[](){qDebug() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::hostFound,[](){qInfo() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::connected,[](){qInfo() << __FUNCTION__;});
+    connect(&udp,&QUdpSocket::disconnected,[](){qInfo() << __FUNCTION__;});
     connect(&udp,&QUdpSocket::readyRead,this,&backEnd::onReadyRead);
     connect(&udp, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),this, &backEnd::onError);
+
+    {
+        Json::Value item = root["endpoints"]["controller"];
+        QString dev = QString::fromStdString(item["device"].asString());
+        if(dev.isEmpty()){
+            dev = "/dev/ttytest1";
+        }
+        int interval = item["interval"].asInt();
+        if(interval<1 ||interval>10000){
+            interval = 200;
+        }
+        controller = new serialPeer(dev,interval,this);
+    }
+
+    controller->setPowerOnOff(true);
+//    controller->getPowerStatus();
 
     return 0;
 }
@@ -95,7 +111,7 @@ int backEnd::saveConfig()
     builder["dropNullPlaceholders"] = false;
     builder["useSpecialFloats"] = false;
     root["id"] = "config file";
-    root["id"] = __FUNCTION__;
+//    root["id"] = __FUNCTION__;
 //    outfile << root;
 
     std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
@@ -119,12 +135,17 @@ void backEnd::onReadyRead()
 
 void backEnd::onError(QAbstractSocket::SocketError socketError)
 {
-    qDebug() <<currentTime()<< "--"<<udp.errorString() << sender()<<socketError;
+    qWarning() <<currentTime()<< "--"<<udp.errorString() << sender()<<socketError;
 }
 
 void backEnd::testQML(const QString& data)
 {
-    qDebug() << data;
+    qInfo() << data;
+}
+
+void backEnd::setDateTime(const QDateTime &dt)
+{
+    qInfo() << dt;
 }
 
 void backEnd::TaTaiReport()
@@ -134,16 +155,6 @@ void backEnd::TaTaiReport()
     xiahua.append(MID_REPORT_XIAHUA);
 
     send2TaTai_(xiahua);
-    //5.2.2 横摇系统状态上报报文
-    QByteArray heng;
-    heng.append(MID_REPORT_HENGYAO);
-
-    send2TaTai_(heng);
-    //5.2.3 故障警示灯状态上报报文
-    QByteArray light;
-    light.append(MID_REPORT_WARNING_LIGHT);
-
-    send2TaTai_(light);
 }
 
 void backEnd::hwHandShake()
@@ -181,6 +192,7 @@ void backEnd::send2XiaHua(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    udp.flush();
     qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 
@@ -192,6 +204,7 @@ void backEnd::send2HengYa(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    udp.flush();
     qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 
@@ -203,6 +216,7 @@ void backEnd::send2TaTai_(const QByteArray &data)
 
     gram.setData(data);
     udp.writeDatagram(gram);
+    udp.flush();
     qDebug() <<"send: " << makeID(gram) << data/*.toHex('-')*/;
 }
 

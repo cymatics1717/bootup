@@ -52,7 +52,7 @@ void udpPeer::processTheDatagram(const QNetworkDatagram &gram)
     qDebug() <<"server recv: " << makeID(gram) << dat;
 
     udp->writeDatagram(gram.makeReply(dat));
-
+    udp->flush();
 //    int tmp = QString(dat.trimmed()).toInt();
 //    emit incoming(tmp);
 
