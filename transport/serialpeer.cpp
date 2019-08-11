@@ -65,6 +65,7 @@ void serialPeer::onReadyRead()
         status = 1;
         qDebug() <<"+++++++++++"<<reply.size()<< reply.toHex('-');
     }
+
     if(reply.size()>=11 &&reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
         if(status ==1 ){
             onGetLightValue(reply.left(11));

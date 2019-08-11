@@ -450,12 +450,5 @@ Page {
             }
         }
     }
-    Connections {
-        target: backend
-        onShowMessage:{
-            panel.text = msg
-//            panel.text += msg+"\n"
-        }
-    }
 
 }

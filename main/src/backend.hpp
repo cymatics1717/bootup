@@ -41,7 +41,7 @@ public slots:
     //5.3.4 初始化结果查询报文
     void getInitSystemStatus();
     //5.3.6 开机/关机报文
-    void setPowerOnOff(bool on);
+    void setPowerOnOff(bool on, int tag);
     //5.3.7 开机/关机结果查询报文
     void getPowerOnOffStatus();
     //5.3.9 工作模式设置报文

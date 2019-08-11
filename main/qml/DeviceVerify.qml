@@ -7,8 +7,8 @@ Rectangle {
 
 //    color: "transparent"
     gradient: Gradient {
-        GradientStop { position: 1; color: "#1e315b" }
-        GradientStop { position: 0; color: "#22335c" }
+        GradientStop { position: 1; color: "#020711" }
+        GradientStop { position: 0; color: "#020711" }
     }
 
     SButton {

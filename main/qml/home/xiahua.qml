@@ -19,6 +19,10 @@ Rectangle {
         title:qsTr("开关")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
+        onChecked: {
+            console.log("----------------"+checked)
+            backend.setPowerOnOff(checked,0);
+        }
     }
     BooleanControl{
         id: lightcontrol
@@ -30,6 +34,9 @@ Rectangle {
         title:qsTr("光源控制")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
+        onChecked: {
+            console.log("----------------"+checked)
+        }
     }
     IntegerControl {
         id: lightsetting

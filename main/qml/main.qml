@@ -43,7 +43,7 @@ ApplicationWindow {
 
     header: Rectangle {
         id:headerbar
-        color: "transparent"
+        color: stackView.depth ==1 ? "transparent":"#020711"
         height: root.width/36
         property var fzise: 22
         Behavior on color {

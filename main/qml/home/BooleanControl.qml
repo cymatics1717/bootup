@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 Rectangle {
+    id:rect
     radius: 3
     color: "transparent"
     property alias title: title.text
@@ -14,6 +15,8 @@ Rectangle {
         GradientStop { position: 1; color: "#1e315b" }
         GradientStop { position: 0; color: "#22335c" }
     }
+
+    signal checked(bool checked);
 
     Text {
         id:title
@@ -85,6 +88,9 @@ Rectangle {
               implicitHeight: 40
               visible: control.down || control.highlighted
               color: control.down ? "#bdbebf" : "#eeeeee"
+          }
+          onCheckedChanged: {
+            rect.checked(control.checked)
           }
       }
 }

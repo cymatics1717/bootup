@@ -16,10 +16,10 @@ static QString makeID(const QNetworkDatagram gram){
 backEnd::backEnd(QString config_file, QObject *parent) : QObject(parent)
   ,configfile(std::move(config_file))
 {
-    endpoints.insert("local",qMakePair<QString,quint16>("129.168.1.5",1025));
-    endpoints.insert("xiahua",qMakePair<QString,quint16>("129.168.1.6",1026));
-    endpoints.insert("hengyao",qMakePair<QString,quint16>("129.168.1.7",1027));
-    endpoints.insert("tatai",qMakePair<QString,quint16>("129.168.1.1",1021));
+    endpoints.insert("local",qMakePair<QString,quint16>("192.168.1.5",1025));
+    endpoints.insert("xiahua",qMakePair<QString,quint16>("192.168.1.6",1026));
+    endpoints.insert("hengyao",qMakePair<QString,quint16>("192.168.1.7",1027));
+    endpoints.insert("tatai",qMakePair<QString,quint16>("192.168.1.1",1021));
 
     tataireportTimerID = startTimer(1000);
 }
@@ -204,7 +204,7 @@ void backEnd::getInitSystemStatus()
     send2Contrl(dat);
 }
 
-void backEnd::setPowerOnOff(bool on)
+void backEnd::setPowerOnOff(bool on, int tag)
 {
     qDebug() <<"";
     QByteArray dat,data;
@@ -214,7 +214,11 @@ void backEnd::setPowerOnOff(bool on)
     } else {
         dat.append('\x02');
     }
-    send2Contrl(dat);
+    if(tag ==0){
+        send2XiaHua(dat);
+    } else {
+        send2HengYa(dat);
+    }
     QTimer::singleShot(10000 , this, &backEnd::getPowerOnOffStatus);
 }
 
