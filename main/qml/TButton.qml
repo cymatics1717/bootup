@@ -6,6 +6,7 @@ Rectangle {
     property string text
     property int lightStatus: 0
     property color lightColor: "#ff00ff00"
+//    property color lightColor: "grey"
     property color leftColor: "#2e3a60"
     property color rightColor: "#090d21"
     property var lgradient: Gradient {
@@ -18,16 +19,15 @@ Rectangle {
         GradientStop { position: 0; color: rightColor }
         GradientStop { position: 1; color: leftColor }
     }
-//    property color lightColor: "grey"
 
     signal clicked();
 
     border.color: "grey"
-    border.width: 0.02 * height
-    radius:       0.05 * height
+    border.width: 1
+    radius:       0.01 * height
 //    opacity:      enabled? 1: 0.3
 
-    color: "#111111"
+//    color: "#111111"
 
     gradient: lightStatus%2+1==2?rgradient:lgradient
 

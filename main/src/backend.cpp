@@ -133,6 +133,9 @@ void backEnd::onReadyRead()
         QNetworkDatagram gram = udp.receiveDatagram();
         QByteArray dat = gram.data();
         qDebug() <<"recv: " << makeID(gram) << dat/*.toHex('-')*/;
+
+        showMessage( makeID(gram) );
+
     }
 }
 

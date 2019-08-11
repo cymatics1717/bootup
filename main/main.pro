@@ -36,5 +36,4 @@ SOURCES += src/utils/logging/logging.cpp \
 
 RESOURCES +=  main.qrc
 
-TRANSLATIONS += lang/en_us.ts lang/zh_CN.ts
 LIBS += -L../lib -ltransport

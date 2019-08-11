@@ -19,15 +19,26 @@
         <file>qml/TButton.qml</file>
         <file>qml/normalmode.qml</file>
         <file>qml/main.qml</file>
-        <file>res/icon.png</file>
         <file>res/v2_ps6xgj.png</file>
         <file>res/boat.png</file>
         <file>res/date-icon.png</file>
         <file>res/green-light.png</file>
         <file>qml/home/StartMenu.qml</file>
+        <file>qml/DeviceVerify.qml</file>
         <file>qml/SButton.qml</file>
         <file>qml/IconGaugeStyle.qml</file>
         <file>qml/DashboardGaugeStyle.qml</file>
         <file>qml/DateSelector.qml</file>
+        <file>res/right-icon.png</file>
+        <file>res/right double-icon.png</file>
+        <file>res/left-icon.png</file>
+        <file>res/left double-icon.png</file>
+        <file>res/sound.png</file>
+        <file>res/menu.png</file>
+        <file>qml/SelectMode.qml</file>
+        <file>qml/XHTS.qml</file>
+        <file>qml/HYTS.qml</file>
+        <file>qml/JTTS.qml</file>
+        <file>qml/JSMS.qml</file>
     </qresource>
 </RCC>

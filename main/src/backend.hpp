@@ -22,6 +22,7 @@ protected:
     void timerEvent(QTimerEvent *event) override;
 
 signals:
+    void showMessage(QString msg);
 
 public slots:
     int loadConfig();

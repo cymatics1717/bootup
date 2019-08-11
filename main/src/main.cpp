@@ -14,7 +14,9 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QString QT_MESSAGE_PATTERN ="[%{threadid}-%{time yyyyMMdd hh:mm:ss.zzz}-"
+    QString QT_MESSAGE_PATTERN =""
+//                                "[%{threadid}-"
+                                "%{time yyyyMMdd hh:mm:ss.zzz}-"
                                 "%{if-debug}D%{endif}"
                                 "%{if-info}I%{endif}"
                                 "%{if-warning}W%{endif}"
@@ -34,13 +36,12 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 //    QString root =  app.applicationFilePath();
-    QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";
+    QString root =  QFileInfo(__FILE__).absolutePath()+"/../";
 //    QString root =  "./";
-//    qDebug() <<"root path: "<< root;
+    qDebug() <<"root path: "<< root;
 
 //    backEnd backend(root+"conf/test.json");
-    backEnd backend("/home/wayne/qt/bootup/conf/test.json");
-
+    backEnd backend("../../bootup/conf/test.json");
 
     if(backend.loadConfig()!=0)
     {
@@ -63,15 +64,6 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
     engine.rootContext()->setContextProperty("backend",&backend);
-
-//    qDebug() <<"ddddddddddd";
-//    qInfo() <<"ddddddddddd";
-//    qWarning() <<"ddddddddddd";
-//    qCritical() <<"ddddddddddd";
-//    qDebug() <<"ddddddddddd";
-//    qInfo() <<"ddddddddddd";
-//    qWarning() <<"ddddddddddd";
-//    qCritical() <<"ddddddddddd";
 
     return QGuiApplication::exec();
 }

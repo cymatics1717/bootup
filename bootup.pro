@@ -8,3 +8,5 @@ SUBDIRS = transport test main
 
 test.depends = transport
 main.depends = transport
+
+TRANSLATIONS += main/lang/en_us.ts  main/lang/zh_CN.ts

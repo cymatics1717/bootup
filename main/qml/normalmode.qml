@@ -30,6 +30,9 @@ Page {
              anchors.fill: parent
         }
     }
+    onActiveFocusChanged: {
+        console.log("========focus============"+focus)
+    }
 
     Rectangle {
         id: groupBox1
@@ -333,12 +336,15 @@ Page {
         height: page.height*.08
         TButton {
             id:left
-            text: qsTr("菜单")
             radius: 0
             border.width: 0
             anchors.left: parent.left
             width: bar.width/10
             height: bar.height
+            Image {
+                source: "qrc:/res/menu.png"
+                anchors.centerIn:  parent
+            }
             onClicked: {
 //                menu.source = "qrc:/qml/home/startmenu.qml"
                 startm.width = left.width*1.2
@@ -351,22 +357,15 @@ Page {
                 id:startm
             }
 
-
-//            Popup {
-//                id: startm
-//                modal: true
-//                dim: true
-//                property alias content: menu
-//                contentItem: Loader {
-//                     id: menu
-//                     anchors.fill: parent
-//                }
-//            }
         }
 
         TButton {
             id: right
-            text: qsTr("⋮")
+            Image {
+                source: "qrc:/res/sound.png"
+                anchors.centerIn:  parent
+            }
+            radius: 0
             border.width: 0
             anchors.right: parent.right
             width: bar.width/10
@@ -387,8 +386,8 @@ Page {
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
             ScrollBar.vertical.width: width/40
             ScrollBar.vertical.contentItem: Rectangle {
-                      color: parent.pressed ? "#5555ff" : "#55aaff"
-                  }
+                color: parent.pressed ? "#5555ff" : "#55aaff"
+            }
             ScrollBar.horizontal.interactive: true
             ScrollBar.vertical.interactive: true
             clip: true
@@ -412,6 +411,7 @@ Page {
                 anchors.fill: parent
                 focus: false
             }
+
         }
         Button {
             id: togglebtn
@@ -448,6 +448,13 @@ Page {
                     innertxt.text =  qsTr('\u2B06')
                 }
             }
+        }
+    }
+    Connections {
+        target: backend
+        onShowMessage:{
+            panel.text = msg
+//            panel.text += msg+"\n"
         }
     }
 

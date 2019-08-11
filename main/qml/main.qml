@@ -138,11 +138,17 @@ ApplicationWindow {
         id: keyHandler
         focus: true
         Keys.onPressed: {
-            console.log('pressed Key '+ event.text);
+            console.log(stackView.depth+ 'pressed Key '+ event.text);
             if (event.key === Qt.Key_Return || event.key === Qt.Key_F) {
                 root.visibility === Window.FullScreen ? root.showNormal() : root.showFullScreen()
             } else if (event.key === Qt.Key_Q) {
                 Qt.quit();
+            } else if (event.key === Qt.Key_1) {
+                if(stackView.depth == 1){
+                    stackView.push("qrc:/qml/DeviceVerify.qml")
+                } else if(stackView.depth == 2){
+                    stackView.pop()
+                }
             }
         }
     }

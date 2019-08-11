@@ -4,6 +4,8 @@ import QtQuick.Controls 2.5
 Rectangle {
 //    focus: false
     property string text
+    property alias fontSize:txt.font.pixelSize
+    property alias source:icon.source
     property int lightStatus: 0
     property color lightColor: "#ff00ff00"
     property color leftColor: "#2e3a60"
@@ -32,16 +34,25 @@ Rectangle {
     gradient: lightStatus%2+1==2?rgradient:lgradient
 
     FontMetrics {
-          id: fontMetrics
-          font.family: "Arial"
-      }
+        id: fontMetrics
+//        font.family: "Arial"
+    }
+
+    Image {
+        id:icon
+        anchors.right: txt.left
+        anchors.verticalCenter: parent.verticalCenter
+    }
 
     Text {
+        id: txt
         text: parent.text
         color: "white"
-        font.pixelSize: fontMetrics.font*2
-        anchors.centerIn: parent
+        font.pixelSize: fontMetrics.font*3
+        anchors.left: icon.right
+        anchors.centerIn:  parent
     }
+
 
     MouseArea {
         anchors.fill: parent
