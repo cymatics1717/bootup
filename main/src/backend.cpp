@@ -97,8 +97,9 @@ int backEnd::loadConfig()
     }
 
     controller->setPowerOnOff(true);
-
-    initSystem();
+	
+	//硬件握手
+    hwHandShake();
 
     return 0;
 }
@@ -135,8 +136,88 @@ void backEnd::onReadyRead()
         qDebug() <<"recv: " << makeID(gram) << dat/*.toHex('-')*/;
 
         showMessage( makeID(gram) );
-
+		
+				
+        //硬件握手回复:dat.at(1)=='\xFF'
+        if(dat.at(0)=='\x1B')
+        {
+            onGethwHandShakeStatus(dat.left(8));
+            qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
+            initSystem();
+        }
+		
+        //初始化查询回复:dat.at(1)=='\x1F'
+        if(dat.at(0)=='\x0E')
+        {
+			onGetInitSystemStatus(dat.left(8));
+            qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
+            setWorkMode(3);
+//            setPowerOnOff(1,0);
+        }
+		
+        //开机结果查询回复: dat.at(1)=='\x55' && dat.at(1)=='\x01'
+        if(dat.at(0)=='\x0F')
+        {
+			onGetPowerOnOffStatus(dat.left(8));
+            qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
+        }
+		
     }
+}
+
+void backEnd::onGethwHandShakeStatus(const QByteArray& dat)
+{
+    qDebug() << dat.toHex('-');
+
+    //其他
+    qDebug() << "其他:" << ((dat.at(1)>>5) & '\x01');
+    //下滑系统控制器硬件握手结果
+    qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
+    //下滑横摇惯性单元硬件握手结果
+    qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
+    //下滑纵摇惯性单元硬件握手结果
+    qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
+    //下滑横摇电机驱动器硬件握手结果
+    qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
+    //下滑纵摇电机驱动器硬件握手结果
+    qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
+
+}
+
+void backEnd::onGetInitSystemStatus(const QByteArray& dat)
+{
+     qDebug() << dat.toHex('-');
+
+	//其他
+//    qDebug() << "其他:" << ((dat.at(1)>>5) & '\x01');
+    //下滑系统控制器初始化结果
+    qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
+    //下滑横摇惯性单元初始化结果
+    qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
+    //下滑纵摇惯性单元初始化结果
+    qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
+    //下滑横摇电机驱动器初始化结果
+    qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
+    //下滑纵摇电机驱动器初始化结果
+    qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
+}
+
+void backEnd::onGetPowerOnOffStatus(const QByteArray& dat)
+{
+	qDebug() << dat.toHex('-');
+	
+	//下滑系统控制器开机/关机结果
+    qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
+	
+	//下滑横摇惯性单元开机/关机结果
+     qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
+	//下滑纵摇惯性单元开机/关机结果
+     qDebug() << "下滑纵摇惯性单元开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
+	//下滑横摇电机驱动器开机/关机结果
+     qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
+	//下滑纵摇电机驱动器开机/关机结果
+     qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
+	
 }
 
 void backEnd::onError(QAbstractSocket::SocketError socketError)

@@ -98,6 +98,10 @@ public slots:
 
     void sysinfoUpload();
 
+    void onGethwHandShakeStatus(const QByteArray& dat);
+    void onGetInitSystemStatus(const QByteArray& dat);
+    void onGetPowerOnOffStatus(const QByteArray& dat);
+
 private:
     void send2Contrl(const QByteArray &data);
     void send2XiaHua(const QByteArray &data);
