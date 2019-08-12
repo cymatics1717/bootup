@@ -25,6 +25,7 @@ Rectangle {
     }
 
     gradient: cgradient
+    signal textChanged(string text);
 
     Text {
         id:title
@@ -81,6 +82,9 @@ Rectangle {
             text: "20"
 //            readOnly: false
             validator: IntValidator{bottom: -180; top: 180;}
+            onTextChanged: {
+                root.textChanged(text);
+            }
         }
 
         TButton {

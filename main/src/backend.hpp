@@ -66,14 +66,14 @@ public slots:
 
 //    5.3.20 光源控制报文
 //    #define MID_REQUEST_LIGHT_CONTROL '\x08'
-    void setLight(qint8 addr);
+    void setLight(qint8 addr, quint8 lightvalue);
 
 //    //5.3.21 方位角设置报文
 //    #define MID_REQUEST_AZIMUTH '\x09'
-    void setAzimuth();
+    void setAzimuth(qint32 azimuth);
 //    //5.3.22 仰角设置报文
 //    #define MID_REQUEST_PITCH '\x0A'
-    void setPitch();
+    void setPitch(qint32 pitch);
 
 //    //5.3.23 确认收到报文
 //    #define MID_ACK '\x06'

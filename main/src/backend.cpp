@@ -406,14 +406,14 @@ void backEnd::getSystemStatus()
     send2Contrl(dat);
 }
 
-void backEnd::setLight(qint8 addr)
+void backEnd::setLight(qint8 addr,quint8 lightvalue)
 {
     qDebug() <<"";
     QByteArray dat;
     dat.append(MID_REQUEST_LIGHT_CONTROL);
     if(addr=='\x07'){
         //光强等级设置 光强等级0:00000000 光强等级1:0000
-        dat.append('\x22');
+        dat.append(lightvalue);
         // 横摇灯杆开关设置 开:01关:10
         if(true){
             dat.append('\x40');
@@ -435,7 +435,7 @@ void backEnd::setLight(qint8 addr)
     }
 }
 
-void backEnd::setAzimuth()
+void backEnd::setAzimuth(qint32 azimuth)
 {
     qDebug() <<"";
     QByteArray dat,data;
@@ -443,13 +443,13 @@ void backEnd::setAzimuth()
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
-    qint32 azimuth =1000;
+//    qint32 azimuth =1000;
     stream << azimuth;
 
     send2XiaHua(data);
 }
 
-void backEnd::setPitch()
+void backEnd::setPitch(qint32 pitch)
 {
     qDebug() <<"";
     QByteArray dat,data;
@@ -457,7 +457,7 @@ void backEnd::setPitch()
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
-    qint32 pitch =1000;
+//    qint32 pitch =1000;
     stream << pitch;
 
     send2XiaHua(data);

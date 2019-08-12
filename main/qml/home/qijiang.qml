@@ -40,7 +40,7 @@ Rectangle {
             left: parent.left
         }
         title:qsTr("光强设置")
-        value:qsTr("请输入角度值")
+        value:qsTr("50")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
     }

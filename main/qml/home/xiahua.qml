@@ -46,9 +46,13 @@ Rectangle {
             left: rect.left
         }
         title:qsTr("光强设置")
-        value:qsTr("请输入角度值")
+        value:qsTr("50")
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
+        onTextChanged: {
+            console.log("####################"+text)
+            backend.setLight()
+        }
     }
 
     IntegerControl {
@@ -59,9 +63,13 @@ Rectangle {
             left: parent.left
         }
         title:qsTr("仰角设置")
-        value:qsTr("请输入角度值")
+        value:qsTr("50")
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
+        onTextChanged: {
+            console.log("####################"+text)
+            backend.setAzimuth(text)
+        }
     }
     IntegerControl {
         id: yawAngleSetting
@@ -71,9 +79,13 @@ Rectangle {
             left: rect.left
         }
         title:qsTr("方位角设置")
-        value:qsTr("请输入角度值")
+        value:qsTr("50")
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
+        onTextChanged: {
+            console.log("####################"+text)
+            backend.setPitch(text)
+        }
     }
     EnumControl {
         id: lightStatus
@@ -86,6 +98,7 @@ Rectangle {
         value:qsTr("当前状态")
         height: parent.height*(rect.rate+0.04)
         width: parent.width - 2*parent.radius
+
     }
 
     BooleanControl{
