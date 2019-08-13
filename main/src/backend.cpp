@@ -437,7 +437,7 @@ void backEnd::setLight(qint8 addr,quint8 lightvalue)
 
 void backEnd::setAzimuth(qint32 azimuth)
 {
-    qDebug() <<"";
+    qDebug() <<azimuth;
     QByteArray dat,data;
     dat.append(MID_REQUEST_AZIMUTH);
     QDataStream stream(&data, QIODevice::WriteOnly);
@@ -451,7 +451,7 @@ void backEnd::setAzimuth(qint32 azimuth)
 
 void backEnd::setPitch(qint32 pitch)
 {
-    qDebug() <<"";
+    qDebug() <<pitch;
     QByteArray dat,data;
     dat.append(MID_REQUEST_PITCH);
     QDataStream stream(&data, QIODevice::WriteOnly);

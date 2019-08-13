@@ -9,6 +9,11 @@ serialPeer::serialPeer(const QString& name, int interval, QObject *parent) : QOb
 {
     qInfo() << name;
     serial->setBaudRate(QSerialPort::Baud9600);
+    serial->setStopBits(QSerialPort::OneStop);
+    serial->setDataBits(QSerialPort::Data8);
+    serial->setParity(QSerialPort::NoParity);
+
+
     connect(serial, &QSerialPort::readyRead, this, &serialPeer::onReadyRead);
     connect(serial, QOverload<QSerialPort::SerialPortError>::of(&QSerialPort::error),this, &serialPeer::onError);
 
