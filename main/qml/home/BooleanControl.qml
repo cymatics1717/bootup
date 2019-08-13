@@ -39,7 +39,7 @@ Rectangle {
     SwitchDelegate {
           id: control
 //          text: qsTr("SwitchDelegate")
-          checked: true
+          checked: false
           anchors{
               left: title.right
               verticalCenter: parent.verticalCenter
