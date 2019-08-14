@@ -51,7 +51,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setLight()
+            backend.setLight(7, text)
         }
     }
 

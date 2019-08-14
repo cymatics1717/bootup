@@ -52,6 +52,7 @@ Rectangle {
             }
             onClicked: {
                 value.text = value.text - 10;
+                root.textChanged(value.text)
             }
         }
         TButton{
@@ -69,6 +70,7 @@ Rectangle {
             }
             onClicked: {
                 value.text --;
+                root.textChanged(value.text)
             }
         }
 
@@ -83,9 +85,6 @@ Rectangle {
             text: "20"
 //            readOnly: false
             validator: IntValidator{bottom: -180; top: 180;}
-            onTextChanged: {
-                root.textChanged(text);
-            }
             background: Rectangle {
                 color: value.focus ? "white" : "grey"
                 radius: width/10
@@ -109,6 +108,7 @@ Rectangle {
             }
             onClicked: {
                 value.text ++;
+                root.textChanged(value.text)
             }
         }
         TButton {
@@ -127,6 +127,7 @@ Rectangle {
             }
             onClicked: {
                 value.text = Number(value.text) + 10;
+                root.textChanged(value.text)
             }
         }
     }

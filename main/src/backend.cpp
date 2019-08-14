@@ -93,10 +93,10 @@ int backEnd::loadConfig()
         if(interval<1 ||interval>10000){
             interval = 200;
         }
-        controller = new serialPeer(dev,interval,this);
+//        controller = new serialPeer(dev,interval,this);
     }
 
-    controller->setPowerOnOff(true);
+//    controller->setPowerOnOff(true);
 	
 	//硬件握手
     hwHandShake();
@@ -406,9 +406,9 @@ void backEnd::getSystemStatus()
     send2Contrl(dat);
 }
 
-void backEnd::setLight(qint8 addr,quint8 lightvalue)
+void backEnd::setLight(qint8 addr,qint8 lightvalue)
 {
-    qDebug() <<"";
+    qDebug() <<addr << lightvalue;
     QByteArray dat;
     dat.append(MID_REQUEST_LIGHT_CONTROL);
     if(addr=='\x07'){
