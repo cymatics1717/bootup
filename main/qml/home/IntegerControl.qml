@@ -77,6 +77,7 @@ Rectangle {
 //            color: "blue"
             width: root.width/6
             height: root.height/2
+            horizontalAlignment: TextInput.AlignHCenter
             anchors.verticalCenter: parent.verticalCenter
 //            height: root.height
             text: "20"
@@ -84,6 +85,12 @@ Rectangle {
             validator: IntValidator{bottom: -180; top: 180;}
             onTextChanged: {
                 root.textChanged(text);
+            }
+            background: Rectangle {
+                color: value.focus ? "white" : "grey"
+                radius: width/10
+                border.color: value.focus ? "#21be2b" : "grey"
+                border.width: 1
             }
         }
 
