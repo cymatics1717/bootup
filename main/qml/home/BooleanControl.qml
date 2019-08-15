@@ -17,7 +17,7 @@ Rectangle {
         GradientStop { position: 0; color: "#22335c" }
     }
 
-    signal checked(bool checked);
+    signal check();
 
     Text {
         id:title
@@ -91,7 +91,7 @@ Rectangle {
               color: control.down ? "#bdbebf" : "#eeeeee"
           }
           onCheckedChanged: {
-            rect.checked(control.checked)
+            rect.check()
           }
       }
 }

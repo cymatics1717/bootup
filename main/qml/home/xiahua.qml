@@ -19,7 +19,7 @@ Rectangle {
         title:qsTr("开机")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
-        onChecked: {
+        onCheck: {
             console.log("----------------"+checked)
             backend.setPowerOnOff(checked,0);
         }
@@ -34,7 +34,7 @@ Rectangle {
         title:qsTr("光源")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
-        onChecked: {
+        onCheck: {
             console.log("----------------"+checked)
         }
     }
