@@ -7,6 +7,7 @@ Rectangle {
     color: "transparent"
     property alias title: title.text
     property alias value: control.text
+    property alias checked: control.checked
     border.color: "grey"
     border.width: 0.02 * height
 //    anchors.margins: 3

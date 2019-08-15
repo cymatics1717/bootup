@@ -10,6 +10,8 @@ Rectangle {
     property alias value: value.text
     property color ccolor: "#aaaaaa"
     property int margin: 16
+    property int min: 0
+    property int max: 100
     border.color: "grey"
     border.width: 0.02 * height
 
@@ -51,8 +53,13 @@ Rectangle {
                 anchors.centerIn:  parent
             }
             onClicked: {
-                value.text = value.text - 10;
-                root.textChanged(value.text)
+                if(value.text!=root.min){
+                    value.text = value.text - 10;
+                    if(value.text<root.min){
+                        value.text = root.min
+                    }
+                    root.textChanged(value.text)
+                }
             }
         }
         TButton{
@@ -69,8 +76,13 @@ Rectangle {
                 anchors.centerIn:  parent
             }
             onClicked: {
-                value.text --;
-                root.textChanged(value.text)
+                if(value.text!=root.min){
+                    value.text = value.text -1;
+                    if(value.text<root.min){
+                        value.text = root.min
+                    }
+                    root.textChanged(value.text)
+                }
             }
         }
 
@@ -82,9 +94,9 @@ Rectangle {
             horizontalAlignment: TextInput.AlignHCenter
             anchors.verticalCenter: parent.verticalCenter
 //            height: root.height
-            text: "20"
+//            text: "50"
 //            readOnly: false
-            validator: IntValidator{bottom: -180; top: 180;}
+            validator: IntValidator{bottom: root.min; top: root.max;}
             background: Rectangle {
                 color: value.focus ? "white" : "grey"
                 radius: width/10
@@ -107,8 +119,13 @@ Rectangle {
                 anchors.centerIn:  parent
             }
             onClicked: {
-                value.text ++;
-                root.textChanged(value.text)
+                if(value.text!=root.max){
+                    value.text = Number(value.text) + 1;
+                    if(value.text>root.max){
+                        value.text = root.max
+                    }
+                    root.textChanged(value.text)
+                }
             }
         }
         TButton {
@@ -126,8 +143,13 @@ Rectangle {
                 anchors.centerIn:  parent
             }
             onClicked: {
-                value.text = Number(value.text) + 10;
-                root.textChanged(value.text)
+                if(value.text!=root.max){
+                    value.text = Number(value.text) + 10;
+                    if(value.text>root.max){
+                        value.text = root.max
+                    }
+                    root.textChanged(value.text)
+                }
             }
         }
     }

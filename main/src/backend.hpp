@@ -66,7 +66,7 @@ public slots:
 
 //    5.3.20 光源控制报文
 //    #define MID_REQUEST_LIGHT_CONTROL '\x08'
-    void setLight(qint8 addr, qint8 lightvalue);
+    void setLight(qint8 addr, qint8 lightvalue,qint8 flash = 6);
 
 //    //5.3.21 方位角设置报文
 //    #define MID_REQUEST_AZIMUTH '\x09'

@@ -2,20 +2,30 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 import ".."
 Rectangle {
+    id: root
     radius: 3
     color: "white"
     property alias title: title.text
     property alias value: info.text
     property int rradius: height/5
     property int margin: 20
+    property int status: 1
+
     border.color: "grey"
     border.width: 0.02 * height
+    signal clicked()
 
 //    anchors.margins: 3
 //    anchors.rightMargin: 6
     gradient: Gradient {
         GradientStop { position: 1; color: "#1e315b" }
         GradientStop { position: 0; color: "#22335c" }
+    }
+
+    function reset(){
+        all.opacity = 1
+        single.opacity = 1
+        none.opacity = 1
     }
 
     Text {
@@ -54,11 +64,16 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                parent.opacity = 1
+                if(root.status!=1){
+                    parent.opacity = 1
+                }
             }
             onClicked:{
-                console.log(parent.objectName + " clicked.")
-                parent.clicked()
+//                console.log(parent.objectName + " clicked.")
+                reset()
+                root.status = 1
+                parent.opacity = .1
+                root.clicked()
             }
         }
         Text {
@@ -90,11 +105,16 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                parent.opacity = 1
+                if(root.status!=3){
+                    parent.opacity = 1
+                }
             }
             onClicked:{
-                console.log(parent.objectName + " clicked.")
-                parent.clicked()
+//                console.log(parent.objectName + " clicked.")
+                reset()
+                root.status = 3
+                parent.opacity = .1
+                root.clicked()
             }
         }
         Text {
@@ -125,11 +145,16 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                parent.opacity = 1
+                if(root.status!=2){
+                    parent.opacity = 1
+                }
             }
             onClicked:{
-                console.log(parent.objectName + " clicked.")
-                parent.clicked()
+//                console.log(parent.objectName + " clicked.")
+                reset()
+                root.status = 2
+                parent.opacity = .1
+                root.clicked()
             }
         }
         Text {

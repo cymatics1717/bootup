@@ -16,7 +16,7 @@ Rectangle {
             top: parent.top
             left: parent.left
         }
-        title:qsTr("开关")
+        title:qsTr("开机")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
         onChecked: {
@@ -31,7 +31,7 @@ Rectangle {
             top: lightswitch.bottom
             left: parent.left
         }
-        title:qsTr("光源控制")
+        title:qsTr("光源")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
         onChecked: {
@@ -45,7 +45,7 @@ Rectangle {
             top: lightcontrol.bottom
             left: rect.left
         }
-        title:qsTr("光强设置")
+        title:qsTr("光强")
         value:qsTr("50")
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
@@ -62,8 +62,10 @@ Rectangle {
             top: lightsetting.bottom
             left: parent.left
         }
-        title:qsTr("仰角设置")
-        value:qsTr("50")
+        title:qsTr("仰角")
+        value:qsTr("4")
+        min:2
+        max:8
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
         onTextChanged: {
@@ -78,8 +80,10 @@ Rectangle {
             top: pitchAngleSetting.bottom
             left: rect.left
         }
-        title:qsTr("方位角设置")
-        value:qsTr("50")
+        title:qsTr("方位角")
+        value:qsTr("0")
+        min:-90
+        max:90
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
         onTextChanged: {
@@ -94,11 +98,13 @@ Rectangle {
             top: yawAngleSetting.bottom
             left: parent.left
         }
-        title:qsTr("闪光状态")
-        value:qsTr("当前状态")
+        title:qsTr("闪光")
         height: parent.height*(rect.rate+0.04)
         width: parent.width - 2*parent.radius
-
+        onClicked: {
+            console.log(lightcontrol.checked+"-------"+status)
+            backend.setLight(7, lightsetting.value, 4*status+(2-lightcontrol.checked))
+        }
     }
 
     BooleanControl{
@@ -108,7 +114,7 @@ Rectangle {
             top: lightStatus.bottom
             left: rect.left
         }
-        title:qsTr("除冰控制")
+        title:qsTr("除冰")
         height: rect.height*rect.rate
         width: rect.width - 2*rect.radius
     }
