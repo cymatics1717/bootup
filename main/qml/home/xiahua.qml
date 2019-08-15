@@ -70,7 +70,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setAzimuth(text)
+            backend.setPitch(text)
         }
     }
     IntegerControl {
@@ -88,7 +88,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setPitch(text)
+            backend.setAzimuth(text)
         }
     }
     EnumControl {

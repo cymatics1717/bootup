@@ -169,8 +169,6 @@ void backEnd::onGethwHandShakeStatus(const QByteArray& dat)
 {
     qDebug() << dat.toHex('-');
 
-    //其他
-    qDebug() << "其他:" << ((dat.at(1)>>5) & '\x01');
     //下滑系统控制器硬件握手结果
     qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
     //下滑横摇惯性单元硬件握手结果
@@ -262,19 +260,20 @@ void backEnd::initSystem()
     qDebug() <<"";
     QByteArray dat,data;
     dat.append(MID_REQUEST_INIT);
-    send2XiaHua(dat);
+//    send2XiaHua(dat);
 //    方位角初始值(4字节)(扩大1000倍,小端传输,有符号数)
-    qint32 azimuth = 1000;
-//    仰角初始值(4字节)(扩大1000倍,小端传输,有符号数)
-    qint32 pitch = 2000;
+//    qint32 azimuth = 1000;
+////    仰角初始值(4字节)(扩大1000倍,小端传输,有符号数)
+//    qint32 pitch = 2000;
 
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream.setByteOrder(QDataStream::LittleEndian);
-    stream.writeRawData(dat,dat.size());
-    stream << azimuth << pitch;
+//    QDataStream stream(&data, QIODevice::WriteOnly);
+//    stream.setByteOrder(QDataStream::LittleEndian);
+//    stream.writeRawData(dat,dat.size());
+//    stream << azimuth << pitch;
 
     send2Contrl(data);
-    QTimer::singleShot(40000 , this, &backEnd::getInitSystemStatus);
+
+    QTimer::singleShot(50000 , this, &backEnd::getInitSystemStatus);
 }
 
 void backEnd::getInitSystemStatus()
@@ -444,7 +443,7 @@ void backEnd::setAzimuth(qint32 azimuth)
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
 //    qint32 azimuth =1000;
-    stream << azimuth;
+    stream << azimuth*1000;
 
     send2XiaHua(data);
 }
@@ -458,7 +457,7 @@ void backEnd::setPitch(qint32 pitch)
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
 //    qint32 pitch =1000;
-    stream << pitch;
+    stream << pitch*1000;
 
     send2XiaHua(data);
 }
