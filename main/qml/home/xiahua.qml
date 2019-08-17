@@ -36,6 +36,7 @@ Rectangle {
         width: parent.width - 2*parent.radius
         onCheck: {
             console.log("----------------"+checked)
+            backend.setLight(7, lightsetting.value)
         }
     }
     IntegerControl {
@@ -103,7 +104,8 @@ Rectangle {
         width: parent.width - 2*parent.radius
         onClicked: {
             console.log(lightcontrol.checked+"-------"+status)
-            backend.setLight(7, lightsetting.value, 4*status+(2-lightcontrol.checked))
+            backend.setLight(7, lightsetting.value, 4*status+(1+lightcontrol.checked))
+//            backend.setLight(7, lightsetting.value, 4*status+(2-lightcontrol.checked))
         }
     }
 
