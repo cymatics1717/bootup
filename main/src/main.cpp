@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
     qDebug() <<"root path: "<< root;
 
 //    backEnd backend(root+"conf/test.json");
-    backEnd backend("../../bootup/conf/test.json");
-
+//    backEnd backend("../../bootup/conf/test.json");
+    backEnd backend("/coding/bootup/conf/test.json");
     if(backend.loadConfig()!=0)
     {
         QGuiApplication::quit();

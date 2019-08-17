@@ -4,7 +4,7 @@ import ".."
 
 Page {
     id:page
-    anchors.fill: parent
+//    anchors.fill: parent
     property var grad: Gradient {
         GradientStop { position: 0; color: "#020711" }
         GradientStop { position: 0; color: "#020711" }
@@ -71,7 +71,7 @@ Page {
         columns: 3
         spacing: 2
         anchors{
-            left: page.left
+//            left: page.left
             top: title1.bottom
         }
         Rectangle { color: "red"; width: 50; height: 50 }

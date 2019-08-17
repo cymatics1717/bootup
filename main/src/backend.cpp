@@ -136,30 +136,32 @@ void backEnd::onReadyRead()
         qDebug() <<"recv: " << makeID(gram) << dat/*.toHex('-')*/;
 
         showMessage( makeID(gram) );
-		
-				
-        //硬件握手回复:dat.at(1)=='\xFF'
-        if(dat.at(0)=='\x1B')
-        {
-            onGethwHandShakeStatus(dat.left(8));
-            qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
-            initSystem();
-        }
-		
-        //初始化查询回复:dat.at(1)=='\x1F'
-        if(dat.at(0)=='\x0E')
-        {
-			onGetInitSystemStatus(dat.left(8));
-            qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
-            setWorkMode(3);
-//            setPowerOnOff(1,0);
-        }
-		
-        //开机结果查询回复: dat.at(1)=='\x55' && dat.at(1)=='\x01'
-        if(dat.at(0)=='\x0F')
-        {
-			onGetPowerOnOffStatus(dat.left(8));
-            qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
+
+        //fix crash.
+        if(dat.size()>0){
+            //硬件握手回复:dat.at(1)=='\xFF'
+            if(dat.at(0)=='\x1B')
+            {
+                onGethwHandShakeStatus(dat);
+                qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
+                initSystem();
+            }
+
+            //初始化查询回复:dat.at(1)=='\x1F'
+            if(dat.at(0)=='\x0E')
+            {
+                onGetInitSystemStatus(dat);
+                qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
+                setWorkMode(3);
+    //            setPowerOnOff(1,0);
+            }
+
+            //开机结果查询回复: dat.at(1)=='\x55' && dat.at(1)=='\x01'
+            if(dat.at(0)=='\x0F')
+            {
+                onGetPowerOnOffStatus(dat);
+                qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
+            }
         }
 		
     }

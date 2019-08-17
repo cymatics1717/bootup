@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 import ".."
 Rectangle {
     id:rect
-    anchors.fill: parent
+//    anchors.fill: parent
 
 //    color: "transparent"
     gradient: Gradient {

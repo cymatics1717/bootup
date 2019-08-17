@@ -7,7 +7,7 @@ import "home"
 Page {
     id:page
     title: qsTr("普通模式")
-    anchors.fill: parent
+//    anchors.fill: parent
 
     property color leftcolor: "#101220"
     property color rightcolor: "#0f1531"

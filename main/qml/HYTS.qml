@@ -4,7 +4,7 @@ import ".."
 
 Rectangle {
     id:rect
-    anchors.fill: parent
+//    anchors.fill: parent
 
 
     property var grad: Gradient {
