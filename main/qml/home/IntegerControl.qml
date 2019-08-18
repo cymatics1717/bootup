@@ -30,6 +30,15 @@ Rectangle {
     gradient: cgradient
     signal textChanged(string text);
 
+    function normalize(){
+        if(value.text<root.min){
+            value.text = root.min
+        }
+        if(value.text>root.max){
+            value.text = root.max
+        }
+    }
+
     Text {
         id:title
         anchors.leftMargin: 5
@@ -56,9 +65,7 @@ Rectangle {
             onClicked: {
                 if(value.text!=root.min){
                     value.text = value.text - 10;
-                    if(value.text<root.min){
-                        value.text = root.min
-                    }
+                    normalize()
                     root.textChanged(value.text)
                 }
             }
@@ -79,9 +86,7 @@ Rectangle {
             onClicked: {
                 if(value.text!=root.min){
                     value.text = value.text -1;
-                    if(value.text<root.min){
-                        value.text = root.min
-                    }
+                    normalize()
                     root.textChanged(value.text)
                 }
             }
@@ -128,9 +133,7 @@ Rectangle {
             onClicked: {
                 if(value.text!=root.max){
                     value.text = Number(value.text) + 1;
-                    if(value.text>root.max){
-                        value.text = root.max
-                    }
+                    normalize()
                     root.textChanged(value.text)
                 }
             }
@@ -152,9 +155,7 @@ Rectangle {
             onClicked: {
                 if(value.text!=root.max){
                     value.text = Number(value.text) + 10;
-                    if(value.text>root.max){
-                        value.text = root.max
-                    }
+                    normalize()
                     root.textChanged(value.text)
                 }
             }
