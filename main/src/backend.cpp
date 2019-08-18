@@ -93,13 +93,13 @@ int backEnd::loadConfig()
         if(interval<1 ||interval>10000){
             interval = 200;
         }
-        controller = new serialPeer(dev,interval,this);
+        //controller = new serialPeer(dev,interval,this);
     }
 
-    controller->setPowerOnOff(true);
+    //controller->setPowerOnOff(true);
 	
 	//硬件握手
-    hwHandShake();
+//    hwHandShake();
 
     return 0;
 }
@@ -273,7 +273,7 @@ void backEnd::initSystem()
 //    stream.writeRawData(dat,dat.size());
 //    stream << azimuth << pitch;
 
-    send2Contrl(data);
+    send2Contrl(dat);
 
     QTimer::singleShot(50000 , this, &backEnd::getInitSystemStatus);
 }

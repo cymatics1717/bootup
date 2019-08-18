@@ -45,8 +45,8 @@ void serialPeer::timerEvent(QTimerEvent */*event*/)
     QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
 
     getPowerStatus();
-    getLightValue();
-    getLightEStatus();
+   // getLightValue();
+    //getLightEStatus();
 //    if(event->timerId() == timerID_PowerStatus ){
 //        getPowerStatus();
 //        qInfo() <<"timerID_PowerStatus = " << timerID_PowerStatus;
@@ -93,9 +93,11 @@ void serialPeer::writing(const QByteArray& dat)
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-//    stream.setByteOrder(QDataStream::BigEndian);
+    stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
     stream << mmmcrc16(data);
+
+    qInfo() << data.toHex('-');
 
     serial->write(data);
 //    serial->waitForBytesWritten(10);
@@ -116,9 +118,9 @@ void serialPeer::setPowerOnOff(bool on)
     data.append('\x00');
 
     if(on){
-        data.append('\x03');
+        data.append('\x04');
         data.append('\x01');
-        data.append('\x07');
+        data.append('\x0F');
     } else {
         data.append('\x04');
         data.append('\x01');
@@ -157,7 +159,6 @@ void serialPeer::getPowerStatus()
     data.append('\x20');
     data.append('\x00');
     data.append('\x04');
-    qDebug() <<"sent:"<< data.toHex('-');
     writing(data);
 }
 
