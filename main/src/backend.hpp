@@ -112,7 +112,7 @@ private:
     QHash<QString,QPair<QString,quint16>> endpoints;
 
     QUdpSocket udp;
-//    serialPeer *controller;
+    serialPeer *controller;
     QHash<QString,QVariant> pool;
 
 

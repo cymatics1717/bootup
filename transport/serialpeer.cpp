@@ -95,7 +95,7 @@ void serialPeer::writing(const QByteArray& dat)
     QDataStream stream(&data, QIODevice::WriteOnly);
 //    stream.setByteOrder(QDataStream::BigEndian);
     stream.writeRawData(dat,dat.size());
-    stream << mmmcrc32(data);
+    stream << mmmcrc16(data);
 
     serial->write(data);
 //    serial->waitForBytesWritten(10);

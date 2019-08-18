@@ -93,10 +93,10 @@ int backEnd::loadConfig()
         if(interval<1 ||interval>10000){
             interval = 200;
         }
-//        controller = new serialPeer(dev,interval,this);
+        controller = new serialPeer(dev,interval,this);
     }
 
-//    controller->setPowerOnOff(true);
+    controller->setPowerOnOff(true);
 	
 	//硬件握手
     hwHandShake();
@@ -414,7 +414,7 @@ void backEnd::setLight(qint8 addr, qint8 lightvalue, qint8 flash)
     dat.append(MID_REQUEST_LIGHT_CONTROL);
     if(addr=='\x07'){
         //光强等级设置 光强等级0:00000000 光强等级1:0000
-        dat.append(lightvalue*5/2);
+        dat.append(qint8(lightvalue*2.5));
         //      闪光状态设置(三闪:11开:01单闪:10关:10不闪:01)   下滑光源开关设置 开:01 关:10
         dat.append(flash);
         send2XiaHua(dat);

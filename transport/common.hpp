@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QDataStream>
 
+quint16 mmmcrc16(const QByteArray &data);
 quint32 mmmcrc32(const QByteArray &data);
 
 #define LOCAL_IP "127.0.0.1"
