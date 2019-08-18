@@ -36,12 +36,12 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 //    QString root =  app.applicationFilePath();
-    QString root =  QFileInfo(__FILE__).absolutePath()+"/../";
+    QString root =  QFileInfo(__FILE__).absolutePath()+"/../../";
 //    QString root =  "./";
     qDebug() <<"root path: "<< root;
 
-//    backEnd backend(root+"conf/test.json");
-    backEnd backend("/home/yyq/project/bootup-master/conf/test.json");
+    backEnd backend(root+"conf/test.json");
+//    backEnd backend("/home/yyq/project/bootup-master/conf/test.json");
 //    backEnd backend("/coding/bootup/conf/test.json");
     if(backend.loadConfig()!=0)
     {

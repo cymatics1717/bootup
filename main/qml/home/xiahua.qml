@@ -21,7 +21,13 @@ Rectangle {
         width: parent.width- 2*parent.radius
         onCheck: {
             console.log("----------------"+checked)
-            backend.setPowerOnOff(checked,0);
+            if(checked){
+                backend.xiahuaHandShake();
+                lightswitch.enabled = false;
+                lightswitch.opacity = .3
+            } else {
+                backend.setPowerOnOff(false,0);
+            }
         }
     }
     BooleanControl{

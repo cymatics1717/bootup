@@ -93,7 +93,7 @@ int backEnd::loadConfig()
         if(interval<1 ||interval>10000){
             interval = 200;
         }
-        //controller = new serialPeer(dev,interval,this);
+//        controller = new serialPeer(dev,interval,this);
     }
 
     //controller->setPowerOnOff(true);
@@ -140,34 +140,33 @@ void backEnd::onReadyRead()
         //fix crash.
         if(dat.size()>0){
             //硬件握手回复:dat.at(1)=='\xFF'
-            if(dat.at(0)=='\x1B')
+            if(dat.at(0)==MID_REQUEST_HARDWARE)
             {
-                onGethwHandShakeStatus(dat);
+                onGetXiahuaHWHandShakeStatus(dat);
                 qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
-                initSystem();
+                initXiahuaSystem();
             }
 
             //初始化查询回复:dat.at(1)=='\x1F'
-            if(dat.at(0)=='\x0E')
+            if(dat.at(0)==MID_REQUEST_INIT_STATUS)
             {
-                onGetInitSystemStatus(dat);
+                onGetXiahuaInitSystemStatus(dat);
                 qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
                 setWorkMode(3);
-    //            setPowerOnOff(1,0);
+                setPowerOnOff(1,0);
             }
 
             //开机结果查询回复: dat.at(1)=='\x55' && dat.at(1)=='\x01'
             if(dat.at(0)=='\x0F')
             {
-                onGetPowerOnOffStatus(dat);
+                onGetXiahuaPowerOnOffStatus(dat);
                 qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
             }
         }
-		
     }
 }
 
-void backEnd::onGethwHandShakeStatus(const QByteArray& dat)
+void backEnd::onGetXiahuaHWHandShakeStatus(const QByteArray &dat)
 {
     qDebug() << dat.toHex('-');
 
@@ -181,10 +180,9 @@ void backEnd::onGethwHandShakeStatus(const QByteArray& dat)
     qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
     //下滑纵摇电机驱动器硬件握手结果
     qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
-
 }
 
-void backEnd::onGetInitSystemStatus(const QByteArray& dat)
+void backEnd::onGetXiahuaInitSystemStatus(const QByteArray& dat)
 {
      qDebug() << dat.toHex('-');
 
@@ -202,7 +200,7 @@ void backEnd::onGetInitSystemStatus(const QByteArray& dat)
     qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
 }
 
-void backEnd::onGetPowerOnOffStatus(const QByteArray& dat)
+void backEnd::onGetXiahuaPowerOnOffStatus(const QByteArray& dat)
 {
 	qDebug() << dat.toHex('-');
 	
@@ -250,18 +248,86 @@ void backEnd::hwHandShake()
     data.append(MID_REQUEST_HARDWARE);
 //    data.append(currentTime().toUtf8());
 //    data.append('\n');
-
     send2Contrl(data);
-
-    //    send2TaTai_(data);
 }
 
+void backEnd::xiahuaHandShake()
+{
+    QByteArray data;
+    data.append(MID_REQUEST_HARDWARE);
+//    data.append(currentTime().toUtf8());
+//    data.append('\n');
+    send2XiaHua(data);
+}
+
+void backEnd::initXiahuaSystem()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT);
+    send2XiaHua(data);
+    QTimer::singleShot(50000 , this, &backEnd::getXiahuaInitSystemStatus);
+}
+
+void backEnd::getXiahuaInitSystemStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT_STATUS);
+    send2XiaHua(data);
+}
+
+void backEnd::getXiahuaPowerOnOffStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_POWER_STATUS);
+    send2XiaHua(data);
+
+    getSystemStatusTimerID = startTimer(500);
+}
+
+void backEnd::hengyaoHandShake()
+{
+    QByteArray data;
+    data.append(MID_REQUEST_HARDWARE);
+//    data.append(currentTime().toUtf8());
+//    data.append('\n');
+    send2HengYa(data);
+}
+
+void backEnd::initHengyaoSystem()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT);
+    send2HengYa(data);
+    QTimer::singleShot(50000 , this, &backEnd::getHengyaoInitSystemStatus);
+}
+
+void backEnd::getHengyaoInitSystemStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT_STATUS);
+    send2HengYa(data);
+}
+
+void backEnd::getHengyaoPowerOnOffStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_POWER_STATUS);
+    send2XiaHua(data);
+
+//    getSystemStatusTimerID = startTimer(500);
+}
 
 void backEnd::initSystem()
 {
     qDebug() <<"";
-    QByteArray dat,data;
-    dat.append(MID_REQUEST_INIT);
+    QByteArray data;
+    data.append(MID_REQUEST_INIT);
 //    send2XiaHua(dat);
 //    方位角初始值(4字节)(扩大1000倍,小端传输,有符号数)
 //    qint32 azimuth = 1000;
@@ -273,43 +339,42 @@ void backEnd::initSystem()
 //    stream.writeRawData(dat,dat.size());
 //    stream << azimuth << pitch;
 
-    send2Contrl(dat);
-
-    QTimer::singleShot(50000 , this, &backEnd::getInitSystemStatus);
+    send2Contrl(data);
 }
 
 void backEnd::getInitSystemStatus()
 {
     qDebug() <<"";
-    QByteArray dat,data;
-    dat.append(MID_REQUEST_INIT_STATUS);
-    send2Contrl(dat);
+    QByteArray data;
+    data.append(MID_REQUEST_INIT_STATUS);
+    send2Contrl(data);
 }
 
 void backEnd::setPowerOnOff(bool on, int tag)
 {
     qDebug() <<"";
-    QByteArray dat,data;
-    dat.append(MID_REQUEST_POWER);
+    QByteArray data;
+    data.append(MID_REQUEST_POWER);
     if(on){
-        dat.append('\x01');
+        data.append('\x01');
     } else {
-        dat.append('\x02');
+        data.append('\x02');
     }
     if(tag ==0){
-        send2XiaHua(dat);
+        send2XiaHua(data);
+        QTimer::singleShot(10000 , this, &backEnd::getXiahuaPowerOnOffStatus);
     } else {
-        send2HengYa(dat);
+        send2HengYa(data);
+        QTimer::singleShot(10000 , this, &backEnd::getPowerOnOffStatus);
     }
-    QTimer::singleShot(10000 , this, &backEnd::getPowerOnOffStatus);
 }
 
 void backEnd::getPowerOnOffStatus()
 {
     qDebug() <<"";
-    QByteArray dat;
-    dat.append(MID_REQUEST_POWER_STATUS);
-    send2Contrl(dat);
+    QByteArray data;
+    data.append(MID_REQUEST_POWER_STATUS);
+    send2Contrl(data);
 
     getSystemStatusTimerID = startTimer(500);
 }
@@ -463,7 +528,6 @@ void backEnd::setPitch(qint32 pitch)
 
     send2XiaHua(data);
 }
-
 
 void backEnd::closeAll()
 {

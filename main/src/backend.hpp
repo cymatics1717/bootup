@@ -36,6 +36,21 @@ public slots:
 
     //5.3.1 硬件握手结果查询报文
     void hwHandShake();
+
+    void xiahuaHandShake();
+    void initXiahuaSystem();
+    void getXiahuaInitSystemStatus();
+    void getXiahuaPowerOnOffStatus();
+    void onGetXiahuaHWHandShakeStatus(const QByteArray& dat);
+    void onGetXiahuaInitSystemStatus(const QByteArray& dat);
+    void onGetXiahuaPowerOnOffStatus(const QByteArray& dat);
+
+    void hengyaoHandShake();
+    void initHengyaoSystem();
+    void getHengyaoInitSystemStatus();
+    void getHengyaoPowerOnOffStatus();
+
+
     //5.3.3 初始化报文
     void initSystem();
     //5.3.4 初始化结果查询报文
@@ -97,10 +112,6 @@ public slots:
     void closeAll();
 
     void sysinfoUpload();
-
-    void onGethwHandShakeStatus(const QByteArray& dat);
-    void onGetInitSystemStatus(const QByteArray& dat);
-    void onGetPowerOnOffStatus(const QByteArray& dat);
 
 private:
     void send2Contrl(const QByteArray &data);
