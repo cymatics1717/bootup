@@ -1,7 +1,9 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.VirtualKeyboard 2.4
 import QtQuick.Window 2.12
+import QtQuick.VirtualKeyboard 2.5
+import QtQuick.VirtualKeyboard.Styles 2.5
+import QtQuick.VirtualKeyboard.Settings 2.5
 
 ApplicationWindow {
     id: root
@@ -152,4 +154,11 @@ ApplicationWindow {
             }
         }
     }
+
+
+    Component.onCompleted: {
+        VirtualKeyboardSettings.styleName = "retro"
+        VirtualKeyboardSettings.fullScreenMode = true
+    }
+
 }

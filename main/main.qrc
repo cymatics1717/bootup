@@ -40,5 +40,6 @@
         <file>qml/HYTS.qml</file>
         <file>qml/JTTS.qml</file>
         <file>qml/JSMS.qml</file>
+        <file>qml/home/Integer.qml</file>
     </qresource>
 </RCC>

@@ -9,6 +9,7 @@ Rectangle {
     property alias title: title.text
     property alias value: value.text
     property color ccolor: "#aaaaaa"
+    property alias validator: value.validator
     property int margin: 16
     property int min: 0
     property int max: 100
@@ -96,12 +97,18 @@ Rectangle {
 //            height: root.height
 //            text: "50"
 //            readOnly: false
+//            validator: DoubleValidator{bottom: root.min; top: root.max;decimals:1}
             validator: IntValidator{bottom: root.min; top: root.max;}
+            inputMethodHints: Qt.ImhDigitsOnly
+
             background: Rectangle {
                 color: value.focus ? "white" : "grey"
                 radius: width/10
                 border.color: value.focus ? "#21be2b" : "grey"
                 border.width: 1
+            }
+            onEditingFinished:{
+                root.textChanged(text)
             }
         }
 
@@ -153,5 +160,4 @@ Rectangle {
             }
         }
     }
-
 }

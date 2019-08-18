@@ -45,8 +45,8 @@ void serialPeer::timerEvent(QTimerEvent */*event*/)
     QString data = QString("%1--%2").arg(serial->portName()).arg(currentTime());
 
     getPowerStatus();
-   // getLightValue();
-    //getLightEStatus();
+    getLightValue();
+    getLightEStatus();
 //    if(event->timerId() == timerID_PowerStatus ){
 //        getPowerStatus();
 //        qInfo() <<"timerID_PowerStatus = " << timerID_PowerStatus;
@@ -213,7 +213,6 @@ void serialPeer::setInfraRedLight(bool on)
     qInfo() <<"sent:"<< data.toHex('-');
     writing(data);
 }
-
 
 void serialPeer::getLightValue()
 {

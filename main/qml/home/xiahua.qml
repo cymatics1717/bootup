@@ -23,8 +23,8 @@ Rectangle {
             console.log("----------------"+checked)
             if(checked){
                 backend.xiahuaHandShake();
-                lightswitch.enabled = false;
-                lightswitch.opacity = .3
+//                lightswitch.enabled = false;
+//                lightswitch.opacity = .3
             } else {
                 backend.setPowerOnOff(false,0);
             }
@@ -62,7 +62,7 @@ Rectangle {
         }
     }
 
-    IntegerControl {
+    Integer {
         id: pitchAngleSetting
         color: "white"
         anchors {
@@ -73,6 +73,7 @@ Rectangle {
         value:qsTr("4")
         min:2
         max:8
+
         height: rect.height*(rect.rate+0.02)
         width: rect.width - 2*rect.radius
         onTextChanged: {
@@ -80,7 +81,7 @@ Rectangle {
             backend.setPitch(text)
         }
     }
-    IntegerControl {
+    Integer {
         id: yawAngleSetting
         color: "white"
         anchors {
@@ -126,4 +127,5 @@ Rectangle {
         height: rect.height*rect.rate
         width: rect.width - 2*rect.radius
     }
+
 }
