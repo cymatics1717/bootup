@@ -131,7 +131,7 @@ void backEnd::onReadyRead()
     while(udp.hasPendingDatagrams()){
         QNetworkDatagram gram = udp.receiveDatagram();
         QByteArray dat = gram.data();
-        qDebug() <<"recv: " << makeID(gram) << dat/*.toHex('-')*/;
+        qDebug() <<"recv: " << makeID(gram) << dat.toHex('-');
 
         showMessage( makeID(gram) );
 
@@ -163,6 +163,12 @@ void backEnd::onReadyRead()
                 //工作模式设置报文 回复
                 onSetWorkMode(tag);
                 qDebug() <<"********SetWorkMode reply success********"<<dat.size()<< dat.toHex('-');
+            } else if(dat.at(0) == MID_REQUEST_AZIMUTH) {
+                //方位角设置报文 回复
+                qDebug() <<"********setAzimuth reply success********"<<dat.size()<< dat.toHex('-');
+            } else if(dat.at(0) == MID_REQUEST_PITCH) {
+                //仰角设置报文 回复
+                qDebug() <<"********setPitch reply success********"<<dat.size()<< dat.toHex('-');
             }
         }
     }
