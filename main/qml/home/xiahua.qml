@@ -22,7 +22,7 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
             if(checked){
-                backend.xiahuaHandShake();
+                backend.hwHandShake(0);
 //                lightswitch.enabled = false;
 //                lightswitch.opacity = .3
             } else {

@@ -35,32 +35,27 @@ public slots:
     void TaTaiReport();
 
     //5.3.1 硬件握手结果查询报文
-    void hwHandShake();
-
-    void xiahuaHandShake();
-    void initXiahuaSystem();
-    void getXiahuaInitSystemStatus();
-    void getXiahuaPowerOnOffStatus();
-    void onGetXiahuaHWHandShakeStatus(const QByteArray& dat);
-    void onGetXiahuaInitSystemStatus(const QByteArray& dat);
-    void onGetXiahuaPowerOnOffStatus(const QByteArray& dat);
-
-    void hengyaoHandShake();
-    void initHengyaoSystem();
-    void getHengyaoInitSystemStatus();
-    void getHengyaoPowerOnOffStatus();
-
+    void hwHandShake(int tag);
+    void onGetHWHandShake(const QByteArray& dat,int tag);
 
     //5.3.3 初始化报文
-    void initSystem();
+    void initControlSystem(int tag);
     //5.3.4 初始化结果查询报文
-    void getInitSystemStatus();
+    void getInitControlSystem();
+    void onGetInitControlSystem(const QByteArray& dat, int tag);
+
+    //5.3.7 开机/关机结果查询报文
+    void getXiaHuaPowerOnOffStatus();
+    void getHengYaoPowerOnOffStatus();
+    void onGetPowerOnOffStatus(const QByteArray& dat,int tag);
+//    void onGetHengYaoPowerOnOffStatus(const QByteArray& dat,int tag);
+
     //5.3.6 开机/关机报文
     void setPowerOnOff(bool on, int tag);
-    //5.3.7 开机/关机结果查询报文
-    void getPowerOnOffStatus();
+
     //5.3.9 工作模式设置报文
-    void setWorkMode(qint8 tag);
+    void setWorkMode(qint8 status);
+    void onSetWorkMode(int tag);
     //5.3.10 检视模式参数设置报文
     void setInspect(qint8 addr);
 
@@ -77,7 +72,7 @@ public slots:
 
 //    5.3.16 系统状态查询报文
 //    #define MID_REQUEST_SYSTEM_STATUS '\x07'
-    void getSystemStatus();
+    void getSystemStatus(int tag);
 
 //    5.3.20 光源控制报文
 //    #define MID_REQUEST_LIGHT_CONTROL '\x08'
@@ -114,7 +109,7 @@ public slots:
     void sysinfoUpload();
 
 private:
-    void send2Contrl(const QByteArray &data);
+    void send2Contrl(const QByteArray &data, int tag);
     void send2XiaHua(const QByteArray &data);
     void send2HengYa(const QByteArray &data);
     void send2TaTai_(const QByteArray &data);
@@ -127,6 +122,7 @@ private:
     QHash<QString,QVariant> pool;
 
 
+    int controler_tag;
     int tataireportTimerID;
     int getSystemStatusTimerID;
 
