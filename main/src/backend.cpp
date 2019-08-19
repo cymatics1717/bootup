@@ -98,9 +98,6 @@ int backEnd::loadConfig()
 
     //controller->setPowerOnOff(true);
 	
-	//硬件握手
-//    hwHandShake();
-
     return 0;
 }
 
@@ -139,25 +136,25 @@ void backEnd::onReadyRead()
 
         //fix crash.
         if(dat.size()>0){
-            //硬件握手回复:dat.at(1)=='\xFF'
-            if(dat.at(0)==MID_REQUEST_HARDWARE)
+            //硬件握手回复
+            if(dat.at(0)==MID_REPLY_HARDWARE)
             {
                 onGetXiahuaHWHandShakeStatus(dat);
                 qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
                 initXiahuaSystem();
             }
 
-            //初始化查询回复:dat.at(1)=='\x1F'
-            if(dat.at(0)==MID_REQUEST_INIT_STATUS)
+            //初始化查询回复
+            if(dat.at(0)==MID_REPLY_INIT_STATUS)
             {
                 onGetXiahuaInitSystemStatus(dat);
                 qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
                 setWorkMode(3);
-                setPowerOnOff(1,0);
+                setPowerOnOff(true,0);
             }
 
-            //开机结果查询回复: dat.at(1)=='\x55' && dat.at(1)=='\x01'
-            if(dat.at(0)=='\x0F')
+            //开机结果查询回复
+            if(dat.at(0)==MID_REPLY_POWER_STATUS)
             {
                 onGetXiahuaPowerOnOffStatus(dat);
                 qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
@@ -186,8 +183,6 @@ void backEnd::onGetXiahuaInitSystemStatus(const QByteArray& dat)
 {
      qDebug() << dat.toHex('-');
 
-	//其他
-//    qDebug() << "其他:" << ((dat.at(1)>>5) & '\x01');
     //下滑系统控制器初始化结果
     qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
     //下滑横摇惯性单元初始化结果
@@ -291,8 +286,7 @@ void backEnd::hengyaoHandShake()
 {
     QByteArray data;
     data.append(MID_REQUEST_HARDWARE);
-//    data.append(currentTime().toUtf8());
-//    data.append('\n');
+
     send2HengYa(data);
 }
 
@@ -328,16 +322,6 @@ void backEnd::initSystem()
     qDebug() <<"";
     QByteArray data;
     data.append(MID_REQUEST_INIT);
-//    send2XiaHua(dat);
-//    方位角初始值(4字节)(扩大1000倍,小端传输,有符号数)
-//    qint32 azimuth = 1000;
-////    仰角初始值(4字节)(扩大1000倍,小端传输,有符号数)
-//    qint32 pitch = 2000;
-
-//    QDataStream stream(&data, QIODevice::WriteOnly);
-//    stream.setByteOrder(QDataStream::LittleEndian);
-//    stream.writeRawData(dat,dat.size());
-//    stream << azimuth << pitch;
 
     send2Contrl(data);
 }
