@@ -34,7 +34,8 @@ void backEnd::timerEvent(QTimerEvent *event)
     if(event->timerId() == tataireportTimerID){
         TaTaiReport();
     } else if(event->timerId() == getSystemStatusTimerID){
-        getSystemStatus();
+        getSystemStatus(0);
+        getSystemStatus(1);
     }
 }
 
@@ -136,81 +137,134 @@ void backEnd::onReadyRead()
 
         //fix crash.
         if(dat.size()>0){
-            //硬件握手回复
-            if(dat.at(0)==MID_REPLY_HARDWARE)
-            {
-                onGetXiahuaHWHandShakeStatus(dat);
-                qDebug() <<"********YYQ：hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
-                initXiahuaSystem();
+
+            int tag = -2;
+            if(gram.senderAddress().toString() == endpoints.value("xiahua").first) {
+                tag = 0;
+            } else if(gram.senderAddress().toString() == endpoints.value("hengyao").first){
+                tag = 1;
+            } else if(gram.senderAddress().toString() == endpoints.value("tatai").first){
+                tag = -1;
             }
 
-            //初始化查询回复
-            if(dat.at(0)==MID_REPLY_INIT_STATUS)
-            {
-                onGetXiahuaInitSystemStatus(dat);
-                qDebug() <<"********YYQ：getInitSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
-                setWorkMode(3);
-                setPowerOnOff(true,0);
-            }
-
-            //开机结果查询回复
-            if(dat.at(0)==MID_REPLY_POWER_STATUS)
-            {
-                onGetXiahuaPowerOnOffStatus(dat);
-                qDebug() <<"********YYQ：getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
+            if(dat.at(0)==MID_REPLY_HARDWARE){
+                //硬件握手回复
+                onGetHWHandShake(dat,tag);
+                qDebug() <<"********YYQ:hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
+            } else if(dat.at(0) == MID_REPLY_INIT_STATUS) {
+                //初始化查询回复
+                onGetInitControlSystem(dat,tag);
+                qDebug() <<"********YYQ:GetInitControlSystem reply success********"<<dat.size()<< dat.toHex('-');
+            } else if(dat.at(0) == MID_REPLY_POWER_STATUS) {
+                //开机结果查询回复
+                onGetPowerOnOffStatus(dat,tag);
+                qDebug() <<"********YYQ:getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
+            } else if(dat.at(0) == MID_REQUEST_WORKING_MODE) {
+                //工作模式设置报文 回复
+                onSetWorkMode(tag);
+                qDebug() <<"********SetWorkMode reply success********"<<dat.size()<< dat.toHex('-');
             }
         }
     }
 }
 
-void backEnd::onGetXiahuaHWHandShakeStatus(const QByteArray &dat)
+void backEnd::hwHandShake(int tag)
 {
-    qDebug() << dat.toHex('-');
-
-    //下滑系统控制器硬件握手结果
-    qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
-    //下滑横摇惯性单元硬件握手结果
-    qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
-    //下滑纵摇惯性单元硬件握手结果
-    qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
-    //下滑横摇电机驱动器硬件握手结果
-    qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
-    //下滑纵摇电机驱动器硬件握手结果
-    qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
+    QByteArray data;
+    data.append(MID_REQUEST_HARDWARE);
+//    data.append(currentTime().toUtf8());
+//    data.append('\n');
+    send2Contrl(data,tag);
 }
 
-void backEnd::onGetXiahuaInitSystemStatus(const QByteArray& dat)
+void backEnd::onGetHWHandShake(const QByteArray &dat, int tag)
 {
-     qDebug() << dat.toHex('-');
+    qDebug() << dat.toHex('-') << tag;
+    initControlSystem(tag);
 
-    //下滑系统控制器初始化结果
-    qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
-    //下滑横摇惯性单元初始化结果
-    qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
-    //下滑纵摇惯性单元初始化结果
-    qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
-    //下滑横摇电机驱动器初始化结果
-    qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
-    //下滑纵摇电机驱动器初始化结果
-    qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
+    if(tag ==0){
+        //下滑系统控制器硬件握手结果
+        qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
+        //下滑横摇惯性单元硬件握手结果
+        qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
+        //下滑纵摇惯性单元硬件握手结果
+        qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
+        //下滑横摇电机驱动器硬件握手结果
+        qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
+        //下滑纵摇电机驱动器硬件握手结果
+        qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
+    }
 }
 
-void backEnd::onGetXiahuaPowerOnOffStatus(const QByteArray& dat)
+void backEnd::initControlSystem(int tag)
 {
-	qDebug() << dat.toHex('-');
-	
-	//下滑系统控制器开机/关机结果
-    qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
-	
-	//下滑横摇惯性单元开机/关机结果
-     qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
-	//下滑纵摇惯性单元开机/关机结果
-     qDebug() << "下滑纵摇惯性单元开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
-	//下滑横摇电机驱动器开机/关机结果
-     qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
-	//下滑纵摇电机驱动器开机/关机结果
-     qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
-	
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT);
+    send2Contrl(data,tag);
+    controler_tag = tag;
+    QTimer::singleShot(50000 , this, &backEnd::getInitControlSystem);
+}
+
+void backEnd::getInitControlSystem()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_INIT_STATUS);
+    send2Contrl(data,controler_tag);
+}
+
+void backEnd::onGetInitControlSystem(const QByteArray& dat, int tag)
+{
+     qDebug() << dat.toHex('-') <<tag;
+     setWorkMode(3);
+
+     if(tag ==0){
+         //下滑系统控制器初始化结果
+         qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
+         //下滑横摇惯性单元初始化结果
+         qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
+         //下滑纵摇惯性单元初始化结果
+         qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
+         //下滑横摇电机驱动器初始化结果
+         qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
+         //下滑纵摇电机驱动器初始化结果
+         qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
+     }
+}
+
+void backEnd::getXiaHuaPowerOnOffStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_POWER_STATUS);
+    send2Contrl(data,0);
+}
+
+void backEnd::getHengYaoPowerOnOffStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_POWER_STATUS);
+    send2Contrl(data,1);
+}
+
+void backEnd::onGetPowerOnOffStatus(const QByteArray& dat,int tag)
+{
+    qDebug() << dat.toHex('-') << tag;
+    if(tag == 0){
+        //下滑系统控制器开机/关机结果
+        qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
+
+        //下滑横摇惯性单元开机/关机结果
+         qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
+        //下滑纵摇惯性单元开机/关机结果
+         qDebug() << "下滑纵摇惯性单元开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
+        //下滑横摇电机驱动器开机/关机结果
+         qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
+        //下滑纵摇电机驱动器开机/关机结果
+         qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
+    }
 }
 
 void backEnd::onError(QAbstractSocket::SocketError socketError)
@@ -237,103 +291,6 @@ void backEnd::TaTaiReport()
     send2TaTai_(xiahua);
 }
 
-void backEnd::hwHandShake()
-{
-    QByteArray data;
-    data.append(MID_REQUEST_HARDWARE);
-//    data.append(currentTime().toUtf8());
-//    data.append('\n');
-    send2Contrl(data);
-}
-
-void backEnd::xiahuaHandShake()
-{
-    QByteArray data;
-    data.append(MID_REQUEST_HARDWARE);
-//    data.append(currentTime().toUtf8());
-//    data.append('\n');
-    send2XiaHua(data);
-}
-
-void backEnd::initXiahuaSystem()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT);
-    send2XiaHua(data);
-    QTimer::singleShot(50000 , this, &backEnd::getXiahuaInitSystemStatus);
-}
-
-void backEnd::getXiahuaInitSystemStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT_STATUS);
-    send2XiaHua(data);
-}
-
-void backEnd::getXiahuaPowerOnOffStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_POWER_STATUS);
-    send2XiaHua(data);
-
-    getSystemStatusTimerID = startTimer(500);
-}
-
-void backEnd::hengyaoHandShake()
-{
-    QByteArray data;
-    data.append(MID_REQUEST_HARDWARE);
-
-    send2HengYa(data);
-}
-
-void backEnd::initHengyaoSystem()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT);
-    send2HengYa(data);
-    QTimer::singleShot(50000 , this, &backEnd::getHengyaoInitSystemStatus);
-}
-
-void backEnd::getHengyaoInitSystemStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT_STATUS);
-    send2HengYa(data);
-}
-
-void backEnd::getHengyaoPowerOnOffStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_POWER_STATUS);
-    send2XiaHua(data);
-
-//    getSystemStatusTimerID = startTimer(500);
-}
-
-void backEnd::initSystem()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT);
-
-    send2Contrl(data);
-}
-
-void backEnd::getInitSystemStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_INIT_STATUS);
-    send2Contrl(data);
-}
-
 void backEnd::setPowerOnOff(bool on, int tag)
 {
     qDebug() <<"";
@@ -344,39 +301,35 @@ void backEnd::setPowerOnOff(bool on, int tag)
     } else {
         data.append('\x02');
     }
+
+    send2Contrl(data,tag);
     if(tag ==0){
-        send2XiaHua(data);
-        QTimer::singleShot(10000 , this, &backEnd::getXiahuaPowerOnOffStatus);
-    } else {
-        send2HengYa(data);
-        QTimer::singleShot(10000 , this, &backEnd::getPowerOnOffStatus);
+        QTimer::singleShot(10000 , this, &backEnd::getXiaHuaPowerOnOffStatus);
+    } else if(tag ==1){
+        QTimer::singleShot(10000 , this, &backEnd::getHengYaoPowerOnOffStatus);
     }
 }
 
-void backEnd::getPowerOnOffStatus()
-{
-    qDebug() <<"";
-    QByteArray data;
-    data.append(MID_REQUEST_POWER_STATUS);
-    send2Contrl(data);
-
-    getSystemStatusTimerID = startTimer(500);
-}
-
-void backEnd::setWorkMode(qint8 tag)
+void backEnd::setWorkMode(qint8 status)
 {
     qDebug() <<"";
     QByteArray dat,data;
     dat.append(MID_REQUEST_WORKING_MODE);
     // 01:调试模式 10:检视模式 11:正常工作模式
-    if(tag == 3){
+    if(status == 3){
         dat.append('\x03');
-    } else if(tag == 2){
+    } else if(status == 2){
         dat.append('\x02');
-    } else if(tag == 1){
+    } else if(status == 1){
         dat.append('\x01');
     }
-    send2Contrl(dat);
+    send2Contrl(dat,0);
+    send2Contrl(dat,1);
+}
+
+void backEnd::onSetWorkMode(int tag)
+{
+    setPowerOnOff(true,tag);
 }
 
 void backEnd::setInspect(qint8 addr)
@@ -448,12 +401,12 @@ void backEnd::getCalibStatus(qint8 addr)
     }
 }
 
-void backEnd::getSystemStatus()
+void backEnd::getSystemStatus(int tag)
 {
     qDebug() <<"";
     QByteArray dat;
     dat.append(MID_REQUEST_SYSTEM_STATUS);
-    send2Contrl(dat);
+    send2Contrl(dat,tag);
 }
 
 void backEnd::setLight(qint8 addr, qint8 lightvalue, qint8 flash)
@@ -528,10 +481,13 @@ void backEnd::sysinfoUpload()
     send2TaTai_(data);
 }
 
-void backEnd::send2Contrl(const QByteArray &data)
+void backEnd::send2Contrl(const QByteArray &data, int tag)
 {
-    send2XiaHua(data);
-    send2HengYa(data);
+    if(tag == 0){
+        send2XiaHua(data);
+    } else if(tag == 1){
+        send2HengYa(data);
+    }
 }
 
 void backEnd::send2XiaHua(const QByteArray &data)
