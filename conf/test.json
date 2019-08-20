@@ -31,7 +31,7 @@
             "port": 1021
         },
         "controller":{
-            "device":"/dev/ttytest1",
+            "device":"/dev/ttyUSB0",
             "interval":200
         }
     }
