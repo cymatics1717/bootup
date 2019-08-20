@@ -23,6 +23,7 @@ Rectangle {
             console.log("----------------"+checked)
             if(checked){
                 backend.hwHandShake(0);
+		lightStatus.status = 2;
 //                lightswitch.enabled = false;
 //                lightswitch.opacity = .3
             } else {
@@ -59,7 +60,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setLight(7, text,4*status+1)
+            backend.setLight(7, text,4*lightStatus.status+1)
         }
     }
 
