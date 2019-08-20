@@ -5,6 +5,7 @@
 #include <QNetworkDatagram>
 
 #include "serialpeer.hpp"
+#include "coreinfo.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -92,6 +93,7 @@ private:
 
     QUdpSocket udp;
     serialPeer *controller;
+    coreInfo core;
     QHash<QString,QVariant> pool;
 
     int controler_tag;

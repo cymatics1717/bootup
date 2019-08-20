@@ -102,6 +102,7 @@ void serialPeer::writing(const QByteArray& dat)
     qInfo() << data.toHex('-');
 
     serial->write(data);
+    serial->flush();
 //    serial->waitForBytesWritten(10);
 }
 

@@ -318,7 +318,9 @@ void backEnd::onReadyRead()
 //                tag = -1;
 //            }
 
-            if(dat.at(0)==MID_REPLY_HARDWARE){
+             if(dat.at(0)==MID_REQUEST_SYSTEM_STATUS){
+                 core.parseSystemStatus(dat,tag);
+             } else if(dat.at(0)==MID_REPLY_HARDWARE){
                 //硬件握手回复
                 onGetHWHandShake(dat,tag);
                 qDebug() <<"********YYQ:hwHandShake reply success********"<<dat.size()<< dat.toHex('-');

@@ -26,11 +26,13 @@ INCLUDEPATH += ../transport
 # Input
 HEADERS += src/utils/logging/logging.hpp \
     src/backend.hpp \
+    src/coreinfo.hpp \
     src/utils/jsoncpp/json/json-forwards.h \
     src/utils/jsoncpp/json/json.h
 
 SOURCES += src/utils/logging/logging.cpp \
     src/backend.cpp \
+    src/coreinfo.cpp \
     src/main.cpp \
     src/utils/jsoncpp/jsoncpp.cpp
 
