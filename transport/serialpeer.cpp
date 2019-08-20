@@ -64,7 +64,8 @@ void serialPeer::onReadyRead()
     static int status = 0;
     auto reply = serial->readAll();
     qDebug() <<"recv:"<<reply.size()<< reply.toHex('-');
-    if(reply.size()>=8 && reply.at(0)=='\x0D' && reply.at(1)=='\x01'){
+
+    if(reply.size()>=6 && reply.at(0)=='\x0D' && reply.at(1)=='\x01'){
         onGetPowerStatus(reply.left(8));
         reply.remove(0,8);
         status = 1;
@@ -81,6 +82,7 @@ void serialPeer::onReadyRead()
         }
         qDebug() <<"+++++++++++"<<reply.size()<< reply.toHex('-');
     }
+
     if(reply.size()>=11 &&reply.at(0)=='\x0B' && reply.at(1)=='\x03'){
         onGetLightEStatus(reply.left(11));
         reply.remove(0,11);

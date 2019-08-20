@@ -163,7 +163,7 @@ QString currentTime(){
 bool checkEquality(const QByteArray &dat){
     QByteArray calc,check = dat.right(2);
     QDataStream stream(&calc, QIODevice::WriteOnly);
-    stream.setByteOrder(QDataStream::BigEndian);
+    stream.setByteOrder(QDataStream::LittleEndian);
     stream << mmmcrc16(dat.chopped(2));
 
 //    qDebug() <<dat.toHex('-')<< calc.toHex('-') << check.toHex('-');
