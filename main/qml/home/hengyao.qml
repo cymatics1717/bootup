@@ -19,6 +19,15 @@ Rectangle {
         title:qsTr("开关")
         height: parent.height*rect.rate
         width: parent.width- 2*parent.radius
+        onCheck: {
+            console.log("----------------"+checked)
+            if(checked){
+                backend.hwHandShake(1);
+//                lightStatus.status = 2;
+            } else {
+                backend.setPowerOnOff(false,1);
+            }
+        }
     }
     BooleanControl{
         id: lightcontrol

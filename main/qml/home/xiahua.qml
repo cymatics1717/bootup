@@ -23,7 +23,7 @@ Rectangle {
             console.log("----------------"+checked)
             if(checked){
                 backend.hwHandShake(0);
-		lightStatus.status = 2;
+                lightStatus.status = 2;
 //                lightswitch.enabled = false;
 //                lightswitch.opacity = .3
             } else {

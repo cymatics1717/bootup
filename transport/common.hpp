@@ -1,4 +1,4 @@
-#ifndef COMMON_HPP
+﻿#ifndef COMMON_HPP
 #define COMMON_HPP
 
 #include <QByteArray>
@@ -7,6 +7,22 @@
 
 quint16 mmmcrc16(const QByteArray &data);
 quint32 mmmcrc32(const QByteArray &data);
+
+/*****************从机地址**************************/
+#define SLAVE_BROADCAST '\x00'
+
+#define SLAVE_XIAHUA_ZONGYAO_DIANJI     '\x01'
+#define SLAVE_HENGYAO_DIANJI            '\x02'
+#define SLAVE_XIAHUA_HENGYAO_DIANJI     '\x03'
+#define SLAVE_XIAHUA_ZONGYAO_GUANXING   '\x04'
+#define SLAVE_HENGYAO_GUANXING          '\x05'
+#define SLAVE_XIAHUA_HENGYAO_GUANXING   '\x06'
+
+
+/***触控面板与系统控制器相关协议信息标识
+**************内部信号和外部信号选择****************/
+//5.3.31 陀螺信号源选择报文
+#define MID_REQUEST_GYRO_SINGAL '\x1D'
 
 /***触控面板与塔台相关协议信息标识***/
 //5.2.1 系统状态上报报文 0x01
@@ -58,6 +74,8 @@ quint32 mmmcrc32(const QByteArray &data);
 *****************检视模式和调试模式**************************/
 //5.3.10 检视模式参数设置报文
 #define MID_REQUEST_SET_INSPECT_MODE '\x14'
+//5.3.26 进入标零报文
+#define MID_REQUEST_CALIB_ACTIVATE '\x19'
 //5.3.11 零位旋变值及惯性单元偏移量查询报文
 #define MID_REQUEST_ZERO_OFFSET '\x15'
 //5.3.12 零位旋变值及惯性单元偏移量报文
@@ -68,18 +86,14 @@ quint32 mmmcrc32(const QByteArray &data);
 #define MID_REQUEST_CALIB_STATUS '\x17'
 //5.3.15 标零结果报文
 #define MID_REPLY_CALIB_STATUS '\x17'
-//5.3.26 进入标零报文
-#define MID_REQUEST_CALIB_ACTIVATE '\x19'
 //5.3.27 退出标零报文
 #define MID_REQUEST_CALIB_DEACTIVATE '\x1A'
 //5.3.28 限位测试报文
-#define MID_REPLY_LIMIT_TEST '\x01'
+#define MID_REPLY_LIMIT_TEST '\x18'
 //5.3.29 限位角度查询报文
 #define MID_REPLY_LIMIT_ANGLE_STATUS '\x1C'
 //5.3.30 限位角度报文
 #define MID_REQUEST_LIMIT_ANGLE '\x1C'
-//5.3.31 陀螺信号源选择报文
-#define MID_REQUEST_GYRO_SINGAL '\x1D'
 
 QString currentTime();
 bool checkEquality(const QByteArray &dat);
