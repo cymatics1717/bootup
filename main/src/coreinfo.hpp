@@ -12,6 +12,8 @@ public:
 signals:
 
 public slots:
+    void parseAlarmStatus(const QByteArray &data, int tag);
+    void parseBreakdownStatus(const QByteArray &data, int tag);
     void parseSystemStatus(const QByteArray &data, int tag);
 
 };

@@ -41,7 +41,7 @@ quint32 mmmcrc32(const QByteArray &data);
 //5.3.16 系统状态查询报文
 #define MID_REQUEST_SYSTEM_STATUS '\x07'
 //5.3.17 系统状态报文
-#define MID_REPLY_SYSTEM_STATUS '\x01'
+#define MID_REPLY_SYSTEM_STATUS '\x07'
 //5.3.18 故障信息主动上报报文
 #define MID_REPLY_ERROR_REPORT '\x00'
 //5.3.19 报警信息主动上报报文
