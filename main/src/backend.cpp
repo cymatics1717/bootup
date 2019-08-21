@@ -3,7 +3,6 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <utility>
-#include <QThread>
 
 static QString makeID(const QNetworkDatagram gram){
     return QString("[%1:%2->%3:%4 %5]")
@@ -98,7 +97,7 @@ int backEnd::loadConfig()
 //        controller = new serialPeer(dev,interval,this);
     }
 
-    //controller->setPowerOnOff(true);
+//    controller->setPowerOnOff(true);
 	
     return 0;
 }
@@ -221,6 +220,17 @@ void backEnd::setPowerOnOff(bool on, int tag)
     }
 }
 
+void backEnd::setXiahuaPowerOnOffDelays()
+{
+    setPowerOnOff(true,0);
+}
+
+void backEnd::setHengyaoPowerOnOffDelays()
+{
+    setPowerOnOff(true,1);
+}
+
+
 void backEnd::getXiaHuaPowerOnOffStatus()
 {
     qDebug() <<"";
@@ -330,9 +340,13 @@ void backEnd::onReadyRead()
                 onGetInitControlSystem(dat,tag);
                 qDebug() <<"********YYQ:GetInitControlSystem reply success********"<<dat.size()<< dat.toHex('-');
                 setWorkMode(3,tag);
-                //延时
-                QThread::msleep(300);
-                setPowerOnOff(true,tag);
+                //延时 if taita
+                if(tag == 0){
+                    QTimer::singleShot(50 , this, &backEnd::setXiahuaPowerOnOffDelays);
+                }else if(tag == 1){
+                    QTimer::singleShot(50 , this, &backEnd::setHengyaoPowerOnOffDelays);
+                }
+
             } else if(dat.at(0) == MID_REPLY_POWER_STATUS) {
                 //开机结果查询回复
                 onGetPowerOnOffStatus(dat,tag);

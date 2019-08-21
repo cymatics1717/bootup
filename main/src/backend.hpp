@@ -50,6 +50,9 @@ public slots:
 
     //5.3.6 开机/关机报文
     void setPowerOnOff(bool on, int tag);
+    void setXiahuaPowerOnOffDelays();
+    void setHengyaoPowerOnOffDelays();
+
     //5.3.7 开机/关机结果查询报文
     void getXiaHuaPowerOnOffStatus();
     void getHengYaoPowerOnOffStatus();
