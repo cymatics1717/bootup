@@ -12,6 +12,10 @@ public:
 signals:
 
 public slots:
+    void parseHWHandShakeStatus(const QByteArray &dat, int tag);
+    void parseInitSystemStatus(const QByteArray& dat, int tag);
+    void parsePowerOnOffStatus(const QByteArray& dat,int tag);
+
     void parseAlarmStatus(const QByteArray &data, int tag);
     void parseBreakdownStatus(const QByteArray &data, int tag);
     void parseSystemStatus(const QByteArray &data, int tag);

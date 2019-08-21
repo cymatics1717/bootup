@@ -22,6 +22,7 @@ backEnd::backEnd(QString config_file, QObject *parent) : QObject(parent)
     endpoints.insert("tatai",qMakePair<QString,quint16>("192.168.1.1",1021));
 
     tataireportTimerID = startTimer(1000);
+//    getSystemStatusTimerID = startTimer(500);
 }
 
 QString backEnd::getConfigfile() const
@@ -304,7 +305,7 @@ void backEnd::setAzimuth(qint32 azimuth)
     send2XiaHua(data);
 }
 
-/*****************正常模式接收通用接口**************************/
+/*****************UDP接收通用接口**************************/
 void backEnd::onReadyRead()
 {
     while(udp.hasPendingDatagrams()){
@@ -328,16 +329,20 @@ void backEnd::onReadyRead()
 //                tag = -1;
 //            }
 
+             //系统状态查询回复
              if(dat.at(0)==MID_REPLY_SYSTEM_STATUS){
                  core.parseSystemStatus(dat,tag);
+                 qDebug() <<"********YYQ:parseSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
+
              } else if(dat.at(0)==MID_REPLY_HARDWARE){
                 //硬件握手回复
-                onGetHWHandShake(dat,tag);
+                core.parseHWHandShakeStatus(dat,tag);
                 qDebug() <<"********YYQ:hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
                 initControlSystem(tag);
-            } else if(dat.at(0) == MID_REPLY_INIT_STATUS) {
+
+             } else if(dat.at(0) == MID_REPLY_INIT_STATUS) {
                 //初始化查询回复
-                onGetInitControlSystem(dat,tag);
+                core.parseInitSystemStatus(dat,tag);
                 qDebug() <<"********YYQ:GetInitControlSystem reply success********"<<dat.size()<< dat.toHex('-');
                 setWorkMode(3,tag);
                 //延时 if taita
@@ -349,76 +354,31 @@ void backEnd::onReadyRead()
 
             } else if(dat.at(0) == MID_REPLY_POWER_STATUS) {
                 //开机结果查询回复
-                onGetPowerOnOffStatus(dat,tag);
+                core.parsePowerOnOffStatus(dat,tag);
                 qDebug() <<"********YYQ:getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
-            }
+
+             }/*else if(dat.at(0) == MID_REPLY_WARN_REPORT) {
+                 //报警信息主动上报
+                 core.parseAlarmStatus(dat,tag);
+                 qDebug() <<"********YYQ:parseAlarmStatus reply success********"<<dat.size()<< dat.toHex('-');
+
+             }else if(dat.at(0) == MID_REPLY_ERROR_REPORT) {
+                 //故障信息主动上报
+                 core.parseBreakdownStatus(dat,tag);
+                 qDebug() <<"********YYQ:parseBreakdownStatus reply success********"<<dat.size()<< dat.toHex('-');
+             }*/
         }
     }
 }
 
-void backEnd::onGetHWHandShake(const QByteArray &dat, int tag)
+/*****************系统状态查询************************/
+void backEnd::getSystemStatus(int tag)
 {
-    qDebug() << dat.toHex('-') << tag;
+    qDebug() <<"";
+    QByteArray dat;
+    dat.append(MID_REQUEST_SYSTEM_STATUS);
 
-    if(tag ==0){
-        //下滑系统控制器硬件握手结果
-        qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
-        qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
-        qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
-        qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
-        qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
-    } else if(tag == 1){
-        //横摇系统控制器硬件握手结果
-        qDebug() << "横摇系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
-        qDebug() << "横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
-        qDebug() << "右固定灯光源驱动器硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
-        qDebug() << "左固定灯光源驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
-        qDebug() << "横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
-    }
-}
-
-void backEnd::onGetInitControlSystem(const QByteArray& dat, int tag)
-{
-     qDebug() << dat.toHex('-') <<tag;
-
-     if(tag ==0){
-         //下滑系统控制器初始化结果
-         qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
-         qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
-         qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
-         qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
-         qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
-     } else if(tag == 1){
-         //横摇系统控制器初始化结果
-         qDebug() << "横摇系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
-         qDebug() << "横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
-         qDebug() << "右固定灯光源驱动器初始化结果:" << ((dat.at(1)>>2) & '\x01');
-         qDebug() << "左固定灯光源驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
-         qDebug() << "横摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
-     }
-}
-
-void backEnd::onGetPowerOnOffStatus(const QByteArray& dat,int tag)
-{
-    qDebug() << dat.toHex('-') << tag;
-
-    if(tag ==0){
-        //下滑系统控制器开机/关机结果
-        qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
-
-        qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
-        qDebug() << "下滑纵摇惯性单元开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
-        qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
-        qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
-    } else if(tag == 1){
-        //横摇系统控制器开机/关机结果
-        qDebug() << "横摇电机驱动器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
-
-        qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
-        qDebug() << "左固定灯光源驱动器开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
-        qDebug() << "左固定灯光源驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
-        qDebug() << "横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
-    }
+    send2Contrl(dat,tag);
 }
 
 /*****************检视模式和调试模式接口************************/
@@ -491,14 +451,6 @@ void backEnd::getCalibStatus(qint8 addr)
     }
 }
 
-void backEnd::getSystemStatus(int tag)
-{
-    qDebug() <<"";
-    QByteArray dat;
-    dat.append(MID_REQUEST_SYSTEM_STATUS);
-    send2Contrl(dat,tag);
-}
-
 void backEnd::closeAll()
 {
 
@@ -514,6 +466,7 @@ void backEnd::sysinfoUpload()
     send2TaTai_(data);
 }
 
+/*****************UDP通用发送接口************************/
 void backEnd::send2Contrl(const QByteArray &data, int tag)
 {
     if(tag == 0){

@@ -6,6 +6,71 @@ coreInfo::coreInfo(QObject *parent) : QObject(parent)
 
 }
 
+void coreInfo::parseHWHandShakeStatus(const QByteArray &dat, int tag)
+{
+    qDebug() << dat.toHex('-') << tag;
+
+    if(tag ==0){
+        //下滑系统控制器硬件握手结果
+        qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
+        qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
+        qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
+        qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
+        qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
+    } else if(tag == 1){
+        //横摇系统控制器硬件握手结果
+        qDebug() << "横摇系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
+        qDebug() << "横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
+        qDebug() << "右固定灯光源驱动器硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
+        qDebug() << "左固定灯光源驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
+        qDebug() << "横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
+    }
+}
+
+void coreInfo::parseInitSystemStatus(const QByteArray& dat, int tag)
+{
+     qDebug() << dat.toHex('-') <<tag;
+
+     if(tag ==0){
+         //下滑系统控制器初始化结果
+         qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
+         qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
+         qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
+         qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
+         qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
+     } else if(tag == 1){
+         //横摇系统控制器初始化结果
+         qDebug() << "横摇系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
+         qDebug() << "横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
+         qDebug() << "右固定灯光源驱动器初始化结果:" << ((dat.at(1)>>2) & '\x01');
+         qDebug() << "左固定灯光源驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
+         qDebug() << "横摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
+     }
+}
+
+void coreInfo::parsePowerOnOffStatus(const QByteArray& dat,int tag)
+{
+    qDebug() << dat.toHex('-') << tag;
+
+    if(tag ==0){
+        //下滑系统控制器开机/关机结果
+        qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
+
+        qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
+        qDebug() << "下滑纵摇惯性单元开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
+        qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
+        qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
+    } else if(tag == 1){
+        //横摇系统控制器开机/关机结果
+        qDebug() << "横摇电机驱动器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
+
+        qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
+        qDebug() << "左固定灯光源驱动器开机/关机结果:" << ((dat.at(1)>>4) & '\x03');
+        qDebug() << "左固定灯光源驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
+        qDebug() << "横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
+    }
+}
+
 void coreInfo::parseAlarmStatus(const QByteArray &data, int tag)
 {
     qDebug() << data.toHex('-') << tag;
@@ -381,6 +446,5 @@ void coreInfo::parseSystemStatus(const QByteArray &data, int tag)
         qDebug() << "系统控制器工作模式:" << (data.at(41));
         //第29行
         qDebug() << "系统控制器工作状态:" << (data.at(42));
-
     }
 }
