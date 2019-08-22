@@ -22,8 +22,7 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
             if(checked){
-                backend.hwHandShake(1);
-//                lightStatus.status = 2;
+                backend.hwHandShake(3, 1);
             } else {
                 backend.setPowerOnOff(false,1);
             }
@@ -39,6 +38,10 @@ Rectangle {
         title:qsTr("光源控制")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
+        onCheck: {
+            console.log("----------------"+checked)
+            backend.setLight(1, lightsetting.value, 4*(1+lightcontrol.checked)+(2-lightcontrol.checked), 3)
+        }
     }
     IntegerControl {
         id: lightsetting
@@ -51,5 +54,9 @@ Rectangle {
         value:qsTr("50")
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
+        onTextChanged: {
+            console.log("####################"+text)
+            backend.setLight(1, text,4*lightStatus.status+1, 3)
+        }
     }
 }

@@ -36,7 +36,7 @@ public slots:
     void TaTaiReport();
 
     //5.3.1 硬件握手结果查询报文
-    void hwHandShake(int tag);
+    void hwHandShake(int mode, int tag);
 //    void onGetHWHandShake(const QByteArray& dat,int tag);
 
     //5.3.3 初始化报文
@@ -58,30 +58,38 @@ public slots:
     void getHengYaoPowerOnOffStatus();
 //    void onGetPowerOnOffStatus(const QByteArray& dat,int tag);
 
+    //5.3.10 检视模式参数设置报文
+    void reqSetInspect(qint8 slaveAddr, qint8 amp, qint8 period, int tag);
+
     //5.3.22 仰角设置报文
     void setPitch(qint32 pitch);
     //5.3.21 方位角设置报文
     void setAzimuth(qint32 azimuth);
 
     //5.3.20 光源控制报文
-    void setLight(qint8 addr, qint8 lightvalue,qint8 flash = 6);
+    void setLight(int tag, qint8 lightvalue, qint8 flash, qint8 mode);
 
-
-    //5.3.10 检视模式参数设置报文
-    void setInspect(qint8 addr);
-
-   //5.3.11 零位旋变值及惯性单元偏移量查询报文
-    void getZeroOffset(qint8 addr);
+    //5.3.26 进入标零报文
+    void reqCalibActivate(qint8 slaveAddr,int tag);
+    //5.3.11 零位旋变值及惯性单元偏移量查询报文
+    void reqZeroOffset(qint8 slaveAddr,int tag);
     //5.3.13 零位旋变值及惯性单元偏移量平均值报文
-    void getZeroOffsetAvg(qint8 addr);
+    void reqZeroOffsetAvg(qint8 slaveAddr,int tag);
+    //5.3.14 标零结果查询报文
+    void reqCalibStatus(qint8 slaveAddr,int tag);
+    //5.3.27 退出标零报文
+    void reqCalibDeactivate(qint8 slaveAddr,int tag);
 
-   //5.3.14 标零结果查询报文
-    void getCalibStatus(qint8 addr);
+    // 限位角报文
+    void reqLimitTest(qint8 slaveAddr,qint8 leftRight,int tag);
+    void reqLimitAngleStatus(qint8 slaveAddr, qint8 leftRight, int tag);
+    void reqXiaHuaLeftLimitAngleStatus();
+    void reqXiaHuaRightLimitAngleStatus();
+    void reqHengYaoLeftLimitAngleStatus();
+    void reqHengYaoRightLimitAngleStatus();
 
   //5.3.16 系统状态查询报文
     void getSystemStatus(int tag);
-
-    void closeAll();
 
     void sysinfoUpload();
 
@@ -102,7 +110,7 @@ private:
     int controler_tag;
     int tataireportTimerID;
     int getSystemStatusTimerID;
-
+    int workMode; //工作模式:01:调试模式;10:检视模式;11:正常工作模式
 };
 
 #endif // BACKEND_HPP

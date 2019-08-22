@@ -3,6 +3,8 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <utility>
+#include <math.h>
+#include <QThread>
 
 static QString makeID(const QNetworkDatagram gram){
     return QString("[%1:%2->%3:%4 %5]")
@@ -155,8 +157,14 @@ void backEnd::TaTaiReport()
 /***触控面板与系统控制器相关协议信息标识
 *****************正常模式发送通用接口**************************/
 //1. 硬件握手
-void backEnd::hwHandShake(int tag)
+/**
+ * @brief backEnd::hwHandShake
+ * @param mode 工作模式
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::hwHandShake(int mode, int tag)
 {
+    workMode = mode;
     QByteArray data;
     data.append(MID_REQUEST_HARDWARE);
 
@@ -248,20 +256,25 @@ void backEnd::getHengYaoPowerOnOffStatus()
     send2Contrl(data,1);
 }
 
-//光源控制
-void backEnd::setLight(qint8 addr, qint8 lightvalue, qint8 flash)
+/**
+ * @brief backEnd::setLight
+ * @param tag 下滑：0；横摇：1
+ * @param lightvalue 光强
+ * @param flash 闪光模式 0x11:多闪, 0x10:单闪, 0x01:不闪
+ * @param mode 工作模式 0x11:正常工作模式, 0x10:检视模式, 0x01:调试模式
+ */
+void backEnd::setLight(int tag, qint8 lightvalue, qint8 flash, qint8 mode)
 {
-    qDebug() <<addr<< lightvalue << lightvalue *5/2<< flash;
+    qDebug() << lightvalue << lightvalue *5/2<< flash <<tag <<mode;
     QByteArray dat;
     dat.append(MID_REQUEST_LIGHT_CONTROL);
-    if(addr=='\x07'){
+    if(tag==0){
         //光强等级设置 光强等级0:00000000 光强等级1:0000
         dat.append(qint8(lightvalue*2.5));
-        //      闪光状态设置(三闪:11开:01单闪:10关:10不闪:01)   下滑光源开关设置 开:01 关:10
+        // 闪光状态设置(三闪:11开:01单闪:10关:10不闪:01)   下滑光源开关设置 开:01 关:10
         dat.append(flash);
-        send2XiaHua(dat);
-
-    } else if(addr=='\x08'){
+        send2Contrl(dat, tag);
+    } else if(tag==1){
         //光强等级设置 光强等级0:00000000 光强等级1:0000
         dat.append(lightvalue);
         // 横摇灯杆开关设置 开:01关:10
@@ -270,10 +283,12 @@ void backEnd::setLight(qint8 addr, qint8 lightvalue, qint8 flash)
         } else {
             dat.append('\x80');
         }
-        //      左固定灯黄灯开关设置 开:01关:10  左固定灯红灯开关设置 开:01关:10 右固定灯黄灯开关设置 开:01关:10  右固定灯红灯开关设置 开:01关:10
-        dat.append('\x40');
-        dat.append('\x02');
-        send2HengYa(dat);
+        if (mode == 1) {
+            // 左固定灯黄灯开关设置 开:01关:10  左固定灯红灯开关设置 开:01关:10 右固定灯黄灯开关设置 开:01关:10  右固定灯红灯开关设置 开:01关:10
+            dat.append('\x40');
+            dat.append('\x02');
+        }
+        send2Contrl(dat, tag);
     }
 }
 
@@ -381,80 +396,222 @@ void backEnd::getSystemStatus(int tag)
     send2Contrl(dat,tag);
 }
 
-/*****************检视模式和调试模式接口************************/
-void backEnd::setInspect(qint8 addr)
+/*****************检视模式和调试模式接口 start************************/
+/**
+ * @brief backEnd::reqSetInspect
+ * @param slaveAddr : 从机地址
+ * @param amp : 幅值大于 15°时,自动填入 15°
+ * @param period : 最小周期=|幅值|*2π/正弦最大速度(正弦最大速度取 11.7°/s)
+ * ,如果设置的周期值小于最小周期,自动填入大于最小周期的整数。
+ * @param tag : 下滑：0；横摇：1
+ */
+void backEnd::reqSetInspect(qint8 slaveAddr, qint8 amp, qint8 period, int tag)
 {
-    qDebug() <<"";
-    QByteArray dat;
-    dat.append(MID_REQUEST_SET_INSPECT_MODE);
+    qDebug() <<"@@@@@@@@@@@@@@@@@viktor@@@@@@@@@@@@" << slaveAddr << amp << period << tag;
+    QByteArray data;
+    data.append(MID_REQUEST_SET_INSPECT_MODE);
 
-//    下滑系统控制器 0x07
-//    横摇系统控制器 0x08
-    dat.append(addr);
-//    幅值(单位:°)
-    qint8 amp = 10;
-//    周期(大于最小周期值,单位为s)
-    qint8 period = 20;
-    dat.append(amp);
-    dat.append(period);
-    if(addr=='\x07'){
-        send2XiaHua(dat);
-    } else if(addr=='\x08'){
-        send2HengYa(dat);
+    // 下滑系统控制器 0x07, tag:0
+    // 横摇系统控制器 0x08, tag:1
+    data.append(slaveAddr);
+    // 幅值(单位:°)
+    if (amp > 15) {
+        amp = 15;
     }
+    data.append(amp);
+    // 周期(大于最小周期值,单位为s)
+    // 最小周期
+    double minPeriod = (double)(qAbs(amp) * 2 * M_PI) / 11.7;
+    if (period < minPeriod) {
+        period = ceil(minPeriod);
+    }
+    data.append(period);
+    send2Contrl(data, tag);
+}
+/*****************检视模式和调试模式接口 end************************/
+
+/*****************标零报文接口 start************************/
+//2. 进入标零报文
+/**
+ * @brief backEnd::reqCalibActivate
+ * @param slaveAddr 从机地址
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqCalibActivate(qint8 slaveAddr,int tag) {
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_CALIB_ACTIVATE);
+    data.append(slaveAddr);
+
+    send2Contrl(data,tag);
 }
 
-void backEnd::getZeroOffset(qint8 addr)
+// 零位旋变值及惯性单元偏移量查询报文
+/**
+ * @brief backEnd::reqZeroOffset
+ * @param slaveAddr 从机地址
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqZeroOffset(qint8 slaveAddr,int tag)
 {
     qDebug() <<"";
-    QByteArray dat;
-    dat.append(MID_REQUEST_ZERO_OFFSET);
-    if(addr=='\x07'){
-        send2XiaHua(dat);
-    } else if(addr=='\x08'){
-        send2HengYa(dat);
-    }
+    QByteArray data;
+    data.append(MID_REQUEST_ZERO_OFFSET);
+    data.append(slaveAddr);
+
+    send2Contrl(data,tag);
 }
 
-void backEnd::getZeroOffsetAvg(qint8 addr)
+// 零位旋变值及惯性单元偏移量平均值报文（可能没意义）
+/**
+ * @brief backEnd::reqZeroOffsetAvg
+ * @param slaveAddr 从机地址
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqZeroOffsetAvg(qint8 slaveAddr,int tag)
 {
     qDebug() <<"";
     QByteArray dat,data;
-    dat.append(MID_REQUEST_ZERO_OFFSET_AVG);
-    if(addr=='\x07'|| addr=='\x08'){
-        dat.append(addr);
-    }
-    //平均值(4字节) (惯性单元偏移量平均值扩大1000倍,小端传输,有符号数)
+    data.append(MID_REQUEST_ZERO_OFFSET_AVG);
+    data.append(slaveAddr);
 
-    qint32 avg = 2000;
+    qint32 avg = 1000;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData(dat,dat.size());
     stream  << avg;
 
-    if(addr=='\x07'){
-        send2XiaHua(data);
-    } else if(addr=='\x08'){
-        send2HengYa(data);
-    }
+    send2Contrl(data,tag);
 }
 
-void backEnd::getCalibStatus(qint8 addr)
+// 标零结果查询报文
+/**
+ * @brief backEnd::reqCalibStatus
+ * @param slaveAddr 从机地址
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqCalibStatus(qint8 slaveAddr,int tag)
 {
     qDebug() <<"";
-    QByteArray dat;
-    dat.append(MID_REQUEST_CALIB_STATUS);
-    if(addr=='\x07'){
-        send2XiaHua(dat);
-    } else if(addr=='\x08'){
-        send2HengYa(dat);
+    QByteArray data;
+    data.append(MID_REQUEST_CALIB_STATUS);
+    data.append(slaveAddr);
+
+    send2Contrl(data,tag);
+}
+
+// 退出标零报文
+/**
+ * @brief backEnd::reqCalibDeactivate
+ * @param slaveAddr 从机地址
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqCalibDeactivate(qint8 slaveAddr,int tag)
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_CALIB_DEACTIVATE);
+
+    data.append(slaveAddr);
+    send2Contrl(data,tag);
+}
+/*****************标零报文接口 end************************/
+
+/*****************限位角报文接口 start************************/
+//2. 限位角 Limit angle
+/**
+ * @brief backEnd::reqLimitTest
+ * @param slaveAddr 从机地址
+ * @param leftRight 0x01:左(上)限位; 0x02:右(下)限位
+ * @param tag 下滑：0；横摇：1
+ */
+void backEnd::reqLimitTest(qint8 slaveAddr,qint8 leftRight,int tag)
+{
+    qDebug() <<"";
+
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_TEST);
+    data.append(slaveAddr);
+    data.append(leftRight);
+
+    send2Contrl(data,tag);
+
+    if(tag == 0) {
+        if(leftRight == 1) {
+            QTimer::singleShot(500, this, &backEnd::reqXiaHuaLeftLimitAngleStatus);
+        } else if (leftRight == 2) {
+            QTimer::singleShot(500, this, &backEnd::reqXiaHuaRightLimitAngleStatus);
+        }
+    } else if (tag == 1) {
+        if(leftRight == 1) {
+            QTimer::singleShot(500, this, &backEnd::reqHengYaoLeftLimitAngleStatus);
+        } else if (leftRight == 2) {
+            QTimer::singleShot(500, this, &backEnd::reqHengYaoRightLimitAngleStatus);
+        }
     }
 }
 
-void backEnd::closeAll()
+void backEnd::reqLimitAngleStatus(qint8 slaveAddr, qint8 leftRight, int tag)
 {
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
+    data.append(slaveAddr);
+    data.append(leftRight);
+
+    send2Contrl(data,tag);
+}
+
+void backEnd::reqXiaHuaLeftLimitAngleStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
+    // TODO 从机地址，限位方向需要填充
+//    data.append(slaveAddr);
+
+//    data.append(leftRight);
+
+//    send2Contrl(data,tag);
 
 }
+
+void backEnd::reqXiaHuaRightLimitAngleStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
+    // TODO 从机地址，限位方向需要填充
+//    data.append(slaveAddr);
+//    data.append(leftRight);
+
+//    send2Contrl(data,tag);
+}
+
+void backEnd::reqHengYaoLeftLimitAngleStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
+    // TODO 从机地址，限位方向需要填充
+//    data.append(slaveAddr);
+//    data.append(leftRight);
+
+//    send2Contrl(data,tag);
+}
+
+void backEnd::reqHengYaoRightLimitAngleStatus()
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
+    // TODO 从机地址，限位方向需要填充
+//    data.append(slaveAddr);
+//    data.append(leftRight);
+
+//    send2Contrl(data,tag);
+}
+/*****************限位角报文接口 end************************/
 
 void backEnd::sysinfoUpload()
 {

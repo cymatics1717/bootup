@@ -22,7 +22,7 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
             if(checked){
-                backend.hwHandShake(0);
+                backend.hwHandShake(3, 0);
                 lightStatus.status = 2;
 //                lightswitch.enabled = false;
 //                lightswitch.opacity = .3
@@ -44,7 +44,7 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
 //            backend.setLight(7, lightsetting.value,4*2+(2-lightcontrol.checked))
-            backend.setLight(7, lightsetting.value,4*(1+lightcontrol.checked)+(2-lightcontrol.checked))
+            backend.setLight(0, lightsetting.value,4*(1+lightcontrol.checked)+(2-lightcontrol.checked), 3)
         }
     }
     IntegerControl {
@@ -60,7 +60,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setLight(7, text,4*lightStatus.status+1)
+            backend.setLight(0, text,4*lightStatus.status+1, 3)
         }
     }
 
@@ -114,7 +114,7 @@ Rectangle {
         onClicked: {
             console.log(lightcontrol.checked+"-------"+status)
 //            backend.setLight(7, lightsetting.value, 4*status+(1+lightcontrol.checked))
-            backend.setLight(7, lightsetting.value, 4*status+(2-lightcontrol.checked))
+            backend.setLight(0, lightsetting.value, 4*status+(2-lightcontrol.checked), 3)
         }
     }
 

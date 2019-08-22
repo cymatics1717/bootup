@@ -89,11 +89,11 @@ quint32 mmmcrc32(const QByteArray &data);
 //5.3.27 退出标零报文
 #define MID_REQUEST_CALIB_DEACTIVATE '\x1A'
 //5.3.28 限位测试报文
-#define MID_REPLY_LIMIT_TEST '\x18'
+#define MID_REQUEST_LIMIT_TEST '\x18'
 //5.3.29 限位角度查询报文
-#define MID_REPLY_LIMIT_ANGLE_STATUS '\x1C'
+#define MID_REQUEST_LIMIT_ANGLE_STATUS '\x1C'
 //5.3.30 限位角度报文
-#define MID_REQUEST_LIMIT_ANGLE '\x1C'
+#define MID_REPLY_LIMIT_ANGLE '\x1C'
 
 QString currentTime();
 bool checkEquality(const QByteArray &dat);

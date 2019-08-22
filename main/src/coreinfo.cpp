@@ -448,3 +448,42 @@ void coreInfo::parseSystemStatus(const QByteArray &data, int tag)
         qDebug() << "系统控制器工作状态:" << (data.at(42));
     }
 }
+
+
+/**
+ * @brief coreInfo::parseLimitAngle
+ * @param data 系统控制器返回的数据
+ * @param tag 下滑：0；横摇：1
+ */
+void coreInfo::parseLimitAngle(const QByteArray &data, int tag) {
+    qDebug() << data.toHex('-') << tag;
+
+    if(tag==0){
+        if (data.at(1) == 1) {
+            qDebug() << "限位过程角度值:" << (data.at(1));
+        } else if (data.at(1) == 2) {
+            qDebug() << "限位角度值:" << (data.at(1));
+        }
+        qDebug() << "对应从机设备地址:" << (data.at(2));
+        if (data.at(2)==1) {
+            qDebug() << "左(上)限位:" << (data.at(2));
+        } else if (data.at(2)==2) {
+            qDebug() << "右(下)限位:" << (data.at(2));
+        }
+        qDebug() << "限位角度:" << (data.at(3));
+    } else if (tag==1) {
+        if (data.at(1) == 1) {
+            qDebug() << "限位过程角度值:" << (data.at(1));
+        } else if (data.at(1) == 2) {
+            qDebug() << "限位角度值:" << (data.at(1));
+        }
+        qDebug() << "对应从机设备地址:" << (data.at(2));
+        if (data.at(2)==1) {
+            qDebug() << "左(上)限位:" << (data.at(2));
+        } else if (data.at(2)==2) {
+            qDebug() << "右(下)限位:" << (data.at(2));
+        }
+        qDebug() << "限位角度:" << (data.at(3));
+    }
+
+}
