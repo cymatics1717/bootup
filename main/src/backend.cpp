@@ -329,12 +329,21 @@ void backEnd::onReadyRead()
 //                tag = -1;
 //            }
 
-             //系统状态查询回复
-             if(dat.at(0)==MID_REPLY_SYSTEM_STATUS){
+             if(dat.at(0) == MID_REPLY_ERROR_REPORT) {
+                 //故障信息主动上报
+                 core.parseBreakdownStatus(dat,tag);
+                 qDebug() <<"********YYQ:parseBreakdownStatus reply success********"<<dat.size()<< dat.toHex('-');
+             }else if(dat.at(0) == MID_REPLY_WARN_REPORT) {
+                 //报警信息主动上报
+                 core.parseAlarmStatus(dat,tag);
+                 qDebug() <<"********YYQ:parseAlarmStatus reply success********"<<dat.size()<< dat.toHex('-');
+
+             }else if(dat.at(0)==MID_REPLY_SYSTEM_STATUS){
+                 //系统状态查询回复
                  core.parseSystemStatus(dat,tag);
                  qDebug() <<"********YYQ:parseSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
 
-             } else if(dat.at(0)==MID_REPLY_HARDWARE){
+             }else if(dat.at(0)==MID_REPLY_HARDWARE){
                 //硬件握手回复
                 core.parseHWHandShakeStatus(dat,tag);
                 qDebug() <<"********YYQ:hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
@@ -357,16 +366,7 @@ void backEnd::onReadyRead()
                 core.parsePowerOnOffStatus(dat,tag);
                 qDebug() <<"********YYQ:getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
 
-             }/*else if(dat.at(0) == MID_REPLY_WARN_REPORT) {
-                 //报警信息主动上报
-                 core.parseAlarmStatus(dat,tag);
-                 qDebug() <<"********YYQ:parseAlarmStatus reply success********"<<dat.size()<< dat.toHex('-');
-
-             }else if(dat.at(0) == MID_REPLY_ERROR_REPORT) {
-                 //故障信息主动上报
-                 core.parseBreakdownStatus(dat,tag);
-                 qDebug() <<"********YYQ:parseBreakdownStatus reply success********"<<dat.size()<< dat.toHex('-');
-             }*/
+             }
         }
     }
 }
