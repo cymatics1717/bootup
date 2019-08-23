@@ -1,4 +1,5 @@
 #include "coreinfo.hpp"
+#include <QMediaPlayer>
 #include <QDebug>
 
 coreInfo::coreInfo(QObject *parent) : QObject(parent)
@@ -11,14 +12,12 @@ void coreInfo::parseHWHandShakeStatus(const QByteArray &dat, int tag)
     qDebug() << dat.toHex('-') << tag;
 
     if(tag ==0){
-        //下滑系统控制器硬件握手结果
         qDebug() << "下滑系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
         qDebug() << "下滑横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
         qDebug() << "下滑纵摇惯性单元硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
         qDebug() << "下滑横摇电机驱动器硬件握手结果:" << ((dat.at(1)>>1) & '\x01');
         qDebug() << "下滑纵摇电机驱动器硬件握手结果:" << ((dat.at(1)>>0) & '\x01');
     } else if(tag == 1){
-        //横摇系统控制器硬件握手结果
         qDebug() << "横摇系统控制器硬件握手结果:" << ((dat.at(1)>>4) & '\x01');
         qDebug() << "横摇惯性单元硬件握手结果:" << ((dat.at(1)>>3) & '\x01');
         qDebug() << "右固定灯光源驱动器硬件握手结果:" << ((dat.at(1)>>2) & '\x01');
@@ -32,14 +31,12 @@ void coreInfo::parseInitSystemStatus(const QByteArray& dat, int tag)
      qDebug() << dat.toHex('-') <<tag;
 
      if(tag ==0){
-         //下滑系统控制器初始化结果
          qDebug() << "下滑系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
          qDebug() << "下滑横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
          qDebug() << "下滑纵摇惯性单元初始化结果:" << ((dat.at(1)>>2) & '\x01');
          qDebug() << "下滑横摇电机驱动器初始化结果:" << ((dat.at(1)>>1) & '\x01');
          qDebug() << "下滑纵摇电机驱动器初始化结果:" << ((dat.at(1)>>0) & '\x01');
      } else if(tag == 1){
-         //横摇系统控制器初始化结果
          qDebug() << "横摇系统控制器初始化结果:" << ((dat.at(1)>>4) & '\x01');
          qDebug() << "横摇惯性单元初始化结果:" << ((dat.at(1)>>3) & '\x01');
          qDebug() << "右固定灯光源驱动器初始化结果:" << ((dat.at(1)>>2) & '\x01');
@@ -53,7 +50,6 @@ void coreInfo::parsePowerOnOffStatus(const QByteArray& dat,int tag)
     qDebug() << dat.toHex('-') << tag;
 
     if(tag ==0){
-        //下滑系统控制器开机/关机结果
         qDebug() << "下滑系统控制器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
 
         qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
@@ -61,7 +57,6 @@ void coreInfo::parsePowerOnOffStatus(const QByteArray& dat,int tag)
         qDebug() << "下滑横摇电机驱动器开机/关机结果:" << ((dat.at(1)>>2) & '\x03');
         qDebug() << "下滑纵摇电机驱动器开机/关机结果:" << ((dat.at(1)>>0) & '\x03');
     } else if(tag == 1){
-        //横摇系统控制器开机/关机结果
         qDebug() << "横摇电机驱动器开机/关机结果:" << ((dat.at(2)>>0) & '\x03');
 
         qDebug() << "下滑横摇惯性单元开机/关机结果:" << ((dat.at(1)>>6) & '\x03');
@@ -108,6 +103,13 @@ void coreInfo::parseAlarmStatus(const QByteArray &data, int tag)
         qDebug() << "下滑纵摇惯性单元422通信和校验错误:" << ((data.at(5)>>5) & '\x01');
         qDebug() << "下滑纵摇惯性单元422通信帧头错误:" << ((data.at(5)>>6) & '\x01');
         qDebug() << "下滑纵摇惯性单元超角度报警:" << ((data.at(5)>>7) & '\x01');
+
+//        qint8 warn_flag_1 = ((data.at(2)>>3) & '\x01');
+//        qint8 warn_flag_2 = ((data.at(2)>>4) & '\x01');
+//        qint8 warn_flag_3 = ((data.at(3)>>3) & '\x01');
+//        if(warn_flag_1 == 0 || warn_flag_2 == 0 || warn_flag_3 == 0){
+//            playAbnormalSound(2);
+//        }
 
     }else if(tag==1){
         //第1行
@@ -291,22 +293,18 @@ void coreInfo::parseSystemStatus(const QByteArray &data, int tag)
         qDebug() << "下滑横摇角度误差值信息包（4字节）:" << (data.mid(29,4));
 
         //第15行:at(33)-at(34)
-        qDebug() << "第1路电压值(总电压24v),单位mv（2字节）:" << (data.mid(33,2));
+        qDebug() << "第1路电压值(总电压24v),单位mv（2字节）:" << ((data.at(34))<<8)+(data.at(33))<<"mv";
         //第16行:at(35)-at(36)
-        qDebug() << "第2路电压值(隔离24v),单位mv（2字节））:" << (data.mid(35,2));
+        qDebug() << "第2路电压值(隔离24v),单位mv（2字节））:" << ((data.at(36))<<8)+(data.at(35))<<"mv";
         //第17行:at(37)-at(38)
-        qDebug() << "第1路电流值,单位ma（2字节）:" << (data.mid(37,2));
+        qDebug() << "第1路电流值,单位ma（2字节）:" << ((data.at(38))<<8)+(data.at(37))<<"ma";
         //第18行:at(39)-at(40)
-        qDebug() << "第2路电流值,单位ma（2字节））:" << (data.mid(39,2));
+        qDebug() << "第2路电流值,单位ma（2字节））:" << ((data.at(40))<<8)+(data.at(39))<<"ma";
 
-        //第19行
-        qDebug() << "温度值(低8位):" << (data.at(41));
-        //第20行
-        qDebug() << "温度值(高8位):" << (data.at(42));
-        //第21行
-        qDebug() << "湿度值(低8位):" << (data.at(43));
-        //第22行
-        qDebug() << "湿度值(高8位):" << (data.at(44));
+        //第19-20行
+        qDebug() << "温度值:" << (((float)((data.at(42))<<8)+(data.at(41)))/100) <<"℃";
+        //第21-22行
+        qDebug() << "湿度值:" << (((float)((data.at(44))<<8)+(data.at(43)))/100) <<"RH";
         //第23行
         qDebug() << "气压值(低8位):" << (data.at(45));
         //第24行
@@ -415,18 +413,19 @@ void coreInfo::parseSystemStatus(const QByteArray &data, int tag)
         qDebug() << "横摇角度误差值信息包（4字节）:" << (data.mid(17,4));
 
         //第15行:at(21)-at(22)
-        qDebug() << "第1路电压值(总电压24v),单位mv（2字节）:" << (data.mid(21,2));
+        qDebug() << "第1路电压值(总电压24v),单位mv（2字节）:" << ((data.at(22))<<8)+(data.at(21))<<"mv";
         //第16行:at(23)-at(24)
-        qDebug() << "第2路电压值(隔离24v),单位mv（2字节））:" << (data.mid(23,2));
+        qDebug() << "第2路电压值(隔离24v),单位mv（2字节））:" << ((data.at(24))<<8)+(data.at(23))<<"mv";
         //第17行:at(25)-at(26)
-        qDebug() << "第1路电流值,单位ma（2字节）:" << (data.mid(25,2));
+        qDebug() << "第1路电流值,单位ma（2字节）:" << ((data.at(26))<<8)+(data.at(25))<<"ma";
         //第18行:at(27)-at(28)
-        qDebug() << "第2路电流值,单位ma（2字节）:" << (data.mid(27,2));
+        qDebug() << "第2路电流值,单位ma（2字节）:" << ((data.at(28))<<8)+(data.at(27))<<"ma";
 
         //第19行
-        qDebug() << "温度值(低8位):" << (data.at(29));
-        //第20行
-        qDebug() << "温度值(高8位):" << (data.at(30));
+//        qDebug() << "温度值(低8位):" << (data.at(29));
+//        //第20行
+//        qDebug() << "温度值(高8位):" << (data.at(30));
+        qDebug() << "温度值:" << (((float)((data.at(30))<<8)+(data.at(29)))/100) <<"℃";
         //第21行
         qDebug() << "湿度值(低8位):" << (data.at(31));
         //第22行
@@ -449,12 +448,6 @@ void coreInfo::parseSystemStatus(const QByteArray &data, int tag)
     }
 }
 
-
-/**
- * @brief coreInfo::parseLimitAngle
- * @param data 系统控制器返回的数据
- * @param tag 下滑：0；横摇：1
- */
 void coreInfo::parseLimitAngle(const QByteArray &data, int tag) {
     qDebug() << data.toHex('-') << tag;
 
@@ -485,5 +478,18 @@ void coreInfo::parseLimitAngle(const QByteArray &data, int tag) {
         }
         qDebug() << "限位角度:" << (data.at(3));
     }
-
 }
+
+void coreInfo::playAbnormalSound(int abnormal)
+{
+    QMediaPlayer *p= new QMediaPlayer();
+
+    if(abnormal == 1){
+        p->setMedia(QUrl::fromLocalFile("/home/yyq/projects/bootup/audio/error.wav"));
+    }else{
+        p->setMedia(QUrl::fromLocalFile("/home/yyq/projects/bootup/audio/warn.wav"));
+    }
+    p->play();
+}
+
+

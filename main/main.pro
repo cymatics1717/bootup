@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = bootup
 
-QT += quick network serialport
+QT += quick network serialport multimedia
 CONFIG += c++11
 
 

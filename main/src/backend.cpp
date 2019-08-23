@@ -91,7 +91,7 @@ int backEnd::loadConfig()
         Json::Value item = root["endpoints"]["controller"];
         QString dev = QString::fromStdString(item["device"].asString());
         if(dev.isEmpty()){
-            dev = "/dev/ttytest1";
+            dev = "/dev/ttyUSB0";
         }
         int interval = item["interval"].asInt();
         if(interval<1 ||interval>10000){
@@ -156,6 +156,27 @@ void backEnd::TaTaiReport()
 
 /***触控面板与系统控制器相关协议信息标识
 *****************正常模式发送通用接口**************************/
+//0. 内外部信号源选择
+/**
+ * @brief backEnd::signalSelect
+ * @param sig 内部信号源（默认内部）:01,外部信号源:02
+ */
+void backEnd::signalSelect(int sig)
+{
+    qDebug() <<"";
+    QByteArray data;
+    data.append(MID_REQUEST_GYRO_SINGAL);
+
+    if(sig == 2){
+        data.append('\x02');
+    } else {
+        data.append('\x01');
+    }
+
+    send2Contrl(data,0);
+    send2Contrl(data,1);
+}
+
 //1. 硬件握手
 /**
  * @brief backEnd::hwHandShake
@@ -192,7 +213,7 @@ void backEnd::getInitControlSystem()
 }
 
 //3. 设置工作模式
-void backEnd::setWorkMode(qint8 status,int tag)
+void backEnd::setWorkMode(int status,int tag)
 {
     qDebug() <<"";
     QByteArray dat,data;
@@ -256,6 +277,7 @@ void backEnd::getHengYaoPowerOnOffStatus()
     send2Contrl(data,1);
 }
 
+//5. 光源控制
 /**
  * @brief backEnd::setLight
  * @param tag 下滑：0；横摇：1
@@ -290,6 +312,14 @@ void backEnd::setLight(int tag, qint8 lightvalue, qint8 flash, qint8 mode)
         }
         send2Contrl(dat, tag);
     }
+}
+
+//6. 全关系统控制器和静态灯
+void backEnd::allPowerOff()
+{
+    setPowerOnOff(false,0);
+    setPowerOnOff(false,1);
+    //add:关闭所有静态灯
 }
 
 /*****************正常模式下滑特有接口*************************/
@@ -368,7 +398,7 @@ void backEnd::onReadyRead()
                 //初始化查询回复
                 core.parseInitSystemStatus(dat,tag);
                 qDebug() <<"********YYQ:GetInitControlSystem reply success********"<<dat.size()<< dat.toHex('-');
-                setWorkMode(3,tag);
+                setWorkMode(workMode,tag);
                 //延时 if taita
                 if(tag == 0){
                     QTimer::singleShot(50 , this, &backEnd::setXiahuaPowerOnOffDelays);
@@ -380,7 +410,6 @@ void backEnd::onReadyRead()
                 //开机结果查询回复
                 core.parsePowerOnOffStatus(dat,tag);
                 qDebug() <<"********YYQ:getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
-
              }
         }
     }
@@ -612,16 +641,6 @@ void backEnd::reqHengYaoRightLimitAngleStatus()
 //    send2Contrl(data,tag);
 }
 /*****************限位角报文接口 end************************/
-
-void backEnd::sysinfoUpload()
-{
-    QByteArray data;
-    data.append(MID_REQUEST_HARDWARE);
-//    data.append(currentTime().toUtf8());
-//    data.append('\n');
-
-    send2TaTai_(data);
-}
 
 /*****************UDP通用发送接口************************/
 void backEnd::send2Contrl(const QByteArray &data, int tag)

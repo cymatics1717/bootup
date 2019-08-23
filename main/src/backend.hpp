@@ -35,18 +35,19 @@ public slots:
 
     void TaTaiReport();
 
+    //5.3.31 内外部信号源选择
+    void signalSelect(int sig);
+
     //5.3.1 硬件握手结果查询报文
     void hwHandShake(int mode, int tag);
-//    void onGetHWHandShake(const QByteArray& dat,int tag);
 
     //5.3.3 初始化报文
     void initControlSystem(int tag);
     //5.3.4 初始化结果查询报文
     void getInitControlSystem();
-//    void onGetInitControlSystem(const QByteArray& dat, int tag);
 
     //5.3.9 工作模式设置报文
-    void setWorkMode(qint8 status,int tag);
+    void setWorkMode(int status,int tag);
 
     //5.3.6 开机/关机报文
     void setPowerOnOff(bool on, int tag);
@@ -56,7 +57,6 @@ public slots:
     //5.3.7 开机/关机结果查询报文
     void getXiaHuaPowerOnOffStatus();
     void getHengYaoPowerOnOffStatus();
-//    void onGetPowerOnOffStatus(const QByteArray& dat,int tag);
 
     //5.3.10 检视模式参数设置报文
     void reqSetInspect(qint8 slaveAddr, qint8 amp, qint8 period, int tag);
@@ -88,10 +88,11 @@ public slots:
     void reqHengYaoLeftLimitAngleStatus();
     void reqHengYaoRightLimitAngleStatus();
 
-  //5.3.16 系统状态查询报文
+    //5.3.16 系统状态查询报文
     void getSystemStatus(int tag);
 
-    void sysinfoUpload();
+    //全关系统控制器和静态灯
+    void allPowerOff();
 
 private:
     void send2Contrl(const QByteArray &data, int tag);
