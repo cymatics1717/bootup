@@ -480,6 +480,43 @@ void coreInfo::parseLimitAngle(const QByteArray &data, int tag) {
     }
 }
 
+void coreInfo::parseCalibStatusReply(const QByteArray &data, int tag) {
+    qDebug() << data.toHex('-') << tag;
+
+    if (tag == 0) {
+        qDebug() << "对应从机设备地址:" << (data.at(1) & '\xFF');
+        qDebug() << "标零信息:" << (data.at(2) & '\xFF')
+                               + (data.at(3) << 8 & '\xFF')
+                               + (data.at(4) << 16 & '\xFF')
+                               + (data.at(5) << 24 & '\xFF');
+    } else if (tag == 1) {
+        qDebug() << "对应从机设备地址:" << (data.at(1) & '\xFF');
+        qDebug() << "标零信息:" << (data.at(2) & '\xFF')
+                               + (data.at(3) << 8 & '\xFF')
+                               + (data.at(4) << 16 & '\xFF')
+                               + (data.at(5) << 24 & '\xFF');
+    }
+}
+
+void coreInfo::parseZeroOffsetReply(const QByteArray &data, int tag) {
+    qDebug() << data.toHex('-') << tag;
+
+    if (tag == 0) {
+        qDebug() << "对应从机设备地址:" << (data.at(1) & '\xFF');
+        qDebug() << "惯性单元偏移量或零位旋变值:" << (data.at(2) & '\xFF')
+                                            + (data.at(3) << 8 & '\xFF')
+                                            + (data.at(4) << 16 & '\xFF')
+                                            + (data.at(5) << 24 & '\xFF');
+    } else if (tag == 1) {
+        qDebug() << "对应从机设备地址:" << (data.at(1) & '\xFF');
+        qDebug() << "惯性单元偏移量或零位旋变值:" << (data.at(2) & '\xFF')
+                                            + (data.at(3) << 8 & '\xFF')
+                                            + (data.at(4) << 16 & '\xFF')
+                                            + (data.at(5) << 24 & '\xFF');
+    }
+}
+
+
 void coreInfo::playAbnormalSound(int abnormal)
 {
     QMediaPlayer *p= new QMediaPlayer();

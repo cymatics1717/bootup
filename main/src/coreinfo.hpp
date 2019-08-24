@@ -25,6 +25,8 @@ public slots:
     void parseBreakdownStatus(const QByteArray &data, int tag);
     void parseSystemStatus(const QByteArray &data, int tag);
     void parseLimitAngle(const QByteArray &data, int tag);
+    void parseCalibStatusReply(const QByteArray &data, int tag);
+    void parseZeroOffsetReply(const QByteArray &data, int tag);
 
     /**
      * @brief backEnd::playAbnormalSound

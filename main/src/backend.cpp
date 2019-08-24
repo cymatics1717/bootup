@@ -410,7 +410,27 @@ void backEnd::onReadyRead()
                 //开机结果查询回复
                 core.parsePowerOnOffStatus(dat,tag);
                 qDebug() <<"********YYQ:getPowerOnOffStatus reply success********"<<dat.size()<< dat.toHex('-');
-             }
+//                //reqLimitTest(0x03, 0x02, 0); //测试限位角
+//                reqCalibActivate(0x03, 0); //测试下滑横摇进入标零 0x19 0x03
+//                QThread::msleep(200);
+//                //reqCalibStatus(0x03, 0); //测试标零结果查询
+//                //reqZeroOffset(0x03, 0); //测试零位旋变值及惯性单元偏移量查询报文
+//                //reqZeroOffsetAvg(0x03, 0); //测试零位旋变值及惯性单元偏移量平均值报文
+//                reqCalibDeactivate(0x03, 0); //测试下滑横摇退出标零 0x1A 0x03
+             } else if (dat.at(0) == MID_REPLY_LIMIT_ANGLE) {
+                // 限位角度报文回复
+                core.parseLimitAngle(dat,tag);
+                qDebug() <<"@@@@@@@@@@@@@viktor:parseLimitAngle reply success********"<<dat.size()<< dat.toHex('-');
+            } else if (dat.at(0) == MID_REPLY_CALIB_STATUS) {
+                // 标零结果报文
+                core.parseCalibStatusReply(dat,tag);
+                qDebug() <<"@@@@@@@@@@@@@viktor:parseCalibStatusReply reply success********"<<dat.size()<< dat.toHex('-');
+            } else if (dat.at(0) == MID_REPLY_ZERO_OFFSET) {
+                // 零位旋变值及惯性单元偏移量报文
+                core.parseZeroOffsetReply(dat, tag);
+                qDebug() <<"@@@@@@@@@@@@@viktor:parseZeroOffsetReply reply success********"<<dat.size()<< dat.toHex('-');
+            }
+
         }
     }
 }
@@ -593,33 +613,35 @@ void backEnd::reqLimitAngleStatus(qint8 slaveAddr, qint8 leftRight, int tag)
 
 void backEnd::reqXiaHuaLeftLimitAngleStatus()
 {
-    qDebug() <<"";
+    qDebug() <<"@@@@@@@@viktor->reqXiaHuaLeftLimitAngleStatus";
     QByteArray data;
     data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
     // TODO 从机地址，限位方向需要填充
 //    data.append(slaveAddr);
-
+    data.append(0x03);
 //    data.append(leftRight);
-
+    data.append(0x01);
 //    send2Contrl(data,tag);
-
+    send2Contrl(data, 0);
 }
 
 void backEnd::reqXiaHuaRightLimitAngleStatus()
 {
-    qDebug() <<"";
+    qDebug() <<"@@@@@@@@viktor->reqXiaHuaRightLimitAngleStatus";
     QByteArray data;
     data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
     // TODO 从机地址，限位方向需要填充
 //    data.append(slaveAddr);
+    data.append(0x03);
 //    data.append(leftRight);
-
+    data.append(0x02);
 //    send2Contrl(data,tag);
+    send2Contrl(data, 0);
 }
 
 void backEnd::reqHengYaoLeftLimitAngleStatus()
 {
-    qDebug() <<"";
+    qDebug() <<"@@@@@@@@viktor->reqHengYaoLeftLimitAngleStatus";
     QByteArray data;
     data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
     // TODO 从机地址，限位方向需要填充
@@ -631,7 +653,7 @@ void backEnd::reqHengYaoLeftLimitAngleStatus()
 
 void backEnd::reqHengYaoRightLimitAngleStatus()
 {
-    qDebug() <<"";
+    qDebug() <<"@@@@@@@@viktor->reqHengYaoRightLimitAngleStatus";
     QByteArray data;
     data.append(MID_REQUEST_LIMIT_ANGLE_STATUS);
     // TODO 从机地址，限位方向需要填充
