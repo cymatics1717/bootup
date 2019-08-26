@@ -53,6 +53,8 @@ public slots:
     void setPowerOnOff(bool on, int tag);
     void setXiahuaPowerOnOffDelays();
     void setHengyaoPowerOnOffDelays();
+    void __setXiahuaPowerOnOffDelays();
+    void __setHengyaoPowerOnOffDelays();
 
     //5.3.7 开机/关机结果查询报文
     void getXiaHuaPowerOnOffStatus();

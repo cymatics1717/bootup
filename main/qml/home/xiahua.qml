@@ -9,6 +9,7 @@ Rectangle {
     color: "transparent"
     anchors.margins: 0
     property real rate: 1./8
+    property bool firstTime: false
     BooleanControl{
         id: lightswitch
         color: "white"
@@ -22,10 +23,16 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
             if(checked){
-                backend.hwHandShake(3, 0);
+                if(!firstTime) {
+                    backend.hwHandShake(3, 0);
+                    firstTime = true;
+                    console.log("@@@@@@@@@@@@@@@viktor@@@@@@@@@@@@@@@@@:" + firstTime)
+                } else {
+                    backend.setWorkMode(3, 0);
+                    backend.__setXiahuaPowerOnOffDelays();
+                    console.log("$$$$$$$$$$$$$$$$$$viktor$$$$$$$$$$$$$$$$$$$:" + firstTime)
+                }
                 lightStatus.status = 2;
-//                lightswitch.enabled = false;
-//                lightswitch.opacity = .3
             } else {
                 backend.setPowerOnOff(false,0);
             }

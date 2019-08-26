@@ -38,7 +38,7 @@ void backEnd::timerEvent(QTimerEvent *event)
         TaTaiReport();
     } else if(event->timerId() == getSystemStatusTimerID){
         getSystemStatus(0);
-        getSystemStatus(1);
+        //getSystemStatus(1);
     }
 }
 
@@ -255,11 +255,20 @@ void backEnd::setXiahuaPowerOnOffDelays()
     setPowerOnOff(true,0);
 }
 
+void backEnd::__setXiahuaPowerOnOffDelays() {
+
+    QTimer::singleShot(50 , this, &backEnd::setXiahuaPowerOnOffDelays);
+}
+
 void backEnd::setHengyaoPowerOnOffDelays()
 {
     setPowerOnOff(true,1);
 }
 
+void backEnd::__setHengyaoPowerOnOffDelays() {
+
+    QTimer::singleShot(50 , this, &backEnd::setHengyaoPowerOnOffDelays);
+}
 
 void backEnd::getXiaHuaPowerOnOffStatus()
 {
@@ -401,9 +410,9 @@ void backEnd::onReadyRead()
                 setWorkMode(workMode,tag);
                 //延时 if taita
                 if(tag == 0){
-                    QTimer::singleShot(50 , this, &backEnd::setXiahuaPowerOnOffDelays);
+                    __setXiahuaPowerOnOffDelays();
                 }else if(tag == 1){
-                    QTimer::singleShot(50 , this, &backEnd::setHengyaoPowerOnOffDelays);
+                    __setHengyaoPowerOnOffDelays();
                 }
 
             } else if(dat.at(0) == MID_REPLY_POWER_STATUS) {
@@ -417,6 +426,7 @@ void backEnd::onReadyRead()
 //                //reqZeroOffset(0x03, 0); //测试零位旋变值及惯性单元偏移量查询报文
 //                //reqZeroOffsetAvg(0x03, 0); //测试零位旋变值及惯性单元偏移量平均值报文
 //                reqCalibDeactivate(0x03, 0); //测试下滑横摇退出标零 0x1A 0x03
+                //getSystemStatusTimerID = startTimer(500);
              } else if (dat.at(0) == MID_REPLY_LIMIT_ANGLE) {
                 // 限位角度报文回复
                 core.parseLimitAngle(dat,tag);
@@ -436,6 +446,10 @@ void backEnd::onReadyRead()
 }
 
 /*****************系统状态查询************************/
+/**
+ * @brief backEnd::getSystemStatus
+ * @param tag : 下滑：0；横摇：1
+ */
 void backEnd::getSystemStatus(int tag)
 {
     qDebug() <<"";
@@ -600,6 +614,12 @@ void backEnd::reqLimitTest(qint8 slaveAddr,qint8 leftRight,int tag)
     }
 }
 
+/**
+ * @brief backEnd::reqLimitAngleStatus
+ * @param slaveAddr 从机地址
+ * @param leftRight 0x01:左(上)限位; 0x02:右(下)限位
+ * @param tag 下滑：0；横摇：1
+ */
 void backEnd::reqLimitAngleStatus(qint8 slaveAddr, qint8 leftRight, int tag)
 {
     qDebug() <<"";

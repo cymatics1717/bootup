@@ -8,6 +8,7 @@ Rectangle {
     radius: 3
     color: "transparent"
     property real rate: 1./3.1
+    property bool firstTime: false
 
     BooleanControl{
         id: lightswitch
@@ -22,7 +23,15 @@ Rectangle {
         onCheck: {
             console.log("----------------"+checked)
             if(checked){
-                backend.hwHandShake(3, 1);
+                if(!firstTime) {
+                    backend.hwHandShake(3, 0);
+                    firstTime = true;
+                    console.log("@@@@@@@@@@@@@@@viktor@@@@@@@@@@@@@@@@@:" + firstTime)
+                } else {
+                    backend.setWorkMode(3, 0);
+                    backend.__setHengyaoPowerOnOffDelays();
+                    console.log("$$$$$$$$$$$$$$$$$$viktor$$$$$$$$$$$$$$$$$$$:" + firstTime)
+                }
             } else {
                 backend.setPowerOnOff(false,1);
             }

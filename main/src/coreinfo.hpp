@@ -33,6 +33,8 @@ public slots:
      * @param abnormal 故障音效:01, 报警音效:其他
      */
     void playAbnormalSound(int abnormal);
+    void matchWarningTable(const QByteArray &data, int tag);
+    void matchBreakdownTable(const QByteArray &data, int tag);
 
 };
 
