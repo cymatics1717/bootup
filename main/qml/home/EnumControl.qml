@@ -9,7 +9,7 @@ Rectangle {
     property alias value: info.text
     property int rradius: height/5
     property int margin: 20
-    property int status: 1
+    property int status: 9 // 默认单闪：0x1001
 
     border.color: "grey"
     border.width: 0.02 * height
@@ -64,14 +64,14 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                if(root.status!=1){
+                if(root.status!=5){
                     parent.opacity = 1
                 }
             }
             onClicked:{
 //                console.log(parent.objectName + " clicked.")
                 reset()
-                root.status = 1
+                root.status = 5 //不闪：0x0101
                 parent.opacity = .1
                 root.clicked()
             }
@@ -105,14 +105,14 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                if(root.status!=3){
+                if(root.status!=13){
                     parent.opacity = 1
                 }
             }
             onClicked:{
 //                console.log(parent.objectName + " clicked.")
                 reset()
-                root.status = 3
+                root.status = 13 //全闪：0x1101
                 parent.opacity = .1
                 root.clicked()
             }
@@ -145,14 +145,14 @@ Rectangle {
                 parent.opacity = .3
             }
             onExited:   {
-                if(root.status!=2){
+                if(root.status!=9){
                     parent.opacity = 1
                 }
             }
             onClicked:{
 //                console.log(parent.objectName + " clicked.")
                 reset()
-                root.status = 2
+                root.status = 9 //单闪：0x1001
                 parent.opacity = .1
                 root.clicked()
             }

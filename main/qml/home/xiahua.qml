@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 
 Rectangle {
     id:rect
@@ -24,17 +24,16 @@ Rectangle {
             console.log("----------------"+checked)
             if(checked){
                 if(!firstTime) {
-                    backend.hwHandShake(3, 0);
+                    backend.hwHandShake(3, 0)
                     firstTime = true;
                     console.log("@@@@@@@@@@@@@@@viktor@@@@@@@@@@@@@@@@@:" + firstTime)
                 } else {
-                    backend.setWorkMode(3, 0);
+                    backend.setWorkMode(3, 0)
                     backend.__setXiahuaPowerOnOffDelays();
                     console.log("$$$$$$$$$$$$$$$$$$viktor$$$$$$$$$$$$$$$$$$$:" + firstTime)
                 }
-                lightStatus.status = 2;
             } else {
-                backend.setPowerOnOff(false,0);
+                backend.setPowerOnOff(false,0)
             }
         }
     }
@@ -49,9 +48,12 @@ Rectangle {
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
         onCheck: {
-            console.log("----------------"+checked)
-//            backend.setLight(7, lightsetting.value,4*2+(2-lightcontrol.checked))
-            backend.setLight(0, lightsetting.value,4*(1+lightcontrol.checked)+(2-lightcontrol.checked), 3)
+            console.log("---------lightcontrol-------"+checked)
+            if(checked) {
+                backend.setLight(0, lightsetting.value, lightStatus.status, 3)
+            } else {
+                backend.setLight(0, lightsetting.value, 6, 3) //关闭光源：0x0110
+            }
         }
     }
     IntegerControl {
@@ -67,7 +69,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setLight(0, text,4*lightStatus.status+1, 3)
+            backend.setLight(0, text, lightStatus.status, 3)
         }
     }
 
@@ -87,7 +89,7 @@ Rectangle {
         width: rect.width - 2*rect.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setPitch(text)
+            backend.setPitch(text - 4)
         }
     }
     Integer {
@@ -118,10 +120,10 @@ Rectangle {
         title:qsTr("闪光")
         height: parent.height*(rect.rate+0.04)
         width: parent.width - 2*parent.radius
+        status:9 //单闪：9/0x1001, 多闪：13/0x1101, 不闪：5/0x0101
         onClicked: {
-            console.log(lightcontrol.checked+"-------"+status)
-//            backend.setLight(7, lightsetting.value, 4*status+(1+lightcontrol.checked))
-            backend.setLight(0, lightsetting.value, 4*status+(2-lightcontrol.checked), 3)
+            console.log(lightcontrol.checked+"!!!!!!!lightStatus.status!!!!!"+status)
+            backend.setLight(0, lightsetting.value, lightStatus.status, 3)
         }
     }
 

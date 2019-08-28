@@ -48,8 +48,12 @@ Rectangle {
         height: parent.height*rect.rate
         width: parent.width - 2*parent.radius
         onCheck: {
-            console.log("----------------"+checked)
-            backend.setLight(1, lightsetting.value, 4*(1+lightcontrol.checked)+(2-lightcontrol.checked), 3)
+            console.log("--------checked--------"+checked)
+            if(checked) {
+                backend.setLight(1, lightsetting.value, lightStatus.status, 3)
+            } else {
+                backend.setLight(1, lightsetting.value, 6, 3) //关闭光源：0x0110
+            }
         }
     }
     IntegerControl {
@@ -65,7 +69,7 @@ Rectangle {
         width: parent.width - 2*parent.radius
         onTextChanged: {
             console.log("####################"+text)
-            backend.setLight(1, text,4*lightStatus.status+1, 3)
+            backend.setLight(1, text, lightStatus.status, 3)
         }
     }
 }

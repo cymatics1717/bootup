@@ -200,7 +200,7 @@ void backEnd::initControlSystem(int tag)
     data.append(MID_REQUEST_INIT);
     send2Contrl(data,tag);
     controler_tag = tag;
-    QTimer::singleShot(50000 , this, &backEnd::getInitControlSystem);
+    QTimer::singleShot(60000, this, &backEnd::getInitControlSystem);
 }
 
 void backEnd::getInitControlSystem()
@@ -414,7 +414,6 @@ void backEnd::onReadyRead()
                 }else if(tag == 1){
                     __setHengyaoPowerOnOffDelays();
                 }
-
             } else if(dat.at(0) == MID_REPLY_POWER_STATUS) {
                 //开机结果查询回复
                 core.parsePowerOnOffStatus(dat,tag);
