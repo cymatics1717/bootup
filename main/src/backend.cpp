@@ -200,7 +200,7 @@ void backEnd::initControlSystem(int tag)
     data.append(MID_REQUEST_INIT);
     send2Contrl(data,tag);
     controler_tag = tag;
-    QTimer::singleShot(60000, this, &backEnd::getInitControlSystem);
+    QTimer::singleShot(30000, this, &backEnd::getInitControlSystem);
 }
 
 void backEnd::getInitControlSystem()
@@ -209,7 +209,19 @@ void backEnd::getInitControlSystem()
     QByteArray data;
     data.append(MID_REQUEST_INIT_STATUS);
 
-    send2Contrl(data,controler_tag);
+    // 30s查询后,继续执行每3s后查询,查20次。
+    if(initTimes ++ <= 20) {
+        if(!initReply) {
+            send2Contrl(data,controler_tag);
+            QTimer::singleShot(3000, this, &backEnd::getInitControlSystem);
+        } else {
+            qDebug() << "规定时间内初始化成功。";
+            return;
+        }
+    } else {
+        // TODO 初始化超过90s，初始化失败
+        qDebug() << "初始化超过90s，判定初始化失败。";
+    }
 }
 
 //3. 设置工作模式
@@ -372,7 +384,6 @@ void backEnd::onReadyRead()
         //fix crash.
          /***单开和一起开测试***/
         if(dat.size()>0){
-
             int tag = -2;
             if(gram.senderAddress().toString() == endpoints.value("xiahua").first) {
                 tag = 0;
@@ -391,19 +402,17 @@ void backEnd::onReadyRead()
                  //报警信息主动上报
                  core.parseAlarmStatus(dat,tag);
                  qDebug() <<"********YYQ:parseAlarmStatus reply success********"<<dat.size()<< dat.toHex('-');
-
              }else if(dat.at(0)==MID_REPLY_SYSTEM_STATUS){
                  //系统状态查询回复
                  core.parseSystemStatus(dat,tag);
                  qDebug() <<"********YYQ:parseSystemStatus reply success********"<<dat.size()<< dat.toHex('-');
-
              }else if(dat.at(0)==MID_REPLY_HARDWARE){
                 //硬件握手回复
                 core.parseHWHandShakeStatus(dat,tag);
                 qDebug() <<"********YYQ:hwHandShake reply success********"<<dat.size()<< dat.toHex('-');
                 initControlSystem(tag);
-
              } else if(dat.at(0) == MID_REPLY_INIT_STATUS) {
+                initReply = true;
                 //初始化查询回复
                 core.parseInitSystemStatus(dat,tag);
                 qDebug() <<"********YYQ:GetInitControlSystem reply success********"<<dat.size()<< dat.toHex('-');
@@ -439,7 +448,6 @@ void backEnd::onReadyRead()
                 core.parseZeroOffsetReply(dat, tag);
                 qDebug() <<"@@@@@@@@@@@@@viktor:parseZeroOffsetReply reply success********"<<dat.size()<< dat.toHex('-');
             }
-
         }
     }
 }

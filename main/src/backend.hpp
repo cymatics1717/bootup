@@ -114,6 +114,8 @@ private:
     int tataireportTimerID;
     int getSystemStatusTimerID;
     int workMode; //工作模式:01:调试模式;10:检视模式;11:正常工作模式
+    int initTimes = 0;
+    bool initReply = false;
 };
 
 #endif // BACKEND_HPP
